@@ -3,7 +3,7 @@
 #include <xinu.h>
 
 uint32	clktime;		/* Seconds since boot			*/
-uint32	ctr1000 = 0;		/* Milliseconds since boot		*/
+uint32	ctr1000;		/* Milliseconds since boot		*/
 qid16	sleepq;			/* Queue of sleeping processes		*/
 uint32	preempt;		/* Preemption counter			*/
 
@@ -24,6 +24,7 @@ void	clkinit(void)
 	preempt = QUANTUM;
 
 	/* Initialize the time since boot to zero */
+	ctr1000=0;
 
 	clktime = 0;
 
