@@ -64,7 +64,7 @@ struct procsumm_record{
 	int32 total_cycles;
 };
 
-struct procsumm_record recs[number_of_system_calls];
+// struct procsumm_record recs[number_of_system_calls];
 
 struct procsumm {
 	pid32 pid;
