@@ -55,9 +55,29 @@ struct procent {		/* Entry in the process table		*/
 	int32	prstime;	//Start time of the process
 };
 
+/* Definition of process summary records */
+extern enum system_calls {create, kill, ready, sleep, suspend, wait, wakeup, yield, number_of_system_calls};
+
+
+struct procsumm_record{
+	int32 count;
+	int32 total_cycles;
+};
+
+struct procsumm_record recs[number_of_system_calls];
+
+struct procsumm {
+	pid32 pid;
+	struct proc_summ_record (*rec)[];
+};
+
+
+
 /* Marker for the top of a process stack (used to help detect overflow)	*/
 #define	STACKMAGIC	0x0A0AAAA9
 
+
+extern	struct	procsumm procsumm_table[];
 extern	struct	procent proctab[];
 extern	int32	prcount;	/* Currently active processes		*/
 extern	pid32	currpid;	/* Currently executing process		*/

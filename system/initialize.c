@@ -16,7 +16,7 @@ extern	void meminit(void);	/* Initializes the free memory list	*/
 local	process startup(void);	/* Process to finish startup tasks	*/
 
 /* Declarations of major kernel variables */
-
+struct	procsumm procsumm_table[1000];
 struct	procent	proctab[NPROC];	/* Process table			*/
 struct	sentry	semtab[NSEM];	/* Semaphore table			*/
 struct	memblk	memlist;	/* List of free memory blocks		*/
