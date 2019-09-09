@@ -95,9 +95,13 @@ process	shell (
 
 	fprintf(dev, "%s\n\n", SHELL_STRTMSG);
 
+	
+
 	/* Continually prompt the user, read input, and execute command	*/
 
 	while (TRUE) {
+
+		pr_status_syscall_summary();
 
 		/* Display prompt */
 
