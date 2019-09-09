@@ -21,7 +21,7 @@ void pr_status_syscall_summary(){
         
         for(int j=0; j<10;j++){
             
-            printf("%3s %7s %5s %-14s\n",);
+            printf("%3s %7s %5s %-14s\n","","","","");
             printf("%32s\n","--------------------------------");
         }
     }
