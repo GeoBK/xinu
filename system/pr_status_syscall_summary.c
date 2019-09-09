@@ -17,7 +17,7 @@ void pr_status_syscall_summary(){
 		   "pid", "syscall", "count", "average cycles");
 
 	printf("%3s %7s %5s %14s\n",
-		   "---", "-------" "-----", "--------------");
+		   "---", "-------", "-----", "--------------");
     
     int process_id_stats[5];
     
@@ -25,7 +25,7 @@ void pr_status_syscall_summary(){
         
         for(j=0; j<2;j++){
             
-            printf("%3s %7s %5s %-14s\n","","","","");
+            printf("%3s %7s %5s %-14s\n","1","create","122","34344");
             printf("%32s\n","--------------------------------");
         }
     }
