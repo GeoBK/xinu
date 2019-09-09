@@ -9,8 +9,9 @@
  */
 
 void pr_status_syscall_summary(){
-    int32 i,j;
-
+    int32 i,j,k;
+    //TODO: make this wait on a semaphore for console out temporary hack 
+    for(k=0;k<1000000;k++);
 
     printf("%3s %7s %5s %14s\n",
 		   "pid", "syscall", "count", "average cycles");
@@ -20,9 +21,9 @@ void pr_status_syscall_summary(){
     
     int process_id_stats[5];
     
-    for(i=0;i<10;i++){
+    for(i=0;i<2;i++){
         
-        for(j=0; j<10;j++){
+        for(j=0; j<2;j++){
             
             printf("%3s %7s %5s %-14s\n","","","","");
             printf("%32s\n","--------------------------------");
