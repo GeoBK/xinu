@@ -64,8 +64,8 @@ syscall	sleep(
  	{
  		num_cycles = end - start;
  	}
-	procsumm_table[pid].rec_count[sleep_enum]++;
-	procsumm_table[pid].total_cycles[sleep_enum]+=(int)num_cycles;
+	procsumm_table[getpid()].rec_count[sleep_enum]++;
+	procsumm_table[getpid()].total_cycles[sleep_enum]+=(int)num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
 	return OK;
 }
