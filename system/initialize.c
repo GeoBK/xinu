@@ -25,6 +25,7 @@ struct	memblk	memlist;	/* List of free memory blocks		*/
 
 int	prcount;		/* Total number of live processes	*/
 pid32	currpid;		/* ID of currently executing process	*/
+int max_pid=0;
 
 /* Control sequence to reset the console colors and cusor positiion	*/
 

@@ -60,8 +60,7 @@ extern enum system_calls {create_enum, kill_enum, ready_enum, sleep_enum,
 							suspend_enum, wait_enum, wakeup_enum, yield_enum, number_of_system_calls};
 
 
-struct procsumm {
-	pid32 pid;
+struct procsumm {		
 	int32 rec_count[number_of_system_calls];
 	int32 total_cycles[number_of_system_calls];
 };
@@ -71,8 +70,8 @@ struct procsumm {
 /* Marker for the top of a process stack (used to help detect overflow)	*/
 #define	STACKMAGIC	0x0A0AAAA9
 
-
 extern	struct	procsumm procsumm_table[];
 extern	struct	procent proctab[];
 extern	int32	prcount;	/* Currently active processes		*/
 extern	pid32	currpid;	/* Currently executing process		*/
+extern	int		max_pid;

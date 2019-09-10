@@ -17,6 +17,7 @@ pid32	create(
 	  ...
 	)
 {
+	int			num_cycles;
 	uint32		savsp, *pushsp;
 	intmask 	mask;    	/* Interrupt mask		*/
 	pid32		pid;		/* Stores new process id	*/
@@ -24,6 +25,8 @@ pid32	create(
 	int32		i;
 	uint32		*a;		/* Points to list of args	*/
 	uint32		*saddr;		/* Stack address		*/
+
+	
 
 	mask = disable();
 	if (ssize < MINSTK)
@@ -36,6 +39,7 @@ pid32	create(
 	}
 
 	prcount++;
+	max_pid++;
 	prptr = &proctab[pid];
 
 	/* Initialize process table entry for new process */
@@ -96,6 +100,11 @@ pid32	create(
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (prptr->prstkptr = (char *)saddr);
 	restore(mask);
+	printf("Initial rec_count: %d, Initial total_cycles: %d",
+				procsumm_table[pid].rec_count[create_enum],procsumm_table[pid].total_cycles[create_enum]);
+	procsumm_table[pid].rec_count[create_enum]++;
+	procsumm_table[pid].total_cycles[create_enum]+=num_cycles;
+	printf("PID: %d , Process Name: %s  \n",pid, name);
 	return pid;
 }
 
