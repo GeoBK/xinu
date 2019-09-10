@@ -18,6 +18,15 @@ pid32	create(
 	)
 {
 	int			num_cycles;
+	int32 start, end;
+	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
+	asm("CPUID\n\t"
+ 		"RDTSC\n\t"
+		"mov %%edx, %0\n\t"
+		"mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
+		"%rax", "%rbx", "%rcx", "%rdx");
+
+
 	uint32		savsp, *pushsp;
 	intmask 	mask;    	/* Interrupt mask		*/
 	pid32		pid;		/* Stores new process id	*/
@@ -100,8 +109,8 @@ pid32	create(
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (prptr->prstkptr = (char *)saddr);
 	restore(mask);
-	kprintf("Initial rec_count: %d, Initial total_cycles: %d \n",
-				procsumm_table[pid].rec_count[create_enum],procsumm_table[pid].total_cycles[create_enum]);
+	kprintf("Initial rec_count: %d, Initial total_cycles: %d, Local Var: %d \n",
+				procsumm_table[pid].rec_count[create_enum],procsumm_table[pid].total_cycles[create_enum],num_cycles);
 	procsumm_table[pid].rec_count[create_enum]++;
 	procsumm_table[pid].total_cycles[create_enum]+=num_cycles;
 	kprintf("PID: %d , Process Name: %s , Parent Process: %d \n",pid, name, prptr->prparent);
