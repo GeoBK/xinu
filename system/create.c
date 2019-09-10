@@ -20,11 +20,43 @@ pid32	create(
 	int			num_cycles;
 	int32 start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
-	asm("CPUID\n\t"
- 		"RDTSC\n\t"
-		"mov %%edx, %0\n\t"
-		"mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
-		"%rax", "%rbx", "%rcx", "%rdx");
+	asm volatile ("CPUID\n\t"
+					 "RDTSC\n\t"
+					 "mov %%edx, %0\n\t"
+					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
+					"%rax", "%rbx", "%rcx", "%rdx");
+	asm volatile("RDTSCP\n\t"
+					 "mov %%edx, %0\n\t"
+					 "mov %%eax, %1\n\t"
+					"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax",
+					"%rbx", "%rcx", "%rdx");
+	asm volatile ("CPUID\n\t"
+					 "RDTSC\n\t"
+					 "mov %%edx, %0\n\t"
+					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
+					"%rax", "%rbx", "%rcx", "%rdx");
+	asm volatile("RDTSCP\n\t"
+					 "mov %%edx, %0\n\t"
+					 "mov %%eax, %1\n\t"
+					"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax",
+					"%rbx", "%rcx", "%rdx");
+	preempt_disable();
+	raw_local_irq_save(flags);
+	asm volatile ("CPUID\n\t"
+					 "RDTSC\n\t"
+					 "mov %%edx, %0\n\t"
+					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r"
+					(cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
+
+	printf("cycle high: %d, cycle low: %d",cycles_high,cycles_low);
+
+	asm volatile("RDTSCP\n\t"
+				 "mov %%edx, %0\n\t"
+				 "mov %%eax, %1\n\t"
+				 "CPUID\n\t": "=r" (cycles_high1), "=r"
+				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");
+				raw_local_irq_restore(flags);
+				preempt_enable();
 
 
 	uint32		savsp, *pushsp;
