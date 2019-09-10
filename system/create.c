@@ -21,28 +21,28 @@ pid32	create(
 	int32 start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
 	unsigned long flags;
-	asm volatile ("CPUID\n\t"
-					 "RDTSC\n\t"
-					 "mov %%edx, %0\n\t"
-					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
-					"%rax", "%rbx", "%rcx", "%rdx");
-	asm volatile("RDTSCP\n\t"
-					 "mov %%edx, %0\n\t"
-					 "mov %%eax, %1\n\t"
-					"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax",
-					"%rbx", "%rcx", "%rdx");
-	asm volatile ("CPUID\n\t"
-					 "RDTSC\n\t"
-					 "mov %%edx, %0\n\t"
-					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
-					"%rax", "%rbx", "%rcx", "%rdx");
-	asm volatile("RDTSCP\n\t"
-					 "mov %%edx, %0\n\t"
-					 "mov %%eax, %1\n\t"
-					"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax",
-					"%rbx", "%rcx", "%rdx");
-	preempt_disable();
-	raw_local_irq_save(flags);
+	// asm volatile ("CPUID\n\t"
+	// 				 "RDTSC\n\t"
+	// 				 "mov %%edx, %0\n\t"
+	// 				 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
+	// 				"%rax", "%rbx", "%rcx", "%rdx");
+	// asm volatile("RDTSCP\n\t"
+	// 				 "mov %%edx, %0\n\t"
+	// 				 "mov %%eax, %1\n\t"
+	// 				"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax",
+	// 				"%rbx", "%rcx", "%rdx");
+	// asm volatile ("CPUID\n\t"
+	// 				 "RDTSC\n\t"
+	// 				 "mov %%edx, %0\n\t"
+	// 				 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
+	// 				"%rax", "%rbx", "%rcx", "%rdx");
+	// asm volatile("RDTSCP\n\t"
+	// 				 "mov %%edx, %0\n\t"
+	// 				 "mov %%eax, %1\n\t"
+	// 				"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax",
+	// 				"%rbx", "%rcx", "%rdx");
+	// preempt_disable();
+	// raw_local_irq_save(flags);
 	asm volatile ("CPUID\n\t"
 					 "RDTSC\n\t"
 					 "mov %%edx, %0\n\t"
@@ -56,8 +56,8 @@ pid32	create(
 				 "mov %%eax, %1\n\t"
 				 "CPUID\n\t": "=r" (cycles_high1), "=r"
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");
-				raw_local_irq_restore(flags);
-				preempt_enable();
+				// raw_local_irq_restore(flags);
+				// preempt_enable();
 
 
 	uint32		savsp, *pushsp;
