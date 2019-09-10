@@ -20,29 +20,7 @@ pid32	create(
 	unsigned long num_cycles;
 	unsigned long start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
-	unsigned long flags;
-	// asm volatile ("CPUID\n\t"
-	// 				 "RDTSC\n\t"
-	// 				 "mov %%edx, %0\n\t"
-	// 				 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
-	// 				"%rax", "%rbx", "%rcx", "%rdx");
-	// asm volatile("RDTSCP\n\t"
-	// 				 "mov %%edx, %0\n\t"
-	// 				 "mov %%eax, %1\n\t"
-	// 				"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax",
-	// 				"%rbx", "%rcx", "%rdx");
-	// asm volatile ("CPUID\n\t"
-	// 				 "RDTSC\n\t"
-	// 				 "mov %%edx, %0\n\t"
-	// 				 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r" (cycles_low)::
-	// 				"%rax", "%rbx", "%rcx", "%rdx");
-	// asm volatile("RDTSCP\n\t"
-	// 				 "mov %%edx, %0\n\t"
-	// 				 "mov %%eax, %1\n\t"
-	// 				"CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: "%rax",
-	// 				"%rbx", "%rcx", "%rdx");
-	// preempt_disable();
-	// raw_local_irq_save(flags);
+	unsigned long flags;	
 	asm volatile ("CPUID\n\t"
 					 "RDTSC\n\t"
 					 "mov %%edx, %0\n\t"
@@ -132,21 +110,15 @@ pid32	create(
 	*--saddr = 0;			/* %esi */
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (prptr->prstkptr = (char *)saddr);
-	restore(mask);
-	kprintf("starting end time trace..... \n");
+	restore(mask);	
 	asm volatile("RDTSCP\n\t"
 				 "mov %%edx, %0\n\t"
 				 "mov %%eax, %1\n\t"
 				 "CPUID\n\t": "=r" (cycles_high1), "=r"
-				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");
-	kprintf("ended end time trace!! \n");
-	kprintf("cycle high: %d, cycle low: %d \n",cycles_high1,cycles_low1);
+				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
 	start = ( ((long)cycles_high << 32) | cycles_low );
-	end = ( ((long)cycles_high1 << 32) | cycles_low1 );
-	kprintf("done parsing to long int!!! \n");
+	end = ( ((long)cycles_high1 << 32) | cycles_low1 );	
 	int len= sizeof(long);
-	kprintf("length of long: %d \n",len);
-	kprintf("start: %d \n",start);
 	if ( (end - start) < 0) {
  		printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
  		num_cycles = 0;
@@ -155,8 +127,6 @@ pid32	create(
  	{
  		num_cycles = end - start;
  	}
-	kprintf("Initial rec_count: %d, Initial total_cycles: %d, Local Var: %d \n",
-				procsumm_table[pid].rec_count[create_enum],procsumm_table[pid].total_cycles[create_enum],num_cycles);
 	procsumm_table[pid].rec_count[create_enum]++;
 	procsumm_table[pid].total_cycles[create_enum]+=(int)num_cycles;	
 	return pid;
