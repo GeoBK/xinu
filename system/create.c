@@ -50,7 +50,7 @@ pid32	create(
 					(cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
 
 	printf("cycle high: %d, cycle low: %d",cycles_high,cycles_low);
-	
+	kprintf("done with start time trace!!");
 	uint32		savsp, *pushsp;
 	intmask 	mask;    	/* Interrupt mask		*/
 	pid32		pid;		/* Stores new process id	*/
@@ -133,14 +133,17 @@ pid32	create(
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (prptr->prstkptr = (char *)saddr);
 	restore(mask);
+	kprintf("starting end time trace.....");
 	asm volatile("RDTSCP\n\t"
 				 "mov %%edx, %0\n\t"
 				 "mov %%eax, %1\n\t"
 				 "CPUID\n\t": "=r" (cycles_high1), "=r"
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");
+	kprintf("ended end time trace!!");
 	printf("cycle high: %d, cycle low: %d",cycles_high1,cycles_low1);
 	start = ( ((unsigned long)cycles_high << 32) | cycles_low );
 	end = ( ((unsigned long)cycles_high1 << 32) | cycles_low1 );
+	kprintf("done parsing to long int!!!");
 	if ( (end - start) < 0) {
  		printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
  		num_cycles = 0;
