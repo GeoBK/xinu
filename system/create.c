@@ -20,6 +20,7 @@ pid32	create(
 	int			num_cycles;
 	int32 start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
+	unsigned long flags;
 	asm volatile ("CPUID\n\t"
 					 "RDTSC\n\t"
 					 "mov %%edx, %0\n\t"
