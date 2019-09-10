@@ -57,7 +57,7 @@ struct procent {		/* Entry in the process table		*/
 
 /* Definition of process summary records */
 extern enum system_calls {create_enum, kill_enum, ready_enum, sleep_enum, 
-							suspend_enum, wait_enum, wakeup_enum, yield_enum, number_of_system_calls};
+							suspend_enum, wait_enum, wakeup_enum, yield_enum, number_of_system_calls} sys_calls_enum;
 
 
 struct procsumm {		
