@@ -26,9 +26,6 @@ pid32	create(
 					 "mov %%edx, %0\n\t"
 					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r"
 					(cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
-
-	kprintf("cycle high: %d, cycle low: %d",cycles_high,cycles_low);
-	kprintf("done with start time trace!!");
 	uint32		savsp, *pushsp;
 	intmask 	mask;    	/* Interrupt mask		*/
 	pid32		pid;		/* Stores new process id	*/
