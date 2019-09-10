@@ -145,7 +145,8 @@ pid32	create(
 	end = ( ((long)cycles_high1 << 32) | cycles_low1 );
 	kprintf("done parsing to long int!!! \n");
 	int len= sizeof(long);
-	kprintf("length of long: len \n");
+	kprintf("length of long: %d \n",len);
+	kprintf("start: %d \n",start);
 	if ( (end - start) < 0) {
  		printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
  		num_cycles = 0;
