@@ -26,7 +26,7 @@ pid32 fork(){
     kprintf("Marker 8 \n");
     kprintf("Marker 1 \n");
     uint32 *pushsp;
-    uint32 *savsp = 
+    uint32 *savsp;
     savsp = (uint32*) ebp_fork;		/* Start of frame for ctxsw	*/
     uint32 *saddr;
     saddr=(uint32*) ebp_fork;
