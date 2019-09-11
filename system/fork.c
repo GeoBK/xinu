@@ -38,7 +38,7 @@ pid32 fork(){
 
         kprintf("offset: %d \n",offset);
         kprintf("ebp_recursive actual value: %d",*(uint32*)ebp_recursive);
-        if(offset_positive==0){
+        if(offset_positive==1){
             ebp_recursive= ebp_recursive + offset;
         }else{
             ebp_recursive= ebp_recursive - offset;
