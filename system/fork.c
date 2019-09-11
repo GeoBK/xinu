@@ -12,6 +12,7 @@ pid32 fork(){
     /* copying the parents stack here */
     int32 stack_length= prptr->prstkbase - ebp_fork + 1;
     int32 offset = proctab[child_pid].prstkbase - prptr->prstkbase;
+    kprintf("Offset: %d \n",offset);
     kprintf("Marker 6 \n");
     memcpy(proctab[child_pid].prstkbase-stack_length,ebp_fork,stack_length);
     kprintf("Marker 7 \n");
