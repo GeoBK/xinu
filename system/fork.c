@@ -37,24 +37,24 @@ pid32 fork(){
     kprintf("Marker 7 \n");
     kprintf("Parent Base pointer: %0X \n", prptr->prstkbase);
     kprintf("Child base pointer: %0X \n",proctab[child_pid].prstkbase);
-    char *ebp_recursive=proctab[child_pid].prstkbase-stack_length+1;
-    // while (*(uint32*)ebp_recursive != STACKMAGIC)
-    // {
-    //     kprintf("Marker 9 \n");
-    //     kprintf("ebp_recursive %0X \n",ebp_recursive);
+    char *ebp_recursive=(char*)(proctab[child_pid].prstkbase-stack_length+1);
+    while (*(uint32*)ebp_recursive != STACKMAGIC)
+    {
+        kprintf("Marker 9 \n");
+        kprintf("ebp_recursive %0X \n",ebp_recursive);
 
-    //     kprintf("offset: %0X \n",offset);
-    //     kprintf("ebp_recursive actual value: %0X\n",*(uint32*)ebp_recursive);
-    //     if(offset_positive==1){
-    //         *(uint32*)ebp_recursive= *(uint32*)ebp_recursive + offset;
-    //     }else{
-    //         *(uint32*)ebp_recursive= *(uint32*)ebp_recursive - offset;
-    //     }
-    //     kprintf("ebp_recursive actual value after adding offset: %0X\n",*(uint32*)ebp_recursive);
-    //     kprintf("Marker 10 \n");
-    //     kprintf("ebp_recursive %0X \n",ebp_recursive);
-    //     ebp_recursive= *(uint32*)ebp_recursive;
-    // }
+        kprintf("offset: %0X \n",offset);
+        kprintf("ebp_recursive actual value: %0X\n",*(uint32*)ebp_recursive);
+        if(offset_positive==1){
+            *(uint32*)ebp_recursive= *(uint32*)ebp_recursive + offset;
+        }else{
+            *(uint32*)ebp_recursive= *(uint32*)ebp_recursive - offset;
+        }
+        kprintf("ebp_recursive actual value after adding offset: %0X\n",*(uint32*)ebp_recursive);
+        kprintf("Marker 10 \n");
+        kprintf("ebp_recursive %0X \n",ebp_recursive);
+        ebp_recursive= *(uint32*)ebp_recursive;
+    }
     kprintf("Marker 8 \n");
     kprintf("Marker 1 \n");
     uint32 *pushsp;
