@@ -62,6 +62,7 @@ pid32 fork(){
     savsp = (uint32*) proctab[child_pid].prstkbase-stack_length+1;		/* Start of frame for ctxsw	*/
     uint32 *saddr;
     saddr=(uint32*) proctab[child_pid].prstkbase-stack_length+1;
+    kprintf("saddr: %0X \n", saddr);
 	*--saddr = 0x00000200;		/* New process runs with	*/
 					/*   interrupts enabled		*/
 
