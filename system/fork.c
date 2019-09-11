@@ -7,8 +7,8 @@ pid32 fork(){
     pid32 child_pid = create(0,prptr->prstklen,prptr->prprio,"forked child",0);
     uint32 ebp_fork=10;
     asm volatile("movl %%ebp,%0\n\t": "=r" (ebp_fork));
-    kprintf("Value in ebp_fork: %d \n", ebp_fork);
-    kprintf("Marker 5 \n");
+    // kprintf("Value in ebp_fork: %d \n", ebp_fork);
+    // kprintf("Marker 5 \n");
     /* copying the parents stack here */
     uint32 stack_length= prptr->prstkbase - ebp_fork + 1;
     uint32 offset =10;
@@ -22,53 +22,50 @@ pid32 fork(){
         offset = prptr->prstkbase - proctab[child_pid].prstkbase;
     }
 
-    kprintf("Offset: %0X \n",offset);
-    kprintf("Marker 6 \n");
-    kprintf("Child Stack Base: %0X \n",proctab[child_pid].prstkbase);
-    kprintf("Parent Stack Base: %0X \n", prptr->prstkbase);
-    kprintf("Child EBP: %0X \n",proctab[child_pid].prstkbase-stack_length+1);
-    kprintf("Parent EBP: %0X \n", ebp_fork);
+    // kprintf("Offset: %0X \n",offset);
+    // kprintf("Marker 6 \n");
+    // kprintf("Child Stack Base: %0X \n",proctab[child_pid].prstkbase);
+    // kprintf("Parent Stack Base: %0X \n", prptr->prstkbase);
+    // kprintf("Child EBP: %0X \n",proctab[child_pid].prstkbase-stack_length+1);
+    // kprintf("Parent EBP: %0X \n", ebp_fork);
     memcpy(proctab[child_pid].prstkbase-stack_length+1,ebp_fork,stack_length);
     
     // stacktrace(currpid);
     
-    kprintf("Marker 7 \n");
-    kprintf("Parent Base pointer: %0X \n", prptr->prstkbase);
-    kprintf("Child base pointer: %0X \n",proctab[child_pid].prstkbase);
+    // kprintf("Marker 7 \n");
+    // kprintf("Parent Base pointer: %0X \n", prptr->prstkbase);
+    // kprintf("Child base pointer: %0X \n",proctab[child_pid].prstkbase);
     char *ebp_recursive=(char*)(proctab[child_pid].prstkbase-stack_length+1);
     while (*(uint32*)ebp_recursive != STACKMAGIC)
     {
-        kprintf("Marker 9 \n");
-        kprintf("ebp_recursive %0X \n",ebp_recursive);
+        // kprintf("Marker 9 \n");
+        // kprintf("ebp_recursive %0X \n",ebp_recursive);
 
-        kprintf("offset: %0X \n",offset);
-        kprintf("ebp_recursive actual value: %0X\n",*(uint32*)ebp_recursive);
+        // kprintf("offset: %0X \n",offset);
+        // kprintf("ebp_recursive actual value: %0X\n",*(uint32*)ebp_recursive);
         if(offset_positive==1){
             *(uint32*)ebp_recursive= *(uint32*)ebp_recursive + offset;
         }else{
             *(uint32*)ebp_recursive= *(uint32*)ebp_recursive - offset;
         }
-        kprintf("ebp_recursive actual value after adding offset: %0X\n",*(uint32*)ebp_recursive);
-        kprintf("Marker 10 \n");
-        kprintf("ebp_recursive %0X \n",ebp_recursive);
+        // kprintf("ebp_recursive actual value after adding offset: %0X\n",*(uint32*)ebp_recursive);
+        // kprintf("Marker 10 \n");
+        // kprintf("ebp_recursive %0X \n",ebp_recursive);
         ebp_recursive= *(uint32*)ebp_recursive;
-    }
-    kprintf("Marker 8 \n");
-    kprintf("Marker 1 \n");
+    }    
     uint32 *pushsp;
     uint32 *savsp;
     savsp = (uint32*) (proctab[child_pid].prstkbase-stack_length+1);		/* Start of frame for ctxsw	*/
     uint32 *saddr;
     saddr=(uint32*) (proctab[child_pid].prstkbase-stack_length+1);
-    kprintf("prstkbase: %0X \n", proctab[child_pid].prstkbase);
-    kprintf("proctab[child_pid].prstkbase-stack_length+1: %0X \n", proctab[child_pid].prstkbase-stack_length+1);
-    kprintf("saddr: %0X \n", saddr);
+    // kprintf("prstkbase: %0X \n", proctab[child_pid].prstkbase);
+    // kprintf("proctab[child_pid].prstkbase-stack_length+1: %0X \n", proctab[child_pid].prstkbase-stack_length+1);
+    // kprintf("saddr: %0X \n", saddr);
 	*--saddr = 0x00000200;		/* New process runs with	*/
 					/*   interrupts enabled		*/
 
 	/* Basically, the following emulates an x86 "pushal" instruction*/
-    kprintf("Marker 2 \n");
-
+    
 	*--saddr = NPROC;			/* %eax */
 	*--saddr = 0;			/* %ecx */
 	*--saddr = 0;			/* %edx */
@@ -78,10 +75,8 @@ pid32 fork(){
 	*--saddr = savsp;		/* %ebp (while finishing ctxsw)	*/
 	*--saddr = 0;			/* %esi */
 	*--saddr = 0;			/* %edi */
-	*pushsp = (unsigned long) (proctab[child_pid].prstkptr = (char *)saddr);
-    kprintf("Marker 3 \n");
-    resume(child_pid);
-    kprintf("Marker 4 \n");
+	*pushsp = (unsigned long) (proctab[child_pid].prstkptr = (char *)saddr);    
+    resume(child_pid);    
     // stacktrace(child_pid);
     return child_pid;
 }
