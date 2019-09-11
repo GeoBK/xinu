@@ -32,7 +32,7 @@ pid32 fork(){
     kprintf("Parent EBP: %0X \n", ebp_fork);
     memcpy(proctab[child_pid].prstkbase-stack_length+1,ebp_fork,stack_length);
     
-    stacktrace(currpid);
+    // stacktrace(currpid);
     
     kprintf("Marker 7 \n");
     kprintf("Parent Base pointer: %0X \n", prptr->prstkbase);
@@ -82,9 +82,9 @@ pid32 fork(){
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (proctab[child_pid].prstkptr = (char *)saddr);
     kprintf("Marker 3 \n");
-    //resume(child_pid);
+    resume(child_pid);
     kprintf("Marker 4 \n");
-    stacktrace(child_pid);
+    // stacktrace(child_pid);
     return child_pid;
 }
 
