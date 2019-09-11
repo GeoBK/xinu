@@ -27,6 +27,9 @@ pid32 fork(){
     kprintf("Offset: %d \n",offset);
     kprintf("Marker 6 \n");
     memcpy(proctab[child_pid].prstkbase-stack_length,ebp_fork,stack_length);
+    proctab[child_pid].prstkptr=proctab[child_pid].prstkbase-stack_length;
+    stacktrace(currpid);
+    stacktrace(child_pid);
     kprintf("Marker 7 \n");
     kprintf("Parent Base pointer: %d \n", prptr->prstkbase);
     kprintf("Child base pointer: %d \n",proctab[child_pid].prstkbase);
