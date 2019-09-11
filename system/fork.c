@@ -14,12 +14,10 @@ pid32 fork(){
     uint32 offset =10;
     int32 offset_signed = -10;
     uint32 number=50;
-    kprintf("offset: %d, number: %d, result: %d",offset, number, number-offset);
-    kprintf("offset: %d, number: %d, result: %d",offset_signed, number, number+offset_signed);
     int offset_positive=0;
     if(proctab[child_pid].prstkbase>prptr->prstkbase){
         offset = proctab[child_pid].prstkbase - prptr->prstkbase;
-        offset =1;
+        offset_positive =1;
     }else{
         offset = prptr->prstkbase - proctab[child_pid].prstkbase;
     }
