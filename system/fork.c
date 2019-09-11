@@ -5,7 +5,7 @@
 pid32 fork(){
     struct	procent	*prptr= &proctab[currpid];
     pid32 child_pid = create(0,prptr->prstklen,prptr->prprio,"forked child",0);
-    uint32 ebp_fork;
+    uint32 ebp_fork=10;
     asm("movl %ebp,ebp_fork");
     kprintf("Value in ebp_fork: %d", ebp_fork);
     /* copying the parents stack here */
