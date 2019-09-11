@@ -33,13 +33,15 @@ pid32 fork(){
     {
         kprintf("Marker 9 \n");
         kprintf("ebp_recursive %d \n",ebp_recursive);
+
         kprintf("offset: %d \n",offset);
+        kprintf("ebp_recursive actual value: %d",*(uint32*)ebp_recursive);
         if(offset_positive==0){
             ebp_recursive= ebp_recursive + offset;
         }else{
             ebp_recursive= ebp_recursive - offset;
         }
-        
+        kprintf("ebp_recursive actual value after adding offset: %d",*(uint32*)ebp_recursive);
         kprintf("Marker 10 \n");
         kprintf("ebp_recursive %d \n",ebp_recursive);
         ebp_recursive= *(uint32*)ebp_recursive;
