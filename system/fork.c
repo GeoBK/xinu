@@ -59,7 +59,7 @@ pid32 fork(){
     kprintf("Marker 1 \n");
     uint32 *pushsp;
     uint32 *savsp;
-    savsp = (uint32*) proctab[child_pid].prstkbase-stack_length+1;		/* Start of frame for ctxsw	*/
+    savsp = (uint32*) (proctab[child_pid].prstkbase-stack_length+1);		/* Start of frame for ctxsw	*/
     uint32 *saddr;
     saddr=(uint32*) (proctab[child_pid].prstkbase-stack_length+1);
     kprintf("prstkbase: %0X \n", proctab[child_pid].prstkbase);
