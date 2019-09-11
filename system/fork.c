@@ -10,8 +10,20 @@ pid32 fork(){
     kprintf("Value in ebp_fork: %d \n", ebp_fork);
     kprintf("Marker 5 \n");
     /* copying the parents stack here */
-    int32 stack_length= prptr->prstkbase - ebp_fork + 1;
-    int32 offset = proctab[child_pid].prstkbase - prptr->prstkbase;
+    uint32 stack_length= prptr->prstkbase - ebp_fork + 1;
+    uint32 offset =10;
+    int32 offset_signed = -10;
+    uint32 number=50;
+    kprintf("offset: %d, number: %d, result: %d",offset, number, number-offset);
+    kprintf("offset: %d, number: %d, result: %d",offset_signed, number, number+offset_signed);
+    int offset_positive=0;
+    if(proctab[child_pid].prstkbase>prptr->prstkbase){
+        offset = proctab[child_pid].prstkbase - prptr->prstkbase;
+        offset =1;
+    }else{
+        offset = prptr->prstkbase - proctab[child_pid].prstkbase;
+    }
+
     kprintf("Offset: %d \n",offset);
     kprintf("Marker 6 \n");
     memcpy(proctab[child_pid].prstkbase-stack_length,ebp_fork,stack_length);
@@ -22,7 +34,12 @@ pid32 fork(){
         kprintf("Marker 9 \n");
         kprintf("ebp_recursive %d \n",ebp_recursive);
         kprintf("offset: %d \n",offset);
-        ebp_recursive+=offset;
+        if(offset_positive==0){
+            ebp_recursive+=offset;
+        }else{
+            ebp_recursive-=offset;
+        }
+        
         kprintf("Marker 10 \n");
         kprintf("ebp_recursive %d \n",ebp_recursive);
         ebp_recursive= *ebp_recursive;
