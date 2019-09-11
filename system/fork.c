@@ -24,10 +24,14 @@ pid32 fork(){
         offset = prptr->prstkbase - proctab[child_pid].prstkbase;
     }
 
-    kprintf("Offset: %d \n",offset);
+    kprintf("Offset: %0X \n",offset);
     kprintf("Marker 6 \n");
+    kprintf("Child Stack Base: %0X \n",proctab[child_pid].prstkbase);
+    kprintf("Parent Stack Base: %0X \n", prptr->prstkbase);
+    kprintf("Child EBP: %0X \n",proctab[child_pid].prstkbase-stack_length+1);
+    kprintf("Parent EBP: %0X \n", ebp_fork);
     memcpy(proctab[child_pid].prstkbase-stack_length+1,ebp_fork,stack_length);
-    proctab[child_pid].prstkptr=proctab[child_pid].prstkbase-stack_length+1;
+    
     stacktrace(currpid);
     
     kprintf("Marker 7 \n");
