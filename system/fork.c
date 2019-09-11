@@ -31,19 +31,19 @@ pid32 fork(){
     kprintf("Parent Base pointer: %d \n", prptr->prstkbase);
     kprintf("Child base pointer: %d \n",proctab[child_pid].prstkbase);
     char *ebp_recursive=ebp_fork;
-    while (*ebp_recursive != STACKMAGIC)
+    while (*(uint32*)ebp_recursive != STACKMAGIC)
     {
         kprintf("Marker 9 \n");
         kprintf("ebp_recursive %d \n",ebp_recursive);
 
         kprintf("offset: %d \n",offset);
-        kprintf("ebp_recursive actual value: %d",*(uint32*)ebp_recursive);
+        kprintf("ebp_recursive actual value: %d\n",*(uint32*)ebp_recursive);
         if(offset_positive==1){
-            ebp_recursive= ebp_recursive + offset;
+            *(uint32*)ebp_recursive= *(uint32*)ebp_recursive + offset;
         }else{
-            ebp_recursive= ebp_recursive - offset;
+            *(uint32*)ebp_recursive= *(uint32*)ebp_recursive - offset;
         }
-        kprintf("ebp_recursive actual value after adding offset: %d",*(uint32*)ebp_recursive);
+        kprintf("ebp_recursive actual value after adding offset: %d\n",*(uint32*)ebp_recursive);
         kprintf("Marker 10 \n");
         kprintf("ebp_recursive %d \n",ebp_recursive);
         ebp_recursive= *(uint32*)ebp_recursive;
