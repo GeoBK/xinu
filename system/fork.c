@@ -30,7 +30,7 @@ pid32 fork(){
     kprintf("Marker 7 \n");
     kprintf("Parent Base pointer: %d \n", prptr->prstkbase);
     kprintf("Child base pointer: %d \n",proctab[child_pid].prstkbase);
-    char *ebp_recursive=ebp_fork;
+    char *ebp_recursive=proctab[child_pid].prstkbase-stack_length;
     while (*(uint32*)ebp_recursive != STACKMAGIC)
     {
         kprintf("Marker 9 \n");
