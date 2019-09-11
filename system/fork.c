@@ -8,17 +8,20 @@ pid32 fork(){
     uint32 ebp_fork=10;
     asm volatile("movl %%ebp,%0\n\t": "=r" (ebp_fork));
     kprintf("Value in ebp_fork: %d \n", ebp_fork);
+    kprintf("Marker 5 \n");
     /* copying the parents stack here */
     int32 stack_length= prptr->prstkbase - ebp_fork + 1;
     int32 offset = proctab[child_pid].prstkbase - prptr->prstkbase;
+    kprintf("Marker 6 \n");
     memcpy(proctab[child_pid].prstkbase-stack_length,ebp_fork,stack_length);
-    
+    kprintf("Marker 7 \n");
     int32 *ebp_recursive=ebp_fork;
     while (*ebp_recursive != STACKMAGIC)
     {
         ebp_recursive+=offset;
         ebp_recursive= *ebp_recursive;
     }
+    kprintf("Marker 8 \n");
     kprintf("Marker 1 \n");
     uint32 *pushsp;
     uint32 *savsp = 
