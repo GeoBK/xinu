@@ -71,7 +71,7 @@ pid32 fork(){
 	/* Basically, the following emulates an x86 "pushal" instruction*/
     kprintf("Marker 2 \n");
 
-	*--saddr = 0;			/* %eax */
+	*--saddr = NPROC;			/* %eax */
 	*--saddr = 0;			/* %ecx */
 	*--saddr = 0;			/* %edx */
 	*--saddr = 0;			/* %ebx */
