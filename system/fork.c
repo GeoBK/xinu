@@ -55,9 +55,9 @@ pid32 fork(){
     kprintf("Marker 1 \n");
     uint32 *pushsp;
     uint32 *savsp;
-    savsp = (uint32*) ebp_fork;		/* Start of frame for ctxsw	*/
+    savsp = (uint32*) proctab[child_pid].prstkbase-stack_length+1;		/* Start of frame for ctxsw	*/
     uint32 *saddr;
-    saddr=(uint32*) ebp_fork;
+    saddr=(uint32*) proctab[child_pid].prstkbase-stack_length+1;
 	*--saddr = 0x00000200;		/* New process runs with	*/
 					/*   interrupts enabled		*/
 
@@ -75,7 +75,7 @@ pid32 fork(){
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (proctab[child_pid].prstkptr = (char *)saddr);
     kprintf("Marker 3 \n");
-    //resume(child_pid);
+    resume(child_pid);
     kprintf("Marker 4 \n");
     return child_pid;
 }
