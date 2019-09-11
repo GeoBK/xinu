@@ -22,7 +22,7 @@ pid32 fork(){
         kprintf("Marker 9 \n");
         ebp_recursive+=offset;
         kprintf("Marker 10 \n");
-        kprintf("ebp_recursive %08X \n");
+        kprintf("ebp_recursive %08X \n",ebp_recursive);
         ebp_recursive= *ebp_recursive;
     }
     kprintf("Marker 8 \n");
