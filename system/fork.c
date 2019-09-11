@@ -28,14 +28,14 @@ pid32 fork(){
     kprintf("Marker 6 \n");
     memcpy(proctab[child_pid].prstkbase-stack_length,ebp_fork,stack_length);
     kprintf("Marker 7 \n");
-    uint32 *ebp_recursive=ebp_fork;
+    char *ebp_recursive=ebp_fork;
     while (*ebp_recursive != STACKMAGIC)
     {
         kprintf("Marker 9 \n");
         kprintf("ebp_recursive %d \n",ebp_recursive);
         kprintf("offset: %d \n",offset);
         if(offset_positive==0){
-            ebp_recursive= ebp_recursive+offset;
+            ebp_recursive= ebp_recursive + offset;
         }else{
             ebp_recursive= ebp_recursive - offset;
         }
