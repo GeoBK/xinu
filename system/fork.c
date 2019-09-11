@@ -42,7 +42,7 @@ pid32 fork(){
         
         kprintf("Marker 10 \n");
         kprintf("ebp_recursive %d \n",ebp_recursive);
-        ebp_recursive= *ebp_recursive;
+        ebp_recursive= *(uint32*)ebp_recursive;
     }
     kprintf("Marker 8 \n");
     kprintf("Marker 1 \n");
