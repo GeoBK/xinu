@@ -18,7 +18,9 @@ pid32 fork(){
     int32 *ebp_recursive=ebp_fork;
     while (*ebp_recursive != STACKMAGIC)
     {
+        kprintf("Marker 9 \n");
         ebp_recursive+=offset;
+        kprintf("Marker 10 \n");
         ebp_recursive= *ebp_recursive;
     }
     kprintf("Marker 8 \n");
