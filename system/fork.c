@@ -6,7 +6,7 @@ pid32 fork(){
     struct	procent	*prptr= &proctab[currpid];
     pid32 child_pid = create(0,prptr->prstklen,prptr->prprio,"forked child",0);
     uint32 ebp_fork=10;
-    asm("movl %ebp,ebp_fork");
+    asm volatile("movl %%ebp,%0\n\t": "=r" (ebp_fork));
     kprintf("Value in ebp_fork: %d", ebp_fork);
     /* copying the parents stack here */
     int32 stack_length= prptr->prstkbase - ebp_fork + 1;
@@ -21,10 +21,10 @@ pid32 fork(){
     }
 
     uint32 *pushsp;
-    uint32 savsp = 
-    savsp = (uint32) ebp_fork;		/* Start of frame for ctxsw	*/
+    uint32 *savsp = 
+    savsp = (uint32*) ebp_fork;		/* Start of frame for ctxsw	*/
     uint32 *saddr;
-    saddr=ebp_fork;
+    saddr=(uint32*) ebp_fork;
 	*--saddr = 0x00000200;		/* New process runs with	*/
 					/*   interrupts enabled		*/
 

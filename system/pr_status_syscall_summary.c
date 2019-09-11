@@ -27,9 +27,7 @@ void pr_status_syscall_summary(){
 		   "pid", "syscall", "count", "average cycles");
 
 	printf("%3s %7s %5s %14s\n",
-		   "---", "-------", "-----", "--------------");
-    
-    int process_id_stats[5];
+		   "---", "-------", "-----", "--------------");    
     
     for(i=0;i<=max_pid;i++){        
         for(j=create_enum; j< number_of_system_calls; j++){
