@@ -7,7 +7,7 @@ pid32 fork(){
     pid32 child_pid = create(0,prptr->prstklen,prptr->prprio,"forked child",0);
     uint32 ebp_fork=10;
     asm volatile("movl %%ebp,%0\n\t": "=r" (ebp_fork));
-    kprintf("Value in ebp_fork: %d", ebp_fork);
+    kprintf("Value in ebp_fork: %d \n", ebp_fork);
     /* copying the parents stack here */
     int32 stack_length= prptr->prstkbase - ebp_fork + 1;
     int32 offset = proctab[child_pid].prstkbase - prptr->prstkbase;
@@ -19,7 +19,7 @@ pid32 fork(){
         ebp_recursive+=offset;
         ebp_recursive= *ebp_recursive;
     }
-
+    kprintf("Marker 1 \n");
     uint32 *pushsp;
     uint32 *savsp = 
     savsp = (uint32*) ebp_fork;		/* Start of frame for ctxsw	*/
@@ -29,6 +29,7 @@ pid32 fork(){
 					/*   interrupts enabled		*/
 
 	/* Basically, the following emulates an x86 "pushal" instruction*/
+    kprintf("Marker 2 \n");
 
 	*--saddr = 0;			/* %eax */
 	*--saddr = 0;			/* %ecx */
@@ -40,7 +41,9 @@ pid32 fork(){
 	*--saddr = 0;			/* %esi */
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (proctab[child_pid].prstkptr = (char *)saddr);
+    kprintf("Marker 3 \n");
     resume(child_pid);
+    kprintf("Marker 4 \n");
     return child_pid;
 }
 
