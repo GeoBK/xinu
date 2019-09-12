@@ -49,9 +49,8 @@ syscall	sleepms(
 					 "CPUID\n\t": "=r" (cycles_high1), "=r"
 					(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
 		start = (double)(cycles_high)*(double)4294967296 + (double)(cycles_low);
-		end = ( ((double)cycles_high1*(double)4294967296) + (double)cycles_low1 );	
+		end = ( ((double)cycles_high1*(double)4294967296) + (double)cycles_low1 );		
 		
-		int len= sizeof(long);
 		if ( (end - start) < 0) {
  			printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
  			num_cycles = 0;
@@ -126,8 +125,8 @@ syscall	sleepms(
 	//-----------------------------------------------------------------------~----------------------------------------
 	// kprintf("sizeof double : %d \n",sizeof(double));
 	// kprintf("sizeof long long : %d \n",sizeof(long long));
-	start=5u;
-	end=5u;
+	start=5ll;
+	end=5l;
 	num_cycles=50.0;
 	kprintf("start: %ull, end: %u ,cycles: %f\n",start,end,num_cycles);
 	kprintf("Cycles high1 : %u , Cycles Low 1: %u \n", cycles_high1, cycles_low1);
