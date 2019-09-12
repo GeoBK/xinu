@@ -29,8 +29,8 @@ syscall	sleepms(
 	  int32	delay			/* Time to delay in msec.	*/
 	)
 {
-	unsigned long long num_cycles;
-	unsigned long long start, end;
+	uint32 num_cycles;
+	double start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
 	unsigned long flags;	
 	asm volatile ("CPUID\n\t"
@@ -91,7 +91,14 @@ syscall	sleepms(
  		}
  		else
  		{
- 			num_cycles = end - start;
+			 if(cycles_high1>cycles_high){
+				 num_cycles= 4294967296 - cycles_low + cycles_low1;
+			 }
+ 			else if (cycles_high1==cycles_high){
+				 num_cycles= cycles_low1- cycles_low;
+			 } else{
+				 kprintf("Overflow error !!!!\n");
+			 }
  		}
 		procsumm_table[getpid()].rec_count[sleep_enum]++;
 		procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
@@ -111,7 +118,8 @@ syscall	sleepms(
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
 	start = (double)(cycles_high)*(double)4294967296 ;//+ (double)(cycles_low);
 	end = ( ((long long)cycles_high1 << 32) | (long long)cycles_low1 );
-	kprintf("start: %f,\n",(double)(cycles_high)*(double)4294967296);
+	start= 7.0*4294967296.0;
+	kprintf("start: %f,\n",start);
 	kprintf("cycles_low: %0X,\n",cycles_low);
 	kprintf("cycles_high: %llx,\n",(long long)cycles_high);
 	if ( (end - start) < 0) {
@@ -120,18 +128,19 @@ syscall	sleepms(
  	}
  	else
  	{
- 		num_cycles = (unsigned long long)(end - start);
+ 		if(cycles_high1 == cycles_high+1){
+			 num_cycles= 4294967296 - cycles_low + cycles_low1;
+		 }
+ 		else if (cycles_high1==cycles_high){
+			 num_cycles= cycles_low1- cycles_low;
+		 } else{
+			 kprintf("Overflow error !!!!\n");
+		 }
  	}
+	 kprintf("num_cycles: %d \n",num_cycles);
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
-	procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
-	//-----------------------------------------------------------------------~----------------------------------------
-	// kprintf("sizeof double : %d \n",sizeof(double));
-	// kprintf("sizeof long long : %d \n",sizeof(long long));
-	start=5ull;
-	end=5ull;
-	num_cycles=50.0f;
-	kprintf("start: %u, end: %u ,cycles: %f\n",start,end,num_cycles);
-	kprintf("Cycles high1 : %u , Cycles Low 1: %u \n", cycles_high1, cycles_low1);
+	procsumm_table[getpid()].total_cycles[sleep_enum]+=(unsigned long long)num_cycles;
+	
 	restore(mask);
 	return OK;
 }
