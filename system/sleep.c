@@ -121,11 +121,11 @@ syscall	sleepms(
  		num_cycles = (double)(end - start);
  	}
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
-	procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;~
+	procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
 	//-----------------------------------------------------------------------~----------------------------------------
 	// kprintf("sizeof double : %d \n",sizeof(double));
 	// kprintf("sizeof long long : %d \n",sizeof(long long));
-	start=5;
+	start=5ull;
 	end=5;
 	num_cycles=50.0;
 	kprintf("start: %ull, end: %u ,cycles: %f\n",start,end,num_cycles);
