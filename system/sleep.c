@@ -38,7 +38,7 @@ syscall	sleepms(
 					 "mov %%edx, %0\n\t"
 					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r"
 					(cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
-	kprintf("Cycles high : %d , Cycles Low : %d", cycles_high, cycles_low);
+	kprintf("Cycles high : %u , Cycles Low : %u \n", cycles_high, cycles_low);
 	intmask	mask;			/* Saved interrupt mask		*/
 	mask = disable();
 	if (delay < 0) {
@@ -50,6 +50,7 @@ syscall	sleepms(
 					(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
 		start = (double)(cycles_high)*4294967296 + (double)(cycles_low);
 		end = ( ((double)cycles_high1*4294967296) + (double)cycles_low1 );	
+		kprintf("start: %f, end: %f \n");
 		int len= sizeof(long);
 		if ( (end - start) < 0) {
  			printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
@@ -123,7 +124,7 @@ syscall	sleepms(
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
 	procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
-	kprintf("Cycles high1 : %d , Cycles Low 1: %d \n", cycles_high1, cycles_low1);
+	kprintf("Cycles high1 : %u , Cycles Low 1: %u \n", cycles_high1, cycles_low1);
 	restore(mask);
 	return OK;
 }
