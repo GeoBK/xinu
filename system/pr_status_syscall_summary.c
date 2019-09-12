@@ -35,8 +35,9 @@ void pr_status_syscall_summary(){
                 int average_cycles= procsumm_table[i].total_cycles[j]/procsumm_table[i].rec_count[j];
                 printf("%3d %7s %5d %-14d\n",
                         i, sys_call_description[j],procsumm_table[i].rec_count[j],average_cycles);
-                printf("%32s\n","--------------------------------");
-            }            
+                
+            }
+            printf("%32s\n","--------------------------------");         
         }
     }
 }
