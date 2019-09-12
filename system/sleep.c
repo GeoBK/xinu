@@ -126,9 +126,9 @@ syscall	sleepms(
 	// kprintf("sizeof double : %d \n",sizeof(double));
 	// kprintf("sizeof long long : %d \n",sizeof(long long));
 	start=5ull;
-	end=5;
-	num_cycles=50.0;
-	kprintf("start: %ull, end: %u ,cycles: %f\n",start,end,num_cycles);
+	end=5ull;
+	num_cycles=50.0f;
+	kprintf("start: %u, end: %u ,cycles: %f\n",start,end,num_cycles);
 	kprintf("Cycles high1 : %u , Cycles Low 1: %u \n", cycles_high1, cycles_low1);
 	restore(mask);
 	return OK;
