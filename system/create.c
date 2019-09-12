@@ -17,6 +17,8 @@ pid32	create(
 	  ...
 	)
 {
+	intmask 	mask;    	/* Interrupt mask		*/
+	mask = disable();
 	unsigned long num_cycles;
 	unsigned long start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
@@ -27,7 +29,7 @@ pid32	create(
 					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r"
 					(cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
 	uint32		savsp, *pushsp;
-	intmask 	mask;    	/* Interrupt mask		*/
+	
 	pid32		pid;		/* Stores new process id	*/
 	struct	procent	*prptr;		/* Pointer to proc. table entry */
 	int32		i;
@@ -36,7 +38,7 @@ pid32	create(
 
 	
 
-	mask = disable();
+	
 	if (ssize < MINSTK)
 		ssize = MINSTK;
 	ssize = (uint32) roundmb(ssize);
@@ -107,7 +109,7 @@ pid32	create(
 	*--saddr = 0;			/* %esi */
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (prptr->prstkptr = (char *)saddr);
-	restore(mask);	
+	
 	asm volatile("RDTSCP\n\t"
 				 "mov %%edx, %0\n\t"
 				 "mov %%eax, %1\n\t"
@@ -126,8 +128,11 @@ pid32	create(
  	}
 	procsumm_table[pid].rec_count[create_enum]++;
 	procsumm_table[pid].total_cycles[create_enum]+=(int)num_cycles;	
+
+	restore(mask);	
 	return pid;
 }
+
 
 /*------------------------------------------------------------------------
  *  newpid  -  Obtain a new (free) process ID

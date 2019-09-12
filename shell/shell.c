@@ -100,9 +100,7 @@ process	shell (
 	/* Continually prompt the user, read input, and execute command	*/
 
 	while (TRUE) {
-
-		pr_status_syscall_summary();
-
+		
 		/* Display prompt */
 
 		fprintf(dev, SHELL_PROMPT);
