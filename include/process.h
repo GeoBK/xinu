@@ -62,7 +62,7 @@ extern enum system_calls {create_enum, kill_enum, ready_enum, sleep_enum,
 
 struct procsumm {		
 	int32 rec_count[number_of_system_calls];
-	double total_cycles[number_of_system_calls];
+	unsigned long long total_cycles[number_of_system_calls];
 };
 
 

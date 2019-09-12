@@ -29,7 +29,7 @@ syscall	sleepms(
 	  int32	delay			/* Time to delay in msec.	*/
 	)
 {
-	double num_cycles;
+	unsigned long long num_cycles;
 	unsigned long long start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
 	unsigned long flags;	
@@ -118,7 +118,7 @@ syscall	sleepms(
  	}
  	else
  	{
- 		num_cycles = (double)(end - start);
+ 		num_cycles = (unsigned long long)(end - start);
  	}
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
 	procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
