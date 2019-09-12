@@ -29,8 +29,8 @@ syscall	sleepms(
 	  int32	delay			/* Time to delay in msec.	*/
 	)
 {
-	double long num_cycles;
-	double start, end;
+	double num_cycles;
+	unsigned long long start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
 	unsigned long flags;	
 	asm volatile ("CPUID\n\t"
@@ -110,8 +110,8 @@ syscall	sleepms(
 				 "mov %%eax, %1\n\t"
 				 "CPUID\n\t": "=r" (cycles_high1), "=r"
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
-	start = (double)(cycles_high)*(double)4294967296 + (double)(cycles_low);
-	end = ( ((double)cycles_high1*(double)4294967296) + (double)cycles_low1 );	
+	start = ( ((long long)cycles_high << 32) | (long long)cycles_low );
+	end = ( ((long long)cycles_high1 << 32) | (long long)cycles_low1 );
 	int len= sizeof(long);
 	if ( (end - start) < 0) {
  		printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
@@ -119,12 +119,14 @@ syscall	sleepms(
  	}
  	else
  	{
- 		num_cycles = end - start;
+ 		num_cycles = (double)(end - start);
  	}
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
 	procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
-	kprintf("start: %f, end: %f ,cycles: %14f\n",start,end,num_cycles);
+	kprintf("sizeof double : %d \n",sizeof(double));
+	kprintf("sizeof long long : %d \n",sizeof(long long));
+	kprintf("start: %lld, end: %lld ,cycles: %14f\n",start,end,num_cycles);
 	kprintf("Cycles high1 : %u , Cycles Low 1: %u \n", cycles_high1, cycles_low1);
 	restore(mask);
 	return OK;
