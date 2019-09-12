@@ -46,7 +46,7 @@ syscall	wait(
  			num_cycles = end - start;
  		}
 		procsumm_table[getpid()].rec_count[wait_enum]++;
-		procsumm_table[getpid()].total_cycles[wait_enum]+=(int)num_cycles;
+		procsumm_table[getpid()].total_cycles[wait_enum]+=num_cycles;
 		//---------------------------------------------------------------------------------------------------------------
 		return SYSERR;
 	}
@@ -72,7 +72,7 @@ syscall	wait(
  			num_cycles = end - start;
  		}
 		procsumm_table[getpid()].rec_count[wait_enum]++;
-		procsumm_table[getpid()].total_cycles[wait_enum]+=(int)num_cycles;
+		procsumm_table[getpid()].total_cycles[wait_enum]+=num_cycles;
 		//---------------------------------------------------------------------------------------------------------------
 		return SYSERR;
 	}
@@ -104,7 +104,7 @@ syscall	wait(
  		num_cycles = end - start;
  	}
 	procsumm_table[getpid()].rec_count[wait_enum]++;
-	procsumm_table[getpid()].total_cycles[wait_enum]+=(int)num_cycles;
+	procsumm_table[getpid()].total_cycles[wait_enum]+=num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
 	return OK;
 }

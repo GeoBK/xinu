@@ -127,7 +127,7 @@ pid32	create(
  		num_cycles = end - start;
  	}
 	procsumm_table[pid].rec_count[create_enum]++;
-	procsumm_table[pid].total_cycles[create_enum]+=(int)num_cycles;	
+	procsumm_table[pid].total_cycles[create_enum]+=(double)num_cycles;	
 
 	restore(mask);	
 	return pid;

@@ -43,7 +43,7 @@ syscall	yield(void)
  		num_cycles = end - start;
  	}
 	procsumm_table[getpid()].rec_count[yield_enum]++;
-	procsumm_table[getpid()].total_cycles[yield_enum]+=(int)num_cycles;
+	procsumm_table[getpid()].total_cycles[yield_enum]+=num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
 	return OK;
 }

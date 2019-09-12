@@ -45,7 +45,7 @@ syscall	suspend(
  			num_cycles = end - start;
  		}
 		procsumm_table[getpid()].rec_count[suspend_enum]++;
-		procsumm_table[getpid()].total_cycles[suspend_enum]+=(int)num_cycles;
+		procsumm_table[getpid()].total_cycles[suspend_enum]+=num_cycles;
 		//---------------------------------------------------------------------------------------------------------------
 		return SYSERR;
 	}
@@ -85,7 +85,7 @@ syscall	suspend(
  		num_cycles = end - start;
  	}
 	procsumm_table[getpid()].rec_count[suspend_enum]++;
-	procsumm_table[getpid()].total_cycles[suspend_enum]+=(int)num_cycles;
+	procsumm_table[getpid()].total_cycles[suspend_enum]+=num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
 	return prio;
 }

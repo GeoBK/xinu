@@ -45,7 +45,7 @@ syscall	kill(
  			num_cycles = end - start;
  		}
 		procsumm_table[pid].rec_count[kill_enum]++;
-		procsumm_table[pid].total_cycles[kill_enum]+=(int)num_cycles;
+		procsumm_table[pid].total_cycles[kill_enum]+=(double)num_cycles;
 		return SYSERR;
 	}
 
@@ -99,6 +99,6 @@ syscall	kill(
  		num_cycles = end - start;
  	}
 	procsumm_table[pid].rec_count[kill_enum]++;
-	procsumm_table[pid].total_cycles[kill_enum]+=(int)num_cycles;
+	procsumm_table[pid].total_cycles[kill_enum]+=(double)num_cycles;
 	return OK;
 }

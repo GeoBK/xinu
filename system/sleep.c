@@ -29,8 +29,8 @@ syscall	sleepms(
 	  int32	delay			/* Time to delay in msec.	*/
 	)
 {
-	unsigned long num_cycles;
-	unsigned long start, end;
+	double long num_cycles;
+	double start, end;
 	unsigned cycles_low, cycles_high, cycles_low1, cycles_high1;
 	unsigned long flags;	
 	asm volatile ("CPUID\n\t"
@@ -48,8 +48,8 @@ syscall	sleepms(
 					 "mov %%eax, %1\n\t"
 					 "CPUID\n\t": "=r" (cycles_high1), "=r"
 					(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
-		start = ( ((long)cycles_high << 32) | cycles_low );
-		end = ( ((long)cycles_high1 << 32) | cycles_low1 );	
+		start = (double)(cycles_high)*4294967296 + (double)(cycles_low);
+		end = ( ((double)cycles_high1*4294967296) + (double)cycles_low1 );	
 		int len= sizeof(long);
 		if ( (end - start) < 0) {
  			printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
@@ -60,7 +60,7 @@ syscall	sleepms(
  			num_cycles = end - start;
  		}
 		procsumm_table[getpid()].rec_count[sleep_enum]++;
-		procsumm_table[getpid()].total_cycles[sleep_enum]+=(int)num_cycles;
+		procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
 		//---------------------------------------------------------------------------------------------------------------
 		restore(mask);
 		return SYSERR;
@@ -82,8 +82,8 @@ syscall	sleepms(
 					 "mov %%eax, %1\n\t"
 					 "CPUID\n\t": "=r" (cycles_high1), "=r"
 					(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
-		start = ( ((long)cycles_high << 32) | cycles_low );
-		end = ( ((long)cycles_high1 << 32) | cycles_low1 );	
+		start = (double)(cycles_high)*4294967296 + (double)(cycles_low);
+		end = ( ((double)cycles_high1*4294967296) + (double)cycles_low1 );	
 		int len= sizeof(long);
 		if ( (end - start) < 0) {
  			printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
@@ -94,7 +94,7 @@ syscall	sleepms(
  			num_cycles = end - start;
  		}
 		procsumm_table[getpid()].rec_count[sleep_enum]++;
-		procsumm_table[getpid()].total_cycles[sleep_enum]+=(int)num_cycles;
+		procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
 		//---------------------------------------------------------------------------------------------------------------
 		restore(mask);
 		return SYSERR;
@@ -109,8 +109,8 @@ syscall	sleepms(
 				 "mov %%eax, %1\n\t"
 				 "CPUID\n\t": "=r" (cycles_high1), "=r"
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
-	start = ( ((long)cycles_high << 32) | cycles_low );
-	end = ( ((long)cycles_high1 << 32) | cycles_low1 );	
+	start = (double)(cycles_high)*4294967296 + (double)(cycles_low);
+	end = ( ((double)cycles_high1*4294967296) + (double)cycles_low1 );	
 	int len= sizeof(long);
 	if ( (end - start) < 0) {
  		printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
@@ -121,9 +121,9 @@ syscall	sleepms(
  		num_cycles = end - start;
  	}
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
-	procsumm_table[getpid()].total_cycles[sleep_enum]+=(int)num_cycles;
+	procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
-	kprintf("Cycles high1 : %d , Cycles Low 1: %d", cycles_high1, cycles_low1);
+	kprintf("Cycles high1 : %d , Cycles Low 1: %d \n", cycles_high1, cycles_low1);
 	restore(mask);
 	return OK;
 }

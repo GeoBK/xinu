@@ -41,7 +41,7 @@ status	ready(
  			num_cycles = end - start;
  		}
 		procsumm_table[pid].rec_count[ready_enum]++;
-		procsumm_table[pid].total_cycles[ready_enum]+=(int)num_cycles;
+		procsumm_table[pid].total_cycles[ready_enum]+=(double)num_cycles;
 		return SYSERR;
 	}
 
@@ -69,7 +69,7 @@ status	ready(
  		num_cycles = end - start;
  	}
 	procsumm_table[pid].rec_count[ready_enum]++;
-	procsumm_table[pid].total_cycles[ready_enum]+=(int)num_cycles;
+	procsumm_table[pid].total_cycles[ready_enum]+=num_cycles;
 
 	return OK;
 }

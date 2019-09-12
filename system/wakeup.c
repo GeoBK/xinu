@@ -45,7 +45,7 @@ void	wakeup(void)
  		num_cycles = end - start;
  	}
 	procsumm_table[getpid()].rec_count[wakeup_enum]++;
-	procsumm_table[getpid()].total_cycles[wakeup_enum]+=(int)num_cycles;
+	procsumm_table[getpid()].total_cycles[wakeup_enum]+=num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
 	return;
 }
