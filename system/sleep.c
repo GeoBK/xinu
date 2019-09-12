@@ -38,9 +38,9 @@ syscall	sleepms(
 					 "mov %%edx, %0\n\t"
 					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r"
 					(cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
-
+	kprintf("Cycles high : %d , Cycles Low : %d", cycles_high, cycles_low);
 	intmask	mask;			/* Saved interrupt mask		*/
-
+	mask = disable();
 	if (delay < 0) {
 		//Timing trace for system call summary-------------------------------------------------------------------
 		asm volatile("RDTSCP\n\t"
@@ -62,6 +62,7 @@ syscall	sleepms(
 		procsumm_table[getpid()].rec_count[sleep_enum]++;
 		procsumm_table[getpid()].total_cycles[sleep_enum]+=(int)num_cycles;
 		//---------------------------------------------------------------------------------------------------------------
+		restore(mask);
 		return SYSERR;
 	}
 
@@ -72,9 +73,9 @@ syscall	sleepms(
 
 	/* Delay calling process */
 
-	mask = disable();
+	
 	if (insertd(currpid, sleepq, delay) == SYSERR) {
-		restore(mask);
+		
 		//Timing trace for system call summary-------------------------------------------------------------------
 		asm volatile("RDTSCP\n\t"
 					 "mov %%edx, %0\n\t"
@@ -95,12 +96,13 @@ syscall	sleepms(
 		procsumm_table[getpid()].rec_count[sleep_enum]++;
 		procsumm_table[getpid()].total_cycles[sleep_enum]+=(int)num_cycles;
 		//---------------------------------------------------------------------------------------------------------------
+		restore(mask);
 		return SYSERR;
 	}
 
 	proctab[currpid].prstate = PR_SLEEP;
 	resched();
-	restore(mask);
+	
 	//Timing trace for system call summary-------------------------------------------------------------------
 	asm volatile("RDTSCP\n\t"
 				 "mov %%edx, %0\n\t"
@@ -121,5 +123,7 @@ syscall	sleepms(
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
 	procsumm_table[getpid()].total_cycles[sleep_enum]+=(int)num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
+	kprintf("Cycles high1 : %d , Cycles Low 1: %d", cycles_high1, cycles_low1);
+	restore(mask);
 	return OK;
 }
