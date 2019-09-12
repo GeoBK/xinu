@@ -33,6 +33,7 @@ void pr_status_syscall_summary(){
         for(j=create_enum; j< number_of_system_calls; j++){
             if(procsumm_table[i].rec_count[j]!=0){
                 double average_cycles= procsumm_table[i].total_cycles[j]/procsumm_table[i].rec_count[j];
+                kprintf("total cycles %lf",procsumm_table[i].total_cycles[j]);
                 printf("%3d %7s %5d %f\n",
                         i, sys_call_description[j],procsumm_table[i].rec_count[j],average_cycles);
                 
