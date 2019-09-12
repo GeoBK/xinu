@@ -30,18 +30,14 @@ void pr_status_syscall_summary(){
 		   "---", "-------", "-----", "--------------");    
     double a=5;
     kprintf("double value: %f\n",a);
-    unsigned long long b=6;
+    unsigned long long b=0xAAAAAAAA;
     kprintf("unsigned long long value: %u\n", b);
 
     for(i=1;i<=max_pid;i++){        
         for(j=create_enum; j< number_of_system_calls; j++){
             if(procsumm_table[i].rec_count[j]!=0){
-                double average_cycles= (double)procsumm_table[i].total_cycles[j]/(double)procsumm_table[i].rec_count[j];
-                kprintf("Long int value: %u \n", procsumm_table[i].total_cycles[j]);
-                kprintf("double value: %f \n", (double)procsumm_table[i].total_cycles[j]);
-                kprintf("average cycles: %14f \n", average_cycles);
-                kprintf("total cycles %f \n",(double)procsumm_table[i].total_cycles[j]/(double)procsumm_table[i].rec_count[j]);
-                printf("%3d %7s %5d %14d \n", i, sys_call_description[j],procsumm_table[i].rec_count[j],(uint32)average_cycles);                
+                double average_cycles= (double)procsumm_table[i].total_cycles[j]/(double)procsumm_table[i].rec_count[j];                
+                printf("%3d %7s %5d %-14u \n", i, sys_call_description[j],procsumm_table[i].rec_count[j],(uint32)average_cycles);                
                 // printf("%3d %7s %5d %14f \n", i, sys_call_description[j],procsumm_table[i].rec_count[j],average_cycles);                
             }                   
         }

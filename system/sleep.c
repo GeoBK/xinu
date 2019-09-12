@@ -120,8 +120,8 @@ syscall	sleepms(
 	end = ( ((long long)cycles_high1 << 32) | (long long)cycles_low1 );
 	start= 7.0*4294967296.0;
 	kprintf("start: %f,\n",start);
-	kprintf("cycles_low: %0X,\n",cycles_low);
-	kprintf("cycles_high: %llx,\n",(long long)cycles_high);
+	kprintf("cycles_low: %u,\n",cycles_low1);
+	kprintf("cycles_high: %u,\n",cycles_high1);
 	if ( (end - start) < 0) {
  		printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
  		num_cycles = 0;
@@ -130,14 +130,16 @@ syscall	sleepms(
  	{
  		if(cycles_high1 == cycles_high+1){
 			 num_cycles= 4294967296 - cycles_low + cycles_low1;
+			 kprintf("Marker 1 \n");
 		 }
  		else if (cycles_high1==cycles_high){
 			 num_cycles= cycles_low1- cycles_low;
+			 kprintf("Marker 2 \n");
 		 } else{
 			 kprintf("Overflow error !!!!\n");
 		 }
  	}
-	 kprintf("num_cycles: %d \n",num_cycles);
+	 kprintf("num_cycles: %u \n",num_cycles);
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
 	procsumm_table[getpid()].total_cycles[sleep_enum]+=(unsigned long long)num_cycles;
 	
