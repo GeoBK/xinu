@@ -50,7 +50,7 @@ syscall	sleepms(
 					(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
 		start = (double)(cycles_high)*4294967296 + (double)(cycles_low);
 		end = ( ((double)cycles_high1*4294967296) + (double)cycles_low1 );	
-		kprintf("start: %f, end: %f \n");
+		
 		int len= sizeof(long);
 		if ( (end - start) < 0) {
  			printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
@@ -124,6 +124,7 @@ syscall	sleepms(
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
 	procsumm_table[getpid()].total_cycles[sleep_enum]+=num_cycles;
 	//---------------------------------------------------------------------------------------------------------------
+	kprintf("start: %f, end: %f \n",start,end);
 	kprintf("Cycles high1 : %u , Cycles Low 1: %u \n", cycles_high1, cycles_low1);
 	restore(mask);
 	return OK;
