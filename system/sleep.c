@@ -38,7 +38,7 @@ syscall	sleepms(
 					 "mov %%edx, %0\n\t"
 					 "mov %%eax, %1\n\t": "=r" (cycles_high), "=r"
 					(cycles_low):: "%rax", "%rbx", "%rcx", "%rdx");
-	kprintf("Cycles high : %u , Cycles Low : %u \n", cycles_high, cycles_low);
+	
 	intmask	mask;			/* Saved interrupt mask		*/
 	mask = disable();
 	if (delay < 0) {
@@ -118,21 +118,18 @@ syscall	sleepms(
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
 	start = (double)(cycles_high)*(double)4294967296 ;//+ (double)(cycles_low);
 	end = ( ((long long)cycles_high1 << 32) | (long long)cycles_low1 );
-	start= 7.0*4294967296.0;
-	kprintf("start: %f,\n",start);
-	kprintf("cycles_low: %u,\n",cycles_low1);
-	kprintf("cycles_high: %u,\n",cycles_high1);
+	
+	
 	if(cycles_high1 == cycles_high+1){
 		 num_cycles= 4294967296 - cycles_low + cycles_low1;
-		 kprintf("Marker 1 \n");
+		 
 	 }
  	else if (cycles_high1==cycles_high){
 		 num_cycles= cycles_low1- cycles_low;
-		 kprintf("Marker 2 \n");
+		 
 	 } else{
 		 kprintf("Overflow error !!!!\n");
-	 }
- 		 kprintf("num_cycles: %u \n",num_cycles);
+	 } 		 
 	procsumm_table[getpid()].rec_count[sleep_enum]++;
 	procsumm_table[getpid()].total_cycles[sleep_enum]+=(unsigned long long)num_cycles;
 	
