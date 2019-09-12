@@ -112,7 +112,7 @@ syscall	sleepms(
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
 	start = ( ((long long)cycles_high << 32) | (long long)cycles_low );
 	end = ( ((long long)cycles_high1 << 32) | (long long)cycles_low1 );
-	int len= sizeof(long);
+	
 	if ( (end - start) < 0) {
  		printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
  		num_cycles = 0;
@@ -126,8 +126,8 @@ syscall	sleepms(
 	//-----------------------------------------------------------------------~----------------------------------------
 	// kprintf("sizeof double : %d \n",sizeof(double));
 	// kprintf("sizeof long long : %d \n",sizeof(long long));
-	start=5llu;
-	end=5llu;
+	start=5u;
+	end=5u;
 	num_cycles=50.0;
 	kprintf("start: %ull, end: %u ,cycles: %f\n",start,end,num_cycles);
 	kprintf("Cycles high1 : %u , Cycles Low 1: %u \n", cycles_high1, cycles_low1);
