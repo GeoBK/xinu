@@ -111,9 +111,9 @@ syscall	sleepms(
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
 	start = ( ((long long)cycles_high << 32) | (long long)cycles_low );
 	end = ( ((long long)cycles_high1 << 32) | (long long)cycles_low1 );
-	kprintf("start: %0X,\n",start);
+	kprintf("start: %lx,\n",start);
 	kprintf("cycles_low: %0X,\n",cycles_low);
-	kprintf("cycles_high: %0X,\n",cycles_high);
+	kprintf("cycles_high: %llx,\n",(long long)cycles_high);
 	if ( (end - start) < 0) {
  		printf("\n\n>>>>>>>>>>>>>> CRITICAL ERROR IN TAKING TIME!!!!!!\n start = %llu, end = %llu, \n",  start, end);
  		num_cycles = 0;
