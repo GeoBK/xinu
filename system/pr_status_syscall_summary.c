@@ -39,7 +39,7 @@ void pr_status_syscall_summary(){
                 double average_cycles= (double)procsumm_table[i].total_cycles[j]/(double)procsumm_table[i].rec_count[j];
                 kprintf("Long int value: %u \n", procsumm_table[i].total_cycles[j]);
                 kprintf("double value: %f \n", (double)procsumm_table[i].total_cycles[j]);
-                kprintf("average cycles: %f \n", average_cycles);
+                kprintf("average cycles: %14f \n", average_cycles);
                 kprintf("total cycles %f \n",(double)procsumm_table[i].total_cycles[j]/(double)procsumm_table[i].rec_count[j]);
                 printf("%3d %7s %5d %5.2f \n", i, sys_call_description[j],procsumm_table[i].rec_count[j],average_cycles);                
                 // printf("%3d %7s %5d %14f \n", i, sys_call_description[j],procsumm_table[i].rec_count[j],average_cycles);                
