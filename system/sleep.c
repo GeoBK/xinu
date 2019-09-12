@@ -129,7 +129,7 @@ syscall	sleepms(
 	start=10;
 	end=5;
 	num_cycles=50;
-	kprintf("start: %llu, end: %llu ,cycles: %14f\n",start,end,num_cycles);
+	kprintf("start: %u, end: %u ,cycles: %14f\n",start,end,num_cycles);
 	kprintf("Cycles high1 : %u , Cycles Low 1: %u \n", cycles_high1, cycles_low1);
 	restore(mask);
 	return OK;
