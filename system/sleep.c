@@ -109,9 +109,9 @@ syscall	sleepms(
 				 "mov %%eax, %1\n\t"
 				 "CPUID\n\t": "=r" (cycles_high1), "=r"
 				(cycles_low1):: "%rax", "%rbx", "%rcx", "%rdx");	
-	start = ( ((long long)cycles_high << 32) | (long long)cycles_low );
+	start = (double)(cycles_high)*(double)4294967296 ;//+ (double)(cycles_low);
 	end = ( ((long long)cycles_high1 << 32) | (long long)cycles_low1 );
-	kprintf("start: %lx,\n",start);
+	kprintf("start: %f,\n",(double)(cycles_high)*(double)4294967296);
 	kprintf("cycles_low: %0X,\n",cycles_low);
 	kprintf("cycles_high: %llx,\n",(long long)cycles_high);
 	if ( (end - start) < 0) {
