@@ -28,11 +28,7 @@ void pr_status_syscall_summary(){
 
 	printf("%3s %7s %5s %14s\n",
 		   "---", "-------", "-----", "--------------");    
-    double a=5;
-    kprintf("double value: %f\n",a);
-    unsigned long long b=0xAAAAAAAA;
-    kprintf("unsigned long long value: %u\n", b);
-
+    
     for(i=1;i<=max_pid;i++){        
         for(j=create_enum; j< number_of_system_calls; j++){
             if(procsumm_table[i].rec_count[j]!=0){
