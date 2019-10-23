@@ -32,12 +32,12 @@ process	main(void)
 	sl_lock(&l);
 	sl_unlock(&l);
 
-	// pid32 pid = create(lock_test,8192,1,"lock_tester_child",0);
-	// sl_lock(&l);	
-	// resume(pid);
-	// sleep(10);
-	// printf("Inside parent process after sleep(If the lock had worked this line should be printed first)\n");
-	// sl_unlock(&l);
+	pid32 pid = create(lock_test,8192,1,"lock_tester_child",0);
+	sl_lock(&l);	
+	resume(pid);
+	sleep(10);
+	printf("Inside parent process after sleep(If the lock had worked this line should be printed first)\n");
+	sl_unlock(&l);
 
 	uint32 x=5;
 	printf("old value: %d\n",test_and_set((void*)&x,1));
