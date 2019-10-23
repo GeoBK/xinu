@@ -19,7 +19,7 @@ process	main(void)
 	// 	resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
 	// }
 	uint32 x=5;
-	printf("old value: %d\n",test_and_set(&x,1));
+	printf("old value: %d\n",test_and_set((void*)&x,1));
 	printf("new value: %d\n",x);
 
 	return OK;
