@@ -1,6 +1,14 @@
 /*  main.c  - main */
 
 #include <xinu.h>
+sl_lock_t l;
+void lock_test()
+{
+	kprintf("------------------Inside child process -------------\n");
+	sl_lock(&l);
+	kprintf("Inside lock of child process !!!\n");
+	sl_unlock(&l);
+}
 
 process	main(void)
 {
@@ -19,10 +27,18 @@ process	main(void)
 	// 	resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
 	// }
 
-	sl_lock_t l;
+	
 	sl_initlock(&l);
 	sl_lock(&l);
 	sl_unlock(&l);
+
+	// pid32 pid = create(lock_test,8192,1,"lock_tester_child",0);
+	// sl_lock(&l);	
+	// resume(pid);
+	// sleep(10);
+	// printf("Inside parent process after sleep(If the lock had worked this line should be printed first)\n");
+	// sl_unlock(&l);
+
 	uint32 x=5;
 	printf("old value: %d\n",test_and_set((void*)&x,1));
 	printf("new value: %d\n",x);
