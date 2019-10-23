@@ -18,6 +18,11 @@ process	main(void)
 	// 	kprintf("\n\nMain process recreating shell\n\n");
 	// 	resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
 	// }
+
+	sl_lock_t l;
+	sl_initlock(&l);
+	sl_lock(&l);
+	sl_unlock(&l);
 	uint32 x=5;
 	printf("old value: %d\n",test_and_set((void*)&x,1));
 	printf("new value: %d\n",x);
