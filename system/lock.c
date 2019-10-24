@@ -20,7 +20,7 @@ pid32 dq(queue q)
         pid32 pid = q.head->pid;
         q.head=q.head->next;
         if(q.tail==node_to_delete){
-            q.tail==NULL;
+            q.tail=NULL;
         }
         free(node_to_delete);
         return pid;
@@ -41,14 +41,12 @@ void park(lock_t *l)
     }
     else
     {
-        struct	procent *prptr;		/* Ptr to process's table entry	*/
-        umsg32	msg;			/* Message to return		*/        
+        struct	procent *prptr;		/* Ptr to process's table entry	*/        
         prptr = &proctab[currpid];
         if (prptr->prhasmsg == FALSE) {
             prptr->prstate = PR_RECV;
             resched();		/* Block until message arrives	*/
-        }
-        msg = prptr->prmsg;		/* Retrieve message		*/
+        }        
         prptr->prhasmsg = FALSE;	/* Reset message flag		*/
         l->unpark_called=0;
         l->set_park_called=0;
