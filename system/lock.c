@@ -28,6 +28,7 @@ syscall lock(lock_t *l)
 syscall unlock(lock_t *l)
 {
     while(test_and_set(l->guard,1)==1);
+    
     if(l->q.head==NULL)
     {
         l->flag=0;

@@ -66,8 +66,8 @@ void park(lock_t *l)
     //---------------------------critical section--------------------
     if(l->set_park_called == l->unpark_called)
     {
-        unpark_called=0;
-        set_park_called=0;
+        l->unpark_called=0;
+        l->set_park_called=0;
     }
     else
     {
@@ -80,8 +80,8 @@ void park(lock_t *l)
         }
         msg = prptr->prmsg;		/* Retrieve message		*/
         prptr->prhasmsg = FALSE;	/* Reset message flag		*/
-        unpark_called=0;
-        set_park_called=0;
+        l->unpark_called=0;
+        l->set_park_called=0;
     }    
     //---------------------------------------------------
 
