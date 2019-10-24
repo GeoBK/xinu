@@ -78,13 +78,13 @@ void unpark(lock_t *l,pid32 pid)
 	mask = disable();
 	if (isbadpid(pid)) {
 		restore(mask);
-		return SYSERR;
+		return;
 	}
 
 	prptr = &proctab[pid];
 	if (prptr->prhasmsg) {
 		restore(mask);
-		return SYSERR;
+		return;
 	}
 	prptr->prmsg = currpid;		/* Deliver message		*/
 	prptr->prhasmsg = TRUE;		/* Indicate message is waiting	*/
@@ -107,6 +107,7 @@ syscall initlock(lock_t *l)
     l->guard=0;
     l->q.head=NULL;
     l->q.tail=NULL;
+    return OK;
 }
 syscall lock(lock_t *l)
 {
@@ -123,7 +124,7 @@ syscall lock(lock_t *l)
         l->guard=0;
         park(l);
     }
-    
+    return OK;    
     
 }
 syscall unlock(lock_t *l)
@@ -141,5 +142,5 @@ syscall unlock(lock_t *l)
         unpark(l,pid);  
         l->guard=0;
     }
-    
+    return OK;    
 }
