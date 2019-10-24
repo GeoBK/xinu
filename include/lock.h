@@ -32,6 +32,7 @@ void enq(queue q,pid32 pid)
         q.head=new_node;
     }
 }
+
 pid32 dq(queue q)
 {
     if(q.head != NULL)
@@ -50,7 +51,8 @@ pid32 dq(queue q)
 
 
 #define NLOCKS 20
-typedef struct lock_t {
+typedef struct lock_t 
+{
     uint32  flag;          /* lock flag */
     uint32  guard;
     queue   q;
@@ -83,7 +85,7 @@ void park(lock_t *l)
         l->unpark_called=0;
         l->set_park_called=0;
     }    
-    //---------------------------------------------------
+    //-----------------------------------------------------------------
 
     restore(mask);    
 }
@@ -99,6 +101,7 @@ void setpark(lock_t *l,pid32 pid)
 
     restore(mask);    
 }
+
 void unpark(lock_t *l,pid32 pid)
 {    
     intmask	mask;			/* Saved interrupt mask		*/
