@@ -1,7 +1,8 @@
 #include <xinu.h>
+#include <stdlib.h>
 void enq(queue q,pid32 pid)
 {
-    node *new_node=(node*)malloc(sizeof(node));
+    node *new_node=malloc(sizeof(node));
     new_node->pid=pid;
     new_node->next=NULL;
     q.tail=new_node;
