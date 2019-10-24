@@ -40,5 +40,6 @@
 #include <quark_irq.h>
 #include <multiboot.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <lock.h>
