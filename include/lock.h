@@ -7,10 +7,10 @@ syscall sl_initlock(sl_lock_t *l);
 syscall sl_lock(sl_lock_t *l);
 syscall sl_unlock(sl_lock_t *l);
 
-typedef struct node
+typedef struct node_struct
 {
     pid32 pid;
-    struct node* next;
+    struct node_struct* next;
 }node;
 
 typedef struct queue
