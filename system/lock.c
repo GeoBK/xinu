@@ -1,5 +1,10 @@
 #include <xinu.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
 #include <stdlib.h>
+#include <inttypes.h>
+#include <unistd.h>
 void enq(queue q,pid32 pid)
 {
     node *new_node=malloc(sizeof(node));
