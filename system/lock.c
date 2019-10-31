@@ -4,27 +4,27 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <inttypes.h>
-void enq(queue q,pid32 pid)
+void enq(queue* q,pid32 pid)
 {
     node *new_node=(node*)getmem(sizeof(node));
     new_node->pid=pid;
     new_node->next=NULL;
-    q.tail=new_node;
-    if(q.head==NULL)
+    q->tail=new_node;
+    if(q->head==NULL)
     {
-        q.head=new_node;
+        q->head=new_node;
     }
 }
 
-pid32 dq(queue q)
+pid32 dq(queue* q)
 {
-    if(q.head != NULL)
+    if(q->head != NULL)
     {
         node* node_to_delete = q.head;
-        pid32 pid = q.head->pid;
-        q.head=q.head->next;
-        if(q.tail==node_to_delete){
-            q.tail=NULL;
+        pid32 pid = q->head->pid;
+        q->head=q->head->next;
+        if(q->tail==node_to_delete){
+            q->tail=NULL;
         }
         freemem((char*)node_to_delete,sizeof(node));
         return pid;
@@ -135,7 +135,7 @@ syscall lock(lock_t *l)
     else
     {
         kprintf("inside when flag =1 lock code part \n");
-        enq(l->q,currpid);
+        enq(&(l->q),currpid);
         printq(l->q);
         setpark(l,currpid);
         l->guard=0;
@@ -158,7 +158,7 @@ syscall unlock(lock_t *l)
     {
         kprintf("Inside unlock when q has elements\n");
         printq(l->q);
-        pid32 pid = dq(l->q);  
+        pid32 pid = dq(&(l->q));  
         unpark(l,pid);  
         l->guard=0;
     }
