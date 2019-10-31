@@ -3,10 +3,11 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <mem.h>
 #include <inttypes.h>
 void enq(queue q,pid32 pid)
 {
-    node *new_node=malloc(sizeof(node));
+    node *new_node=(node*)getmem(sizeof(node));
     new_node->pid=pid;
     new_node->next=NULL;
     q.tail=new_node;
@@ -26,7 +27,7 @@ pid32 dq(queue q)
         if(q.tail==node_to_delete){
             q.tail=NULL;
         }
-        free(node_to_delete);
+        freemem(node_to_delete,sizeof(node));
         return pid;
     }
     return SYSERR;    
