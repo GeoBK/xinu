@@ -26,7 +26,7 @@ pid32 dq(queue q)
         if(q.tail==node_to_delete){
             q.tail=NULL;
         }
-        freemem(node_to_delete,sizeof(node));
+        freemem((char*)node_to_delete,sizeof(node));
         return pid;
     }
     return SYSERR;    
