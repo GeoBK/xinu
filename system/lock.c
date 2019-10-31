@@ -47,18 +47,20 @@ void park(lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
     mask = disable();
-
+    kprintf("Inside park\n");
     //---------------------------critical section--------------------
-    if(l->set_park_called == l->unpark_called)
+    if(l->set_park_called == l->unpark_called && l->set_park_called !=0)
     {
         l->unpark_called=0;
         l->set_park_called=0;
     }
     else
     {
+        kprintf("pid : %d will now be put to sleep\n",currpid);
         struct	procent *prptr;		/* Ptr to process's table entry	*/        
         prptr = &proctab[currpid];
         if (prptr->prhasmsg == FALSE) {
+            kprintf("pid : %d will now be put to sleep 2\n",currpid);
             prptr->prstate = PR_RECV;
             resched();		/* Block until message arrives	*/
         }        
@@ -134,11 +136,10 @@ syscall lock(lock_t *l)
     {
         kprintf("inside when flag =1 lock code part \n");
         enq(l->q,currpid);
-
+        printq(l->q);
         setpark(l,currpid);
         l->guard=0;
-        park(l);
-        printq(l->q);
+        park(l);        
     }
     return OK;    
     
