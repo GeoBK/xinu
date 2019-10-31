@@ -20,7 +20,7 @@ pid32 dq(queue* q)
 {
     if(q->head != NULL)
     {
-        node* node_to_delete = q.head;
+        node* node_to_delete = q->head;
         pid32 pid = q->head->pid;
         q->head=q->head->next;
         if(q->tail==node_to_delete){

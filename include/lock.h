@@ -21,9 +21,9 @@ typedef struct queue
 
 
 
-void enq(queue q,pid32 pid);
+void enq(queue* q,pid32 pid);
 
-pid32 dq(queue q);
+pid32 dq(queue* q);
 
 
 #define NLOCKS 20
