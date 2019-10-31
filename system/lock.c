@@ -32,6 +32,15 @@ pid32 dq(queue q)
     return SYSERR;    
 }
 
+void printq(queue q)
+{
+    node* it = q.head;
+    while(it != NULL)
+    {
+        kprintf("%d->",it->pid);
+    }
+}
+
 void park(lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
@@ -113,7 +122,7 @@ syscall initlock(lock_t *l)
 }
 syscall lock(lock_t *l)
 {
-    while(test_and_set(&l->guard,1)==1);
+    while(test_and_set(&l->guard,1)==1){kprintf("spinning on lock guard \n");}
     if(l->flag==0)
     {
         l->flag=1;        
@@ -121,7 +130,9 @@ syscall lock(lock_t *l)
     }
     else
     {
+        kprintf("inside when flag =1 lock code part \n");
         enq(l->q,currpid);
+
         setpark(l,currpid);
         l->guard=0;
         park(l);
@@ -131,7 +142,7 @@ syscall lock(lock_t *l)
 }
 syscall unlock(lock_t *l)
 {
-    while(test_and_set(&l->guard,1)==1);
+    while(test_and_set(&l->guard,1)==1){kprintf("spinning on unlock guard \n");}
 
     if(l->q.head==NULL)
     {
