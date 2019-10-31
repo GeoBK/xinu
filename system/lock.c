@@ -39,6 +39,7 @@ void printq(queue q)
     while(it != NULL)
     {
         kprintf("%d->",it->pid);
+        it=it->next;
     }
     kprintf("\n");
 }
