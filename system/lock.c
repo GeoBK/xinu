@@ -35,10 +35,12 @@ pid32 dq(queue q)
 void printq(queue q)
 {
     node* it = q.head;
+    if(it==NULL)kprintf("Q empty!!! \n");
     while(it != NULL)
     {
         kprintf("%d->",it->pid);
     }
+    kprintf("\n");
 }
 
 void park(lock_t *l)
@@ -136,6 +138,7 @@ syscall lock(lock_t *l)
         setpark(l,currpid);
         l->guard=0;
         park(l);
+        printq(l->q);
     }
     return OK;    
     
@@ -146,11 +149,14 @@ syscall unlock(lock_t *l)
 
     if(l->q.head==NULL)
     {
+        kprintf("Inside unlock when q empty\n");
         l->flag=0;
         l->guard=0;
     }
     else
     {
+        kprintf("Inside unlock when q has elements\n");
+        printq(l->q);
         pid32 pid = dq(l->q);  
         unpark(l,pid);  
         l->guard=0;

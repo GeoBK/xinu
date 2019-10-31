@@ -33,7 +33,8 @@ process	main(void)
 	// unlock(&l);
 
 	pid32 pid = create(lock_test,8192,1,"lock_tester_child",0);
-	lock(&l);	
+	lock(&l);
+	kprintf("Parent has lock now \n");
 	resume(pid);
 	sleep(10);
 	printf("Inside parent process after sleep(If the lock had worked this line should be printed first)\n");
