@@ -40,9 +40,8 @@ process	main(void)
 	printf("Inside parent process after sleep(If the lock had worked this line should be printed first)\n");
 	unlock(&l);
 	sleep(10);
-	uint32 x=5;
-	printf("old value: %d\n",test_and_set((void*)&x,1));
-	printf("new value: %d\n",x);
+	
+	kprintf("Runtime of child process pid(%d) : %d",pid, proctab[pid].runtime);	
 
 	return OK;
     
