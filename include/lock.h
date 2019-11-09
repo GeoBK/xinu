@@ -34,6 +34,7 @@ typedef struct lock_t
     queue   q;
     uint32  set_park_called;
     uint32  unpark_called;
+    pid32   owner;
 } lock_t;
 
 void park(lock_t *l);

@@ -21,9 +21,10 @@ syscall	send(
 	}
 
 	prptr = &proctab[pid];
-	if (prptr->prhasmsg) {
-		restore(mask);
-		return SYSERR;
+	while (prptr->prhasmsg) {
+		ready(currpid); // modified here - if phasmsg was set another process might have sent a message. Wait for receiver to receive and clean the flag
+		//restore(mask); OLD CODE
+		//return SYSERR; OLD CODE
 	}
 	prptr->prmsg = msg;		/* Deliver message		*/
 	prptr->prhasmsg = TRUE;		/* Indicate message is waiting	*/

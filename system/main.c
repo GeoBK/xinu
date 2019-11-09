@@ -1,48 +1,113 @@
+// /*  main.c  - main */
+
+// #include <xinu.h>
+
+
+
+// process	main(void)
+// {
+
+// 	// /* Run the Xinu shell */
+
+// 	// recvclr();
+// 	// resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
+
+// 	// /* Wait for shell to exit and recreate it */
+
+// 	// while (TRUE) {
+// 	// 	receive();
+// 	// 	sleepms(200);
+// 	// 	kprintf("\n\nMain process recreating shell\n\n");
+// 	// 	resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
+// 	// }
+
+	
+// 	initlock(&l);
+// 	// lock(&l);
+// 	// unlock(&l);
+
+	
+
+// 	return OK;
+    
+// }
+
+
 /*  main.c  - main */
 
 #include <xinu.h>
-lock_t l;
-void lock_test()
-{
-	kprintf("------------------Inside child process -------------\n");
-	lock(&l);
-	kprintf("Inside lock of child process !!!\n");
-	unlock(&l);
+
+inline uint32 get_timestamp(){
+	return ctr1000;
 }
 
+void run_for_ms(uint32 time){
+	uint32 start = proctab[currpid].runtime;
+	while (proctab[currpid].runtime-start < time);
+}
+
+process p_spinlock(sl_lock_t *l){
+	uint32 i;
+	for (i=0; i<5; i++){
+		sl_lock(l);
+		run_for_ms(1000);
+		sl_unlock(l);		
+	}
+	return OK;
+}
+	
+process p_lock(lock_t *l){
+	uint32 i;
+	for (i=0; i<5; i++){
+		lock(l);
+		run_for_ms(1000);
+		unlock(l);		
+	}
+	return OK;
+}
+	
 process	main(void)
 {
 
-	// /* Run the Xinu shell */
+	sl_lock_t	mutex_sl;  		
+	lock_t 		mutex;  		
+	pid32		pid1, pid2;
+	uint32 		timestamp;
 
-	// recvclr();
-	// resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
-
-	// /* Wait for shell to exit and recreate it */
-
-	// while (TRUE) {
-	// 	receive();
-	// 	sleepms(200);
-	// 	kprintf("\n\nMain process recreating shell\n\n");
-	// 	resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
-	// }
-
+	kprintf("\n\n=========== TEST 1: spinlock & 2 threads  ===================\n\n");
+ 	sl_initlock(&mutex_sl); 
 	
-	initlock(&l);
-	// lock(&l);
-	// unlock(&l);
+	pid1 = create((void *)p_spinlock, INITSTK, 1,"nthreads", 1, &mutex_sl);
+	pid2 = create((void *)p_spinlock, INITSTK, 1,"nthreads", 1, &mutex_sl);
 
-	pid32 pid = create(lock_test,8192,1,"lock_tester_child",0);
-	lock(&l);
-	kprintf("Parent has lock now \n");
-	resume(pid);
-	sleep(10);
-	printf("Inside parent process after sleep(If the lock had worked this line should be printed first)\n");
-	unlock(&l);
-	sleep(10);
+	timestamp = get_timestamp();
 	
-	kprintf("Runtime of child process pid(%d) : %d",pid, proctab[pid].runtime);	
+	resume(pid1);
+	sleepms(500);
+	resume(pid2);		
+
+	receive();
+	receive();
+
+    kprintf("Time = %d ms\n", get_timestamp()-timestamp);
+        
+	kprintf("\n\n=========== TEST 2: lock w/sleep & 2 threads  ===============\n\n");
+	initlock(&mutex);
+
+    pid1 = create((void *)p_lock, INITSTK, 1,"nthreads", 1, &mutex);
+    pid2 = create((void *)p_lock, INITSTK, 1,"nthreads", 1, &mutex);
+
+    timestamp = get_timestamp();
+
+    resume(pid1);
+    sleepms(500);
+    resume(pid2);
+
+    receive();
+    receive();
+
+    kprintf("Time = %d ms\n", get_timestamp()-timestamp);
 
 	return OK;
-    
 }
+

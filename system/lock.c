@@ -128,8 +128,10 @@ syscall initlock(lock_t *l)
 syscall lock(lock_t *l)
 {
     while(test_and_set(&l->guard,1)==1){kprintf("spinning on lock guard \n");}
+
     if(l->flag==0)
     {
+        l->owner=currpid;
         l->flag=1;        
         l->guard=0;        
     }
@@ -149,6 +151,9 @@ syscall unlock(lock_t *l)
 {
     while(test_and_set(&l->guard,1)==1){kprintf("spinning on unlock guard \n");}
 
+    if(currpid!=&l->owner){
+        return SYSERR;
+    }
     if(l->q.head==NULL)
     {
         kprintf("Inside unlock when q empty\n");
