@@ -167,6 +167,7 @@ syscall unlock(lock_t *l)
         kprintf("Inside unlock when q empty\n");
         l->flag=0;
         l->guard=0;
+        l->owner=0;
     }
     else
     {
@@ -174,6 +175,7 @@ syscall unlock(lock_t *l)
         printq(l->q);
         pid32 pid = dq(&(l->q));  
         unpark(l,pid);  
+        l->owner=pid;
         l->guard=0;
     }
     return OK;    
