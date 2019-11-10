@@ -44,7 +44,7 @@ void printq(queue q)
     kprintf("\n");
 }
 
-void park(lock_t *l)
+process park(lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
     mask = disable();
@@ -69,9 +69,11 @@ void park(lock_t *l)
         l->unpark_called=0;
         l->set_park_called=0;
     }    
-    //-----------------------------------------------------------------
-
-    restore(mask);    
+    //-----------------------------------------------------------------	
+	
+	restore(mask);		/* Restore interrupts */
+	return OK;
+      
 }
 
 void setpark(lock_t *l,pid32 pid)
@@ -92,15 +94,17 @@ void unpark(lock_t *l,pid32 pid)
 	struct	procent *prptr;		/* Ptr to process's table entry	*/
 
 	mask = disable();
+
 	if (isbadpid(pid)) {
 		restore(mask);
 		return;
 	}
 
 	prptr = &proctab[pid];
-	if (prptr->prhasmsg) {
-		restore(mask);
-		return;
+	while (prptr->prhasmsg) {
+		ready(currpid); // modified here - if phasmsg was set another process might have sent a message. Wait for receiver to receive and clean the flag
+		//restore(mask); OLD CODE
+		//return SYSERR; OLD CODE
 	}
 	prptr->prmsg = currpid;		/* Deliver message		*/
 	prptr->prhasmsg = TRUE;		/* Indicate message is waiting	*/
