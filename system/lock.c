@@ -4,6 +4,19 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <inttypes.h>
+
+void sync_printf(char *fmt, ...)
+
+{
+        intmask mask = disable();
+
+        void *arg = __builtin_apply_args();
+
+        __builtin_apply((void*)kprintf, arg, 100);
+
+        restore(mask);
+
+}
 void enq(queue* q,pid32 pid)
 {
     node *new_node=(node*)getmem(sizeof(node));
@@ -35,13 +48,13 @@ pid32 dq(queue* q)
 void printq(queue q)
 {
     node* it = q.head;
-    if(it==NULL)kprintf("Q empty!!! \n");
+    if(it==NULL)sync_printf("Q empty!!! \n");
     while(it != NULL)
     {
-        kprintf("%d->",it->pid);
+        sync_printf("%d->",it->pid);
         it=it->next;
     }
-    kprintf("\n");
+    sync_printf("\n");
 }
 
 process park(lock_t *l)
@@ -52,7 +65,7 @@ process park(lock_t *l)
     //---------------------------critical section--------------------
     if(l->set_park_called == l->unpark_called && l->set_park_called !=0)
     {
-        kprintf("Inside that instance when park is called after unpark is called!!!");
+        kprintf("Inside that instance when park is called after unpark is called!!!\n");
         l->unpark_called=0;
         l->set_park_called=0;
     }
@@ -132,19 +145,19 @@ syscall initlock(lock_t *l)
 }
 syscall lock(lock_t *l)
 {
-    kprintf("Inside LOCK for PID -> %d \n",currpid);
+    sync_printf("Inside LOCK for PID -> %d \n",currpid);
     while(test_and_set(&l->guard,1)==1){kprintf("spinning on lock guard \n");}
 
     if(l->flag==0)
     {
-        kprintf("inside when flag =0 lock code part \n");
+        sync_printf("inside when flag =0 lock code part \n");
         l->owner=currpid;
         l->flag=1;        
         l->guard=0;        
     }
     else
     {
-        kprintf("inside when flag =1 lock code part \n");
+        sync_printf("inside when flag =1 lock code part \n");
         enq(&(l->q),currpid);
         printq(l->q);
         setpark(l,currpid);
@@ -156,23 +169,23 @@ syscall lock(lock_t *l)
 }
 syscall unlock(lock_t *l)
 {
-    kprintf("Inside UNLOCK for PID -> %d \n",currpid);
-    while(test_and_set(&l->guard,1)==1){kprintf("spinning on unlock guard \n");}
+    sync_printf("Inside UNLOCK for PID -> %d \n",currpid);
+    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on unlock guard (currpid= %d)\n",currpid);}
 
     if(currpid!=l->owner){
-        kprintf("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
+        sync_printf("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
         return SYSERR;
     }
     if(l->q.head==NULL)
     {
-        kprintf("Inside unlock when q empty\n");
+        sync_printf("Inside unlock when q empty\n");
         l->flag=0;
         l->guard=0;
         l->owner=0;
     }
     else
     {
-        kprintf("Inside unlock when q has elements\n");
+        sync_printf("Inside unlock when q has elements\n");
         printq(l->q);
         pid32 pid = dq(&(l->q));  
         unpark(l,pid);  
