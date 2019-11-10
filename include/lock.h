@@ -37,7 +37,7 @@ typedef struct lock_t
     pid32   owner;
 } lock_t;
 
-void park(lock_t *l);
+process park(lock_t *l);
 
 void setpark(lock_t *l,pid32 pid);
 
