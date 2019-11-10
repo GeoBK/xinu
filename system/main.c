@@ -44,6 +44,7 @@ process increment(uint32 *x, uint32 n, lock_t *mutex){
 	for (i=0; i<n; i++){
 		lock(mutex);
 		(*x)+=1;
+		sync_printf(*x);
 		for (j=0; j<1000; j++);
 		yield();
 		unlock(mutex);
@@ -75,7 +76,7 @@ process	main(void)
 {
 	uint32 x;			// shared variable
 	unsigned nt;			// number of threads cooperating
-	unsigned value = 1000000; 	// target value of variable
+	unsigned value = 100; 	// target value of variable
 
 	lock_t mutex;  			// lock
 
