@@ -47,14 +47,16 @@ pid32 dq(queue* q)
 
 void printq(queue q)
 {
+    intmask mask = disable();
     node* it = q.head;
-    if(it==NULL)sync_printf("Q empty!!! \n");
+    if(it==NULL)kprintf("Q empty!!! \n");
     while(it != NULL)
     {
-        sync_printf("%d->",it->pid);
+        kprintf("%d->",it->pid);
         it=it->next;
     }
-    sync_printf("\n");
+    kprintf("\n");
+    restore(mask);
 }
 
 process park(lock_t *l)
@@ -146,7 +148,7 @@ syscall initlock(lock_t *l)
 syscall lock(lock_t *l)
 {
     sync_printf("Inside LOCK for PID -> %d \n",currpid);
-    while(test_and_set(&l->guard,1)==1){kprintf("spinning on lock guard \n");}
+    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on lock guard \n");}
 
     if(l->flag==0)
     {
