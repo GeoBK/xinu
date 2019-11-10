@@ -44,7 +44,7 @@ process increment(uint32 *x, uint32 n, lock_t *mutex){
 	for (i=0; i<n; i++){
 		lock(mutex);
 		(*x)+=1;
-		sync_printf(*x);
+		sync_printf("x= %d\n",*x);
 		for (j=0; j<1000; j++);
 		yield();
 		unlock(mutex);
