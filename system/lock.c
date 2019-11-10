@@ -155,6 +155,7 @@ syscall unlock(lock_t *l)
     while(test_and_set(&l->guard,1)==1){kprintf("spinning on unlock guard \n");}
 
     if(currpid!=l->owner){
+        kprintf("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
         return SYSERR;
     }
     if(l->q.head==NULL)
