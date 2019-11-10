@@ -22,6 +22,10 @@ void enq(queue* q,pid32 pid)
     node *new_node=(node*)getmem(sizeof(node));
     new_node->pid=pid;
     new_node->next=NULL;
+    if(q->tail!=NULL)
+    {
+        q->tail->next=new_node;
+    }    
     q->tail=new_node;
     if(q->head==NULL)
     {
