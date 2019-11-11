@@ -56,7 +56,11 @@ void printq(queue q)
     if(it==NULL)kprintf("Q empty!!! \n");
     while(it != NULL)
     {
-        kprintf("%d->",it->pid);
+        kprintf("%d",it->pid);
+        if(it->next!=NULL)
+        {
+            kprintf("-",it->pid);
+        }
         it=it->next;
     }
     kprintf("\n");
@@ -143,11 +147,19 @@ void unpark(lock_t *l,pid32 pid)
 
 syscall initlock(lock_t *l)
 {
-    l->flag=0;
-    l->guard=0;
-    l->q.head=NULL;
-    l->q.tail=NULL;
-    return OK;
+    if(num_locks<NLOCKS)
+    {
+        l->flag=0;
+        l->guard=0;
+        l->q.head=NULL;
+        l->q.tail=NULL;
+        num_locks++;
+        return OK;
+    }
+    else
+    {
+        return SYSERR;
+    }    
 }
 syscall lock(lock_t *l)
 {

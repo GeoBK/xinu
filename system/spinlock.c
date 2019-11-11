@@ -2,8 +2,18 @@
 
 syscall sl_initlock(sl_lock_t *l)
 {
-    l->flag=0;
-    return OK;
+    if(num_spinlocks<NSPINLOCKS)
+    {
+        l->flag=0;
+        num_spinlocks++;
+        return OK;
+    }
+    else
+    {
+        return SYSERR;
+    }
+    
+    
 }
 syscall sl_lock(sl_lock_t *l)
 {

@@ -39,19 +39,19 @@
 
 #include <xinu.h>
 
-process increment(uint32 *x, uint32 n, sl_lock_t *mutex){
+process increment(uint32 *x, uint32 n, al_lock_t *mutex){
 	uint32 i, j;	
 	for (i=0; i<n; i++){
-		sl_lock(mutex);
+		al_lock(mutex);
 		(*x)+=1;
 		for (j=0; j<1000; j++);
 		yield();
-		sl_unlock(mutex);
+		al_unlock(mutex);
 	}
 	return OK;
 }
 
-process nthreads(uint32 nt, uint32 *x, uint32 n, sl_lock_t *mutex){
+process nthreads(uint32 nt, uint32 *x, uint32 n, al_lock_t *mutex){
 	pid32 pids[nt];
 	int i;	
 	for (i=0; i < nt; i++){
@@ -76,36 +76,20 @@ process	main(void)
 	uint32 x;			// shared variable
 	unsigned nt;			// number of threads cooperating
 	unsigned value = 1000; 		// target value of variable
-	sl_lock_t mutex;  		// mutex	
+	al_lock_t mutex;  		// mutex	
 
 	kprintf("\n\n=====     Testing the SPINLOCK's implementation     =====\n");
 
 	// 10 threads
 	kprintf("\n\n================= TEST 1 = 10 threads ===================\n");
 	x = 0;	nt = 10;
- 	sl_initlock(&mutex); 
+ 	al_initlock(&mutex); 
 	resume(create((void *)nthreads, INITSTK, 1,"nthreads", 4, nt, &x, value/nt, &mutex));
 	receive(); 
 	sync_printf("%d threads, n=%d, target value=%d\n", nt, value, x);
 	if (x==value) kprintf("TEST PASSED.\n"); else kprintf("TEST FAILED.\n");
 
-	// 20 threads
-        kprintf("\n\n================= TEST 2 = 20 threads ===================\n");
-        x = 0;  nt = 20;
- 	sl_initlock(&mutex); 
-        resume(create((void *)nthreads, INITSTK, 1,"nthreads", 4, nt, &x, value/nt, &mutex));
-        receive();
-	sync_printf("%d threads, n=%d, target value=%d\n", nt, value, x);
-        if (x==value) kprintf("TEST PASSED.\n"); else kprintf("TEST FAILED.\n");
-
-	// 50 threads
-        kprintf("\n\n================= TEST 3 = 50 threads ===================\n");
-        x = 0;  nt = 50;
- 	sl_initlock(&mutex); 
-        resume(create((void *)nthreads, INITSTK, 1,"nthreads", 4, nt, &x, value/nt, &mutex));
-        receive();
-	sync_printf("%d threads, n=%d, target value=%d\n", nt, value, x);
-        if (x==value) kprintf("TEST PASSED.\n"); else kprintf("TEST FAILED.\n");
+	
 
 	return OK;
 }
