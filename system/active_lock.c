@@ -133,13 +133,15 @@ syscall al_lock(al_lock_t *l)
     else
     {
         sync_printf("inside when flag =1 lock code part \n");
+        proctab[currpid].prlockindex=l->index;
         struct	procent	*prptr;		/* Pointer to proc. table entry */
         queue   cycleq;
         enq(&cycleq,currpid);
-        sync_printf("CYCleQ  -> ");
+        sync_printf("CURRPID %d \n",currpid);
+        sync_printf("CYCleQ  -> \n");
         printq(cycleq);
         pid32   cyclepid=l->owner;
-        sync_printf("Current lock index - %d, current lock owner pid - %d",l->index,l->owner);
+        sync_printf("Current lock index - %d, current lock owner pid - %d\n",l->index,l->owner);
         prptr=&proctab[cyclepid];
         while(prptr->prlockindex!=-1)
         {
@@ -155,12 +157,12 @@ syscall al_lock(al_lock_t *l)
                 enq(&cycleq,cyclepid);
                 sync_printf("Inside deadlock detection loop(else part) \n");
                 cyclepid=al_lock_list[prptr->prlockindex]->owner;
-                sync_printf("Next lock index - %d, next lock owner pid - %d",prptr->prlockindex,l->owner);
+                sync_printf("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,l->owner);
                 prptr= &proctab[cyclepid];
             }
         }
 
-        proctab[currpid].prlockindex=l->index;
+        
         sync_printf("Did i shit my pants yet??? \n");
         enq(&(l->q),currpid);
         printq(l->q);
