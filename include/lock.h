@@ -1,5 +1,5 @@
 #define NSPINLOCKS 20
-uint32 num_spinlocks=0;
+extern uint32 num_spinlocks;
 typedef struct sl_lock_t {
     uint32   flag;          /* lock flag */
 } sl_lock_t;
@@ -28,7 +28,7 @@ pid32 dq(queue* q);
 
 
 #define NLOCKS 20
-uint32 num_locks=0;
+extern uint32 num_locks;
 typedef struct lock_t 
 {
     uint32  flag;          /* lock flag */
@@ -53,7 +53,7 @@ syscall unlock(lock_t *l);
 
 
 #define NALOCKS 20
-uint32 num_activelocks=0;
+extern uint32 num_activelocks;
 typedef struct al_lock_t 
 {
     uint32  flag;          /* lock flag */
@@ -71,7 +71,7 @@ syscall al_unlock(al_lock_t *l);
 bool8   al_trylock(al_lock_t *l); 
 
 #define NPILOCKS  20
-uint32 num_pilocks=0;
+extern uint32 num_pilocks;
 typedef struct pi_lock_t 
 {
     uint32  flag;          /* lock flag */

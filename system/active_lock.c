@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
+uint32 num_activelocks=0;
 process al_park(al_lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/

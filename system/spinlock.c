@@ -1,5 +1,6 @@
 #include <xinu.h>
 
+uint32 num_spinlocks=0;
 syscall sl_initlock(sl_lock_t *l)
 {
     if(num_spinlocks<NSPINLOCKS)

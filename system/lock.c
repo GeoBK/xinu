@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
+uint32 num_locks=0;
 void sync_printf(char *fmt, ...)
 
 {
