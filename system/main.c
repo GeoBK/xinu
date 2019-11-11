@@ -75,14 +75,14 @@ process	main(void)
 {
 	uint32 x;			// shared variable
 	unsigned nt;			// number of threads cooperating
-	unsigned value = 1000; 		// target value of variable
+	unsigned value = 100; 		// target value of variable
 	al_lock_t mutex;  		// mutex	
 
 	kprintf("\n\n=====     Testing the SPINLOCK's implementation     =====\n");
 
 	// 10 threads
 	kprintf("\n\n================= TEST 1 = 10 threads ===================\n");
-	x = 0;	nt = 10;
+	x = 0;	nt = 2;
  	al_initlock(&mutex); 
 	resume(create((void *)nthreads, INITSTK, 1,"nthreads", 4, nt, &x, value/nt, &mutex));
 	receive(); 
