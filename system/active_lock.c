@@ -158,7 +158,7 @@ syscall al_lock(al_lock_t *l)
             {
                 enq(&cycleq,cyclepid);                
                 sync_printf("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,cyclepid);
-                printq(&cycleq);
+                printq(cycleq);
                 cyclepid=al_lock_list[prptr->prlockindex]->owner;                
                 prptr= &proctab[cyclepid];
             }
