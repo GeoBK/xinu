@@ -121,8 +121,7 @@ syscall al_lock(al_lock_t *l)
     sync_printf("Inside LOCK for PID -> %d \n",currpid);
     
     
-    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on lock guard (currpid = %d)\n",currpid);}
-    
+    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on lock guard (currpid = %d)\n",currpid);}    
     if(l->flag==0)
     {
         sync_printf("inside when flag =0 lock code part \n");
@@ -132,6 +131,7 @@ syscall al_lock(al_lock_t *l)
     }
     else
     {
+        sync_printf("inside when flag =1 lock code part \n");
         struct	procent	*prptr;		/* Pointer to proc. table entry */
         queue   cycleq;
         enq(&cycleq,currpid);
