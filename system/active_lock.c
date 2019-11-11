@@ -135,6 +135,8 @@ syscall al_lock(al_lock_t *l)
         struct	procent	*prptr;		/* Pointer to proc. table entry */
         queue   cycleq;
         enq(&cycleq,currpid);
+        sync_printf("CYCleQ  -> ");
+        printq(cycleq);
         pid32   cyclepid=l->owner;
         prptr=&proctab[cyclepid];
         while(prptr->prlockindex!=-1)
@@ -148,13 +150,15 @@ syscall al_lock(al_lock_t *l)
             }
             else
             {
+                sync_printf("Inside deadlock detection loop(else part) \n");
                 cyclepid=al_lock_list[prptr->prlockindex]->owner;
                 prptr= &proctab[al_lock_list[prptr->prlockindex]->owner];
                 enq(&cycleq,cyclepid);                
             }
         }
+
         proctab[currpid].prlockindex=l->index;
-        sync_printf("inside when flag =1 lock code part \n");
+        sync_printf("Did i shit my pants yet??? \n");
         enq(&(l->q),currpid);
         printq(l->q);
         al_setpark(l,currpid);
