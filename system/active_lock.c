@@ -154,10 +154,10 @@ syscall al_lock(al_lock_t *l)
             }
             else
             {
-                enq(&cycleq,cyclepid);
-                sync_printf("Inside deadlock detection loop(else part) \n");
-                cyclepid=al_lock_list[prptr->prlockindex]->owner;
-                sync_printf("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,l->owner);
+                enq(&cycleq,cyclepid);                
+                sync_printf("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,cyclepid);
+                printq(&cycleq);
+                cyclepid=al_lock_list[prptr->prlockindex]->owner;                
                 prptr= &proctab[cyclepid];
             }
         }
