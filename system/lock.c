@@ -174,19 +174,19 @@ syscall initlock(lock_t *l)
 }
 syscall lock(lock_t *l)
 {
-    sync_printf("Inside LOCK for PID -> %d \n",currpid);
-    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on lock guard \n");}
+    sync_debug_out("Inside LOCK for PID -> %d \n",currpid);
+    while(test_and_set(&l->guard,1)==1){sync_debug_out("spinning on lock guard \n");}
 
     if(l->flag==0)
     {
-        sync_printf("inside when flag =0 lock code part \n");
+        sync_debug_out("inside when flag =0 lock code part \n");
         l->owner=currpid;
         l->flag=1;        
         l->guard=0;        
     }
     else
     {
-        sync_printf("inside when flag =1 lock code part \n");
+        sync_debug_out("inside when flag =1 lock code part \n");
         enq(&(l->q),currpid);
         printq(l->q);
         setpark(l,currpid);
@@ -198,23 +198,23 @@ syscall lock(lock_t *l)
 }
 syscall unlock(lock_t *l)
 {
-    sync_printf("Inside UNLOCK for PID -> %d \n",currpid);
-    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on unlock guard (currpid= %d)\n",currpid);}
+    sync_debug_out("Inside UNLOCK for PID -> %d \n",currpid);
+    while(test_and_set(&l->guard,1)==1){sync_debug_out("spinning on unlock guard (currpid= %d)\n",currpid);}
 
     if(currpid!=l->owner){
-        sync_printf("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
+        sync_debug_out("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
         return SYSERR;
     }
     if(l->q.head==NULL)
     {
-        sync_printf("Inside unlock when q empty\n");
+        sync_debug_out("Inside unlock when q empty\n");
         l->flag=0;
         l->guard=0;
         l->owner=0;
     }
     else
     {
-        sync_printf("Inside unlock when q has elements\n");
+        sync_debug_out("Inside unlock when q has elements\n");
         printq(l->q);
         pid32 pid = dq(&(l->q));  
         unpark(l,pid);  
