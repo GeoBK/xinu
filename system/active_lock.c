@@ -200,10 +200,10 @@ syscall al_unlock(al_lock_t *l)
     {
         sync_printf("Inside unlock when q has elements\n");
         printq(l->q);
-        pid32 pid = dq(&(l->q)); 
+        pid32 pid = dq(&(l->q));        
+        l->owner=pid;
         proctab[l->owner].prlockindex=-1;
         sync_printf("3. prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
-        l->owner=pid;        
         sync_printf("Releasing lock from currpid(%d). Now PID: %d is the owner of LID: %d\n",currpid, l->owner, l->index);
         al_unpark(l,pid);        
         l->guard=0;
