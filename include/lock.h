@@ -62,6 +62,7 @@ typedef struct al_lock_t
     uint32  set_park_called;
     uint32  unpark_called;
     pid32   owner;
+    int32   index;
 } al_lock_t;
 al_lock_t* al_lock_list[NALOCKS];
 syscall al_initlock(al_lock_t *l); 
@@ -78,8 +79,7 @@ typedef struct pi_lock_t
     queue   q;
     uint32  set_park_called;
     uint32  unpark_called;
-    pid32   owner;
-    int32   index;
+        
 } pi_lock_t;
 syscall pi_initlock(pi_lock_t *l); 
 syscall pi_lock(pi_lock_t *l);
