@@ -126,7 +126,7 @@ syscall al_lock(al_lock_t *l)
     {
         sync_printf("inside when flag =0 lock code part \n");
         l->owner=currpid;
-        l->flag=1;        
+        l->flag=1;
         l->guard=0;        
     }
     else
@@ -138,6 +138,7 @@ syscall al_lock(al_lock_t *l)
         sync_printf("CYCleQ  -> ");
         printq(cycleq);
         pid32   cyclepid=l->owner;
+        sync_printf("Current lock index - %d, current lock owner pid - %d",l->index,l->owner);
         prptr=&proctab[cyclepid];
         while(prptr->prlockindex!=-1)
         {
@@ -150,10 +151,11 @@ syscall al_lock(al_lock_t *l)
             }
             else
             {
+                enq(&cycleq,cyclepid);
                 sync_printf("Inside deadlock detection loop(else part) \n");
                 cyclepid=al_lock_list[prptr->prlockindex]->owner;
-                prptr= &proctab[al_lock_list[prptr->prlockindex]->owner];
-                enq(&cycleq,cyclepid);                
+                sync_printf("Next lock index - %d, next lock owner pid - %d",prptr->prlockindex,l->owner);
+                prptr= &proctab[cyclepid];
             }
         }
 
@@ -182,9 +184,10 @@ syscall al_unlock(al_lock_t *l)
     {
         sync_printf("Inside unlock when q empty\n");
         l->flag=0;
-        l->guard=0;
         proctab[l->owner].prlockindex=-1;
-        l->owner=0;        
+        l->owner=0;     
+        l->guard=0;
+           
     }
     else
     {
