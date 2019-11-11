@@ -10,21 +10,21 @@ process al_park(al_lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
     mask = disable();
-    kprintf("Inside park\n");
+    debug_out("Inside park\n");
     //---------------------------critical section--------------------
     if(l->set_park_called == l->unpark_called && l->set_park_called !=0)
     {
-        kprintf("Inside that instance when park is called after unpark is called!!!\n");
+        debug_out("Inside that instance when park is called after unpark is called!!!\n");
         l->unpark_called=0;
         l->set_park_called=0;
     }
     else
     {
-        kprintf("pid : %d will now be put to sleep\n",currpid);
+        debug_out("pid : %d will now be put to sleep\n",currpid);
         struct	procent *prptr;		/* Ptr to process's table entry	*/        
         prptr = &proctab[currpid];
         if (prptr->prhasmsg == FALSE) {
-            kprintf("pid : %d will now be put to sleep 2\n",currpid);
+            debug_out("pid : %d will now be put to sleep 2\n",currpid);
             prptr->prstate = PR_RECV;
             resched();		/* Block until message arrives	*/
         }        
@@ -65,7 +65,7 @@ void al_unpark(al_lock_t *l,pid32 pid)
 
 	prptr = &proctab[pid];
 	while (prptr->prhasmsg) {
-        kprintf("IS THIS EVER HIT??");
+        debug_out("IS THIS EVER HIT??");
 		ready(currpid); // modified here - if phasmsg was set another process might have sent a message. Wait for receiver to receive and clean the flag
 		//restore(mask); OLD CODE
 		//return SYSERR; OLD CODE
@@ -78,7 +78,7 @@ void al_unpark(al_lock_t *l,pid32 pid)
 	if (prptr->prstate == PR_RECV) {
 		ready(pid);
 	} else if (prptr->prstate == PR_RECTIM) {
-        kprintf("THIS CODE SHOULDNT BE HIT!!!!");
+        debug_out("THIS CODE SHOULDNT BE HIT!!!!");
 		unsleep(pid);
 		ready(pid);
 	}
@@ -161,7 +161,7 @@ syscall al_lock(al_lock_t *l)
             {
                 enq(&cycleq,cyclepid);                
                 sync_printf("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,cyclepid);
-                printq(cycleq);
+                //printq(cycleq);
                 cyclepid=al_lock_list[prptr->prlockindex]->owner;                
                 prptr= &proctab[cyclepid];
             }
@@ -198,6 +198,7 @@ syscall al_unlock(al_lock_t *l)
     }
     else
     {
+
         sync_printf("Inside unlock when q has elements\n");
         printq(l->q);
         pid32 pid = dq(&(l->q));        

@@ -609,6 +609,10 @@ extern	syscall	yield(void);
 
 /* in file testandset.S */
 extern	uint32	test_and_set(void *, uint32);
+#define DEBUG_OUT
+extern void debug_out(char *fmt, ...);
+
+extern void sync_debug_out(char *fmt, ...);
 
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
 #define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))

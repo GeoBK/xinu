@@ -6,21 +6,28 @@
 #include <inttypes.h>
 
 uint32 num_locks=0;
-void sync_printf(char *fmt, ...)
+void sync_debug_out(char *fmt, ...)
 
 {
+    #ifdef DEBUG_OUT
         intmask mask = disable();
-
         void *arg = __builtin_apply_args();
-
         __builtin_apply((void*)kprintf, arg, 100);
-
         restore(mask);
+    #endif
 
+}
+
+void debug_out(char *fmt, ...)
+{
+    #ifdef DEBUG_OUT
+        void *arg = __builtin_apply_args();
+        __builtin_apply((void*)kprintf, arg, 100);        
+    #endif
 }
 void enq(queue* q,pid32 pid)
 {
-    kprintf("ENQ -> %d",pid);
+    debug_out("ENQ -> %d",pid);
     node *new_node=(node*)getmem(sizeof(node));
     new_node->pid=pid;
     new_node->next=NULL;
@@ -33,8 +40,8 @@ void enq(queue* q,pid32 pid)
     {
         q->head=new_node;
     }
-    kprintf("ENQ -> %d",q->tail->pid);
-    kprintf("ENQ-head -> %d",q->head->pid);
+    debug_out("ENQ -> %d",q->tail->pid);
+    debug_out("ENQ-head -> %d",q->head->pid);
 }
 
 pid32 dq(queue* q)
