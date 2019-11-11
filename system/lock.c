@@ -34,6 +34,7 @@ void enq(queue* q,pid32 pid)
         q->head=new_node;
     }
     kprintf("ENQ -> %d",q->tail->pid);
+    kprintf("ENQ-head -> %d",q->head->pid);
 }
 
 pid32 dq(queue* q)
