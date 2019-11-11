@@ -91,7 +91,7 @@ bool8 checkinq(queue *q,pid32 pid)
     node* it = q->head;
     while(it!=NULL)
     {
-        sync_printf("CyclePID  -> %d \n",it->pid);
+        sync_debug_out("CyclePID  -> %d \n",it->pid);
         if(pid==it->pid)
         {
             return 1;
@@ -121,32 +121,32 @@ syscall al_initlock(al_lock_t *l)
 }
 syscall al_lock(al_lock_t *l)
 {
-    sync_printf("Inside LOCK for PID -> %d \n",currpid);
+    sync_debug_out("Inside LOCK for PID -> %d \n",currpid);
     
     
-    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on lock guard (currpid = %d)\n",currpid);}    
+    while(test_and_set(&l->guard,1)==1){sync_debug_out("spinning on lock guard (currpid = %d)\n",currpid);}    
     if(l->flag==0)
     {
-        sync_printf("inside when flag =0 lock code part \n");
+        sync_debug_out("inside when flag =0 lock code part \n");
         l->owner=currpid;
         l->flag=1;
         l->guard=0;        
     }
     else
     {
-        sync_printf("inside when flag =1 lock code part \n");
+        sync_debug_out("inside when flag =1 lock code part \n");
         proctab[currpid].prlockindex=l->index;
-        sync_printf("1. prlockindex of %d: %d\n", currpid, proctab[currpid].prlockindex); 
+        sync_debug_out("1. prlockindex of %d: %d\n", currpid, proctab[currpid].prlockindex); 
         struct	procent	*prptr;		/* Pointer to proc. table entry */
         queue   cycleq;
         cycleq.head=NULL;
         cycleq.tail=NULL;
         enq(&cycleq,currpid);
-        sync_printf("CURRPID %d \n",currpid);
-        sync_printf("CYCleQ  -> ");
+        sync_debug_out("CURRPID %d \n",currpid);
+        sync_debug_out("CYCleQ  -> ");
         printq(cycleq);
         pid32   cyclepid=l->owner;
-        sync_printf("Current lock index - %d, current lock owner pid - %d\n",l->index,l->owner);
+        sync_debug_out("Current lock index - %d, current lock owner pid - %d\n",l->index,l->owner);
         prptr=&proctab[cyclepid];
         while(prptr->prlockindex!=-1)
         {
@@ -160,7 +160,7 @@ syscall al_lock(al_lock_t *l)
             else
             {
                 enq(&cycleq,cyclepid);                
-                sync_printf("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,cyclepid);
+                sync_debug_out("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,cyclepid);
                 //printq(cycleq);
                 cyclepid=al_lock_list[prptr->prlockindex]->owner;                
                 prptr= &proctab[cyclepid];
@@ -178,20 +178,20 @@ syscall al_lock(al_lock_t *l)
 }
 syscall al_unlock(al_lock_t *l)
 {
-    sync_printf("Inside UNLOCK for PID -> %d \n",currpid);
+    sync_debug_out("Inside UNLOCK for PID -> %d \n",currpid);
     while(test_and_set(&l->guard,1)==1);
 
     if(currpid!=l->owner){
-        sync_printf("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
+        sync_debug_out("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
         l->guard=0;
         return SYSERR;
     }
     if(l->q.head==NULL)
     {
-        sync_printf("Inside unlock when q empty\n");
+        sync_debug_out("Inside unlock when q empty\n");
         l->flag=0;
         proctab[l->owner].prlockindex=-1;
-        sync_printf("2. prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
+        sync_debug_out("2. prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
         l->owner=0;     
         l->guard=0;
            
@@ -199,13 +199,13 @@ syscall al_unlock(al_lock_t *l)
     else
     {
 
-        sync_printf("Inside unlock when q has elements\n");
+        sync_debug_out("Inside unlock when q has elements\n");
         printq(l->q);
         pid32 pid = dq(&(l->q));        
         l->owner=pid;
         proctab[l->owner].prlockindex=-1;
-        sync_printf("3. prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
-        sync_printf("Releasing lock from currpid(%d). Now PID: %d is the owner of LID: %d\n",currpid, l->owner, l->index);
+        sync_debug_out("3. prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
+        sync_debug_out("Releasing lock from currpid(%d). Now PID: %d is the owner of LID: %d\n",currpid, l->owner, l->index);
         al_unpark(l,pid);        
         l->guard=0;
     }
