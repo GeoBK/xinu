@@ -65,6 +65,7 @@ void al_unpark(al_lock_t *l,pid32 pid)
 
 	prptr = &proctab[pid];
 	while (prptr->prhasmsg) {
+        kprintf("IS THIS EVER HIT??");
 		ready(currpid); // modified here - if phasmsg was set another process might have sent a message. Wait for receiver to receive and clean the flag
 		//restore(mask); OLD CODE
 		//return SYSERR; OLD CODE
@@ -77,6 +78,7 @@ void al_unpark(al_lock_t *l,pid32 pid)
 	if (prptr->prstate == PR_RECV) {
 		ready(pid);
 	} else if (prptr->prstate == PR_RECTIM) {
+        kprintf("THIS CODE SHOULDNT BE HIT!!!!");
 		unsleep(pid);
 		ready(pid);
 	}
@@ -162,10 +164,8 @@ syscall al_lock(al_lock_t *l)
                 cyclepid=al_lock_list[prptr->prlockindex]->owner;                
                 prptr= &proctab[cyclepid];
             }
-        }
-
+        }       
         
-        sync_printf("Did i shit my pants yet??? \n");
         enq(&(l->q),currpid);
         printq(l->q);
         al_setpark(l,currpid);        
@@ -199,8 +199,10 @@ syscall al_unlock(al_lock_t *l)
         sync_printf("Inside unlock when q has elements\n");
         printq(l->q);
         pid32 pid = dq(&(l->q)); 
-        proctab[l->owner].prlockindex=-1; 
-        l->owner=pid;
+        proctab[l->owner].prlockindex=-1;
+        sync_printf("prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
+        l->owner=pid;        
+        sync_printf("Releasing lock from currpid(%d). Now PID: %d is the owner of LID: %d\n",currpid, l->owner, l->index);
         al_unpark(l,pid);        
         l->guard=0;
     }
