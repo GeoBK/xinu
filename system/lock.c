@@ -20,7 +20,7 @@ void sync_printf(char *fmt, ...)
 }
 void enq(queue* q,pid32 pid)
 {
-    kprintf("PID in enq -> %d",pid);
+    kprintf("ENQ -> %d",pid);
     node *new_node=(node*)getmem(sizeof(node));
     new_node->pid=pid;
     new_node->next=NULL;
@@ -33,6 +33,7 @@ void enq(queue* q,pid32 pid)
     {
         q->head=new_node;
     }
+    kprintf("ENQ -> %d",q->tail->pid);
 }
 
 pid32 dq(queue* q)

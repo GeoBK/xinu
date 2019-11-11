@@ -138,7 +138,7 @@ syscall al_lock(al_lock_t *l)
         queue   cycleq;
         enq(&cycleq,currpid);
         sync_printf("CURRPID %d \n",currpid);
-        sync_printf("CYCleQ  -> \n");
+        sync_printf("CYCleQ  -> ");
         printq(cycleq);
         pid32   cyclepid=l->owner;
         sync_printf("Current lock index - %d, current lock owner pid - %d\n",l->index,l->owner);
@@ -166,7 +166,7 @@ syscall al_lock(al_lock_t *l)
         sync_printf("Did i shit my pants yet??? \n");
         enq(&(l->q),currpid);
         printq(l->q);
-        al_setpark(l,currpid);
+        al_setpark(l,currpid);        
         l->guard=0;
         al_park(l);        
     }
@@ -196,10 +196,10 @@ syscall al_unlock(al_lock_t *l)
     {
         sync_printf("Inside unlock when q has elements\n");
         printq(l->q);
-        pid32 pid = dq(&(l->q));  
-        al_unpark(l,pid);  
-        proctab[l->owner].prlockindex=-1;
+        pid32 pid = dq(&(l->q)); 
+        proctab[l->owner].prlockindex=-1; 
         l->owner=pid;
+        al_unpark(l,pid);        
         l->guard=0;
     }
     return OK;    
