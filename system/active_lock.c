@@ -136,6 +136,7 @@ syscall al_lock(al_lock_t *l)
     {
         sync_printf("inside when flag =1 lock code part \n");
         proctab[currpid].prlockindex=l->index;
+        sync_printf("1. prlockindex of %d: %d\n", currpid, proctab[currpid].prlockindex); 
         struct	procent	*prptr;		/* Pointer to proc. table entry */
         queue   cycleq;
         cycleq.head=NULL;
@@ -190,6 +191,7 @@ syscall al_unlock(al_lock_t *l)
         sync_printf("Inside unlock when q empty\n");
         l->flag=0;
         proctab[l->owner].prlockindex=-1;
+        sync_printf("2. prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
         l->owner=0;     
         l->guard=0;
            
@@ -200,7 +202,7 @@ syscall al_unlock(al_lock_t *l)
         printq(l->q);
         pid32 pid = dq(&(l->q)); 
         proctab[l->owner].prlockindex=-1;
-        sync_printf("prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
+        sync_printf("3. prlockindex of %d: %d\n", l->owner, proctab[l->owner].prlockindex); 
         l->owner=pid;        
         sync_printf("Releasing lock from currpid(%d). Now PID: %d is the owner of LID: %d\n",currpid, l->owner, l->index);
         al_unpark(l,pid);        
