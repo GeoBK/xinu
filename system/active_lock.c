@@ -89,6 +89,7 @@ bool8 checkinq(queue *q,pid32 pid)
     node* it = q->head;
     while(it!=NULL)
     {
+        sync_printf("CyclePID  -> %d \n",it->pid);
         if(pid==it->pid)
         {
             return 1;
