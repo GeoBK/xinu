@@ -121,7 +121,7 @@ syscall al_lock(al_lock_t *l)
     sync_printf("Inside LOCK for PID -> %d \n",currpid);
     
     
-    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on lock guard \n");}
+    while(test_and_set(&l->guard,1)==1){sync_printf("spinning on lock guard (currpid = %d)\n",currpid);}
     
     if(l->flag==0)
     {
@@ -171,6 +171,7 @@ syscall al_unlock(al_lock_t *l)
 
     if(currpid!=l->owner){
         sync_printf("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
+        l->guard=0;
         return SYSERR;
     }
     if(l->q.head==NULL)
