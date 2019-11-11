@@ -135,7 +135,7 @@ syscall al_lock(al_lock_t *l)
         queue   cycleq;
         enq(&cycleq,currpid);
         pid32   cyclepid=l->owner;
-        prptr=proctab[cyclepid];
+        prptr=&proctab[cyclepid];
         while(prptr->prlockindex!=-1)
         {
             if(checkinq(&cycleq,cyclepid)==1)
@@ -148,7 +148,7 @@ syscall al_lock(al_lock_t *l)
             else
             {
                 cyclepid=al_lock_list[prptr->prlockindex]->owner;
-                prptr= proctab[al_lock_list[prptr->prlockindex]->owner];
+                prptr= &proctab[al_lock_list[prptr->prlockindex]->owner];
                 enq(&cycleq,cyclepid);                
             }
         }
