@@ -136,6 +136,8 @@ syscall al_lock(al_lock_t *l)
         proctab[currpid].prlockindex=l->index;
         struct	procent	*prptr;		/* Pointer to proc. table entry */
         queue   cycleq;
+        cycleq.head=NULL;
+        cycleq.tail=NULL;
         enq(&cycleq,currpid);
         sync_printf("CURRPID %d \n",currpid);
         sync_printf("CYCleQ  -> ");
