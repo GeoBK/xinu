@@ -140,35 +140,54 @@ syscall al_lock(al_lock_t *l)
         proctab[currpid].prlockindex=l->index;
         sync_debug_out("1. prlockindex of %d: %d\n", currpid, proctab[currpid].prlockindex); 
         struct	procent	*prptr;		/* Pointer to proc. table entry */
-        queue   cycleq;
-        cycleq.head=NULL;
-        cycleq.tail=NULL;
-        enq(&cycleq,currpid);
-        sync_debug_out("CURRPID %d \n",currpid);
-        sync_debug_out("CYCleQ  -> ");
-        printq(cycleq);
-        pid32   cyclepid=l->owner;
+        
+        sync_debug_out("CURRPID %d \n",currpid);        
         sync_debug_out("Current lock index - %d, current lock owner pid - %d\n",l->index,l->owner);
-        prptr=&proctab[cyclepid];
-        while(prptr->prlockindex!=-1)
+        
+        int i;
+        queue checked_locks;
+        checked_locks.head=NULL;
+        checked_locks.tail=NULL;
+        for(i=0;i<num_activelocks;++i)
         {
-            if(checkinq(&cycleq,cyclepid)==1)
+            
+            if(checkinq(&checked_locks,i)==1)
             {
-                //printf that a cycle has been formed
-                kprintf("lock_detected=");
-                printq(cycleq);                
-                break;
+                continue;
             }
             else
             {
-                enq(&cycleq,cyclepid);                
-                sync_debug_out("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,cyclepid);
-                //printq(cycleq);
-                cyclepid=al_lock_list[prptr->prlockindex]->owner;                
-                prptr= &proctab[cyclepid];
-            }
-        }       
-        
+                //enq(&checked_locks,i);
+                if(al_lock_list[i]->owner!=0)
+                {
+                    pid32   cyclepid=al_lock_list[i]->owner;
+                    prptr=&proctab[cyclepid];
+                    queue   cycleq;
+                    cycleq.head=NULL;
+                    cycleq.tail=NULL;
+                    //enq(&cycleq,currpid);
+                    while(prptr->prlockindex!=-1)
+                    {
+                        enq(&checked_locks,prptr->prlockindex);
+                        if(checkinq(&cycleq,cyclepid)==1)
+                        {
+                            //printf that a cycle has been formed
+                            kprintf("lock_detected=");
+                            printinorder(cycleq);                
+                            break;
+                        }
+                        else
+                        {
+                            enq(&cycleq,cyclepid);                
+                            sync_debug_out("Next lock index - %d, next lock owner pid - %d\n",prptr->prlockindex,cyclepid);
+                            //printq(cycleq);
+                            cyclepid=al_lock_list[prptr->prlockindex]->owner;                                           
+                            prptr= &proctab[cyclepid];
+                        }
+                    }  
+                }                
+            }            
+        }        
         enq(&(l->q),currpid);
         printq(l->q);
         al_setpark(l,currpid);        

@@ -78,6 +78,45 @@ void printq(queue q)
     restore(mask);
 }
 
+void printinorder(queue q)
+{
+    intmask mask = disable();
+    node* it = q.head;
+    node* min_node;
+    node dummy_node;
+    node* prev_node;
+    node* prev_min_node;
+    if(it==NULL)kprintf("Q empty!!! \n");
+    while(q.head!=q.tail)
+    {
+        it=q.head;
+        prev_node=&dummy_node;
+        while(it != NULL)
+        {
+            if(min_node==NULL || min_node->pid>it->pid)
+            {
+                min_node=it;
+                prev_min_node=prev_node;                
+            }
+            prev_node=it;
+            it=it->next;
+        }
+        kprintf("%d",min_node->pid);
+        kprintf("-",it->pid);
+        if(prev_min_node==&dummy_node)
+        {
+            q.head=q.head->next;
+        }
+        else
+        {
+            prev_min_node->next=min_node->next;
+        }               
+    }
+    kprintf("%d",q.head->pid);    
+    kprintf("\n");
+    restore(mask);
+}
+
 process park(lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
