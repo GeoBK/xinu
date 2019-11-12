@@ -11,21 +11,21 @@ process pi_park(pi_lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
     mask = disable();
-    kprintf("Inside park\n");
+    sync_debug_out("Inside park\n");
     //---------------------------critical section--------------------
     if(l->set_park_called == l->unpark_called && l->set_park_called !=0)
     {
-        kprintf("Inside that instance when park is called after unpark is called!!!\n");
+        sync_debug_out("Inside that instance when park is called after unpark is called!!!\n");
         l->unpark_called=0;
         l->set_park_called=0;
     }
     else
     {
-        kprintf("pid : %d will now be put to sleep\n",currpid);
+        sync_debug_out("pid : %d will now be put to sleep\n",currpid);
         struct	procent *prptr;		/* Ptr to process's table entry	*/        
         prptr = &proctab[currpid];
         if (prptr->prhasmsg == FALSE) {
-            kprintf("pid : %d will now be put to sleep 2\n",currpid);
+            sync_debug_out("pid : %d will now be put to sleep 2\n",currpid);
             prptr->prstate = PR_RECV;
             resched();		/* Block until message arrives	*/
         }        
@@ -121,7 +121,7 @@ syscall pi_lock(pi_lock_t *l)
         //sync_debug_out("inside when flag =1 lock code part \n");
         preempt = QUANTUM;
         enq(&(l->q),currpid);
-        printq(l->q);
+        //printq(l->q);
         if(proctab[currpid].prprio>l->lockpriority)
         {
             sync_printf("priority_change=P%d::%d-%d",l->owner,l->lockpriority,proctab[currpid].prprio);
