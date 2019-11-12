@@ -128,6 +128,7 @@ process	main(void)
 	//pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
 	kprintf("Created children\n");
 	resume(pid1);
+	receive();
 	//resume(pid2);
 	//Expected output   -   lock_detected=P1-P2	
 	return OK;
