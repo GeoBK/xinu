@@ -124,7 +124,7 @@ syscall pi_lock(pi_lock_t *l)
         //printq(l->q);
         if(proctab[currpid].prprio>l->lockpriority)
         {
-            sync_printf("priority_change=P%d::%d-%d",l->owner,l->lockpriority,proctab[currpid].prprio);
+            sync_printf("priority_change=P%d::%d-%d\n",l->owner,l->lockpriority,proctab[currpid].prprio);
             preempt = QUANTUM;
             l->lockpriority=proctab[currpid].prprio;  
             proctab[l->owner].prprio=l->lockpriority;
@@ -155,7 +155,7 @@ syscall pi_unlock(pi_lock_t *l)
         l->flag=0;
         if(proctab[l->owner].prprio!=proctab[l->owner].initialpriority)
         {
-            sync_printf("priority_change=P%d::%d-%d",l->owner,proctab[l->owner].prprio,l->initialpriority);
+            sync_printf("priority_change=P%d::%d-%d\n",l->owner,proctab[l->owner].prprio,l->initialpriority);
             preempt = QUANTUM;
         }
         proctab[l->owner].prprio=proctab[l->owner].initialpriority;        
@@ -179,7 +179,7 @@ syscall pi_unlock(pi_lock_t *l)
         pri16 maxpri=maxpriority(l->q);
         if(maxpri>l->lockpriority)
         {
-            sync_printf("priority_change=P%d::%d-%d",l->owner,l->lockpriority,maxpri);
+            sync_printf("priority_change=P%d::%d-%d\n",l->owner,l->lockpriority,maxpri);
             preempt = QUANTUM;
             l->lockpriority=maxpri;
             proctab[l->owner].prprio=maxpri;
@@ -189,6 +189,10 @@ syscall pi_unlock(pi_lock_t *l)
         }
         pi_unpark(l,pid);        
         l->guard=0;
+        if(proctab[oldowner].prprio!=oldpriority)
+        {
+            sync_printf("priority_change=P%d::%d-%d\n",oldowner,proctab[oldowner].prprio,oldpriority);
+        }
         proctab[oldowner].prprio=oldpriority;
     }
     return OK;    
