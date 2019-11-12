@@ -125,7 +125,7 @@ syscall al_lock(al_lock_t *l)
     sync_debug_out("Inside LOCK for PID -> %d \n",currpid);
     
     
-    while(test_and_set(&l->guard,1)==1){sync_debug_out("spinning on lock guard (currpid = %d)\n",currpid);}    
+    while(test_and_set(&l->guard,1)==1){sleepms(QUANTUM);sync_debug_out("spinning on lock guard (currpid = %d)\n",currpid);}    
     if(l->flag==0)
     {
         sync_debug_out("inside when flag =0 lock code part \n");
@@ -200,7 +200,7 @@ syscall al_lock(al_lock_t *l)
 syscall al_unlock(al_lock_t *l)
 {
     sync_debug_out("Inside UNLOCK for PID -> %d \n",currpid);
-    while(test_and_set(&l->guard,1)==1);
+    while(test_and_set(&l->guard,1)==1){sleepms(QUANTUM);}
 
     if(currpid!=l->owner){
         sync_debug_out("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
@@ -239,11 +239,13 @@ bool8   al_trylock(al_lock_t *l)
     preempt = QUANTUM;
     if(l->flag==1)
     {
+        sync_printf("Inside trylock when flag=1\n");
         l->guard=0;
         return 0;
     }
     else
     {
+        sync_printf("Inside trylock when flag=0\n");
         l->guard=0;
         al_lock(l);
         return 1;
