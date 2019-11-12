@@ -111,7 +111,7 @@ syscall pi_lock(pi_lock_t *l)
         preempt = QUANTUM;
         l->owner=currpid;
         l->flag=1;   
-        l->initialpriority=proctab[currpid].prprio; 
+        proctab[l->owner].initialpriority=proctab[currpid].prprio; 
         l->lockpriority=proctab[currpid].prprio;     
         l->guard=0;    
             
@@ -153,30 +153,29 @@ syscall pi_unlock(pi_lock_t *l)
         //sync_debug_out("Inside unlock when q empty\n");
         preempt = QUANTUM;
         l->flag=0;
-        if(proctab[l->owner].prprio!=l->initialpriority)
+        if(proctab[l->owner].prprio!=proctab[l->owner].initialpriority)
         {
             sync_printf("priority_change=P%d::%d-%d",l->owner,proctab[l->owner].prprio,l->initialpriority);
             preempt = QUANTUM;
         }
-        proctab[l->owner].prprio=l->initialpriority;        
+        proctab[l->owner].prprio=proctab[l->owner].initialpriority;        
         l->owner=0;
-        l->lockpriority=0;
-        l->initialpriority=0;
+        l->lockpriority=0;        
         l->guard=0;
         
     }
     else
     {
         //sync_debug_out("Inside unlock when q has elements\n");
-        preempt = QUANTUM;
+        preempt = 2*QUANTUM;
         pid32 oldowner=l->owner;
-        pri16 oldpriority=l->initialpriority;
+        pri16 oldpriority=proctab[l->owner].initialpriority;
         
         // printq(l->q);
         pid32 pid = dq(&(l->q)); 
         l->owner=pid; 
-        l->initialpriority=proctab[l->owner].prprio;
-        l->lockpriority=l->initialpriority;
+        proctab[l->owner].initialpriority=proctab[l->owner].prprio;
+        l->lockpriority=proctab[l->owner].initialpriority;
         pri16 maxpri=maxpriority(l->q);
         if(maxpri>l->lockpriority)
         {

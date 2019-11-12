@@ -79,8 +79,7 @@ typedef struct pi_lock_t
     queue   q;
     uint32  set_park_called;
     uint32  unpark_called;
-    pid32   owner;
-    pri16	initialpriority;		/* lock priority			*/
+    pid32   owner;    
     pri16	lockpriority;		/* lock priority			*/
         
 } pi_lock_t;

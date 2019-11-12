@@ -54,6 +54,7 @@ struct procent {		/* Entry in the process table		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
 	uint32	runtime;
 	int32	prlockindex;		/* lock on which process waits */
+	pri16	initialpriority;
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/
