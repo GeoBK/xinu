@@ -14,7 +14,7 @@ process al_park(al_lock_t *l)
     //---------------------------critical section--------------------
     if(l->set_park_called == l->unpark_called && l->set_park_called !=0)
     {
-        debug_out("Inside that instance when park is called after unpark is called!!!\n");
+        kprintf("Inside that instance when park is called after unpark is called!!!\n");
         l->unpark_called=0;
         l->set_park_called=0;
     }
@@ -65,7 +65,7 @@ void al_unpark(al_lock_t *l,pid32 pid)
 
 	prptr = &proctab[pid];
 	while (prptr->prhasmsg) {
-        debug_out("IS THIS EVER HIT??");
+        kprintf("IS THIS EVER HIT??");
 		ready(currpid); // modified here - if phasmsg was set another process might have sent a message. Wait for receiver to receive and clean the flag
 		//restore(mask); OLD CODE
 		//return SYSERR; OLD CODE
