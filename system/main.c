@@ -129,6 +129,7 @@ process	main(void)
 	kprintf("Created children\n");
 	resume(pid1);
 	receive();
+	
 	//resume(pid2);
 	//Expected output   -   lock_detected=P1-P2	
 	return OK;
