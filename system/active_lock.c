@@ -122,6 +122,7 @@ syscall al_initlock(al_lock_t *l)
 }
 syscall al_lock(al_lock_t *l)
 {
+    
     sync_debug_out("Inside LOCK for PID -> %d \n",currpid);
     
     
