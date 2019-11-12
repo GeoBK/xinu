@@ -1,14 +1,11 @@
 #include <xinu.h>
 uint32 num_pilocks=0;
-
-#include <xinu.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <inttypes.h>
 
-uint32 num_locks=0;
 
 process pi_park(pi_lock_t *l)
 {
