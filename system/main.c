@@ -83,6 +83,8 @@ process nthreads(uint32 nt, uint32 *x, uint32 n, al_lock_t *mutex){
 process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
 {
 	sync_debug_out("In deadlock function \n");
+	debug_out("l1 index : %d\n",l1->index);
+	debug_out("l2 index : %d\n",l2->index);
 	sync_debug_out("l1  : %d\n",l1);
 	sync_debug_out("l2  : %d\n",l2);
 	al_lock(l1);
@@ -120,7 +122,7 @@ process	main(void)
 	debug_out("l1  : %d\n",&l1);
 	debug_out("l2  : %d\n",&l2);
 	kprintf("Creating deadlock creating child processes\n");
-	pid32 pid1 = create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2);
+	pid32 pid1 = create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, l1, l2);
 	//pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
 	kprintf("Created children\n");
 	resume(pid1);
