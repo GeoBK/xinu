@@ -207,6 +207,7 @@ process longrunningprocess()
         }
     }
     sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
+	return OK;
 }
 
 process main()
