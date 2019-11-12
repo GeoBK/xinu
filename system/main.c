@@ -83,8 +83,8 @@ process nthreads(uint32 nt, uint32 *x, uint32 n, al_lock_t *mutex){
 process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
 {
 	sync_debug_out("In deadlock function \n");
-	debug_out("l1 index : %d\n",l1->index);
-	debug_out("l2 index : %d\n",l2->index);
+	debug_out("l1  : %d\n",l1);
+	debug_out("l2  : %d\n",l2);
 	al_lock(l1);
 
 	yield();
@@ -96,12 +96,12 @@ process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
 
 process	main(void)
 {
-	uint32 x;			// shared variable
-	unsigned nt;			// number of threads cooperating
-	unsigned value = 100; 		// target value of variable
-	al_lock_t mutex;  		// mutex	
+	// uint32 x;			// shared variable
+	// unsigned nt;			// number of threads cooperating
+	// unsigned value = 100; 		// target value of variable
+	// al_lock_t mutex;  		// mutex	
 
-	kprintf("\n\n=====     Testing the SPINLOCK's implementation     =====\n");
+	// kprintf("\n\n=====     Testing the SPINLOCK's implementation     =====\n");
 
 	// // 10 threads
 	// kprintf("\n\n================= TEST 1 = 10 threads ===================\n");
@@ -117,12 +117,14 @@ process	main(void)
 	al_initlock(&l2);
 	debug_out("l1 index : %d\n",l1.index);
 	debug_out("l2 index : %d\n",l2.index);
+	debug_out("l1  : %d\n",&l1);
+	debug_out("l2  : %d\n",&l2);
 	kprintf("Creating deadlock creating child processes\n");
 	pid32 pid1 = create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2);
 	pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
 	kprintf("Created children\n");
 	resume(pid1);
-	resume(pid1);
+	resume(pid2);
 	//Expected output lock_detected=P1-P2	
 	return OK;
 }
