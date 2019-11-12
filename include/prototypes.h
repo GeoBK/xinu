@@ -609,7 +609,7 @@ extern	syscall	yield(void);
 
 /* in file testandset.S */
 extern	uint32	test_and_set(void *, uint32);
-#define DEBUG_OUT
+// #define DEBUG_OUT
 extern void debug_out(char *fmt, ...);
 
 extern void sync_debug_out(char *fmt, ...);
