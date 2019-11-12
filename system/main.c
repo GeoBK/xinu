@@ -246,6 +246,7 @@ process main()
 	pid32 pid5 = create((void *)lockswithdiffpri, INITSTK, 3,"trylock", 2, &l6);
     pid32 pid6 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
     resume(pid4);
+	sleepms(3);
 	resume(pid5);
 	resume(pid6);	
 	receive();
@@ -253,9 +254,10 @@ process main()
 	receive();
     kprintf("Testcase complete\n");  
 	//Expected output
-    // PID: 7 with priority 3 completed.
-    // PID: 6 with priority 1 completed.
-    // PID: 8 with priority 2 completed. 
+	// PID: 11 with priority 2 completed. 
+    // PID: 9 with priority 1 completed.
+    // PID: 10 with priority 3 completed.
+    
 
 	return OK;
 }

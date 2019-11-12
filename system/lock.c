@@ -121,7 +121,7 @@ pri16 maxpriority(queue q)
 {
     if(q.head==NULL)
     {
-        kprintf("maxpriority called for null q!!!");
+        //kprintf("maxpriority called for null q!!!");
         return 0;
     }
     else

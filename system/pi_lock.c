@@ -172,7 +172,7 @@ syscall pi_unlock(pi_lock_t *l)
         pid32 oldowner=l->owner;
         pri16 oldpriority=l->initialpriority;
         
-        printq(l->q);
+        // printq(l->q);
         pid32 pid = dq(&(l->q)); 
         l->owner=pid; 
         l->initialpriority=proctab[l->owner].prprio;
