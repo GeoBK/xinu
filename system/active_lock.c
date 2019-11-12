@@ -236,6 +236,7 @@ syscall al_unlock(al_lock_t *l)
 bool8   al_trylock(al_lock_t *l)
 {
     while(test_and_set(&l->guard,1)==1);
+    preempt = QUANTUM;
     if(l->flag==1)
     {
         l->guard=0;
