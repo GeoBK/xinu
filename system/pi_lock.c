@@ -6,7 +6,7 @@ uint32 num_pilocks=0;
 #include <stdlib.h>
 #include <inttypes.h>
 
-
+#define MAX_PRIORITY 30000
 process pi_park(pi_lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
@@ -104,8 +104,7 @@ syscall pi_initlock(pi_lock_t *l)
 syscall pi_lock(pi_lock_t *l)
 {
     sync_debug_out("Inside LOCK for PID -> %d \n",currpid);
-    while(test_and_set(&l->guard,1)==1){sync_debug_out("spinning on lock guard \n");}
-
+    while(test_and_set(&l->guard,1)==1){sleepms(QUANTUM);sync_debug_out("spinning on lock guard \n");}    
     if(l->flag==0)
     {
         sync_debug_out("inside when flag =0 lock code part \n");
@@ -137,7 +136,7 @@ syscall pi_lock(pi_lock_t *l)
 syscall pi_unlock(pi_lock_t *l)
 {
     sync_debug_out("Inside UNLOCK for PID -> %d \n",currpid);
-    while(test_and_set(&l->guard,1)==1){sync_debug_out("spinning on unlock guard (currpid= %d)\n",currpid);}
+    while(test_and_set(&l->guard,1)==1){sleepms(QUANTUM);sync_debug_out("spinning on unlock guard (currpid= %d)\n",currpid);}
 
     if(currpid!=l->owner){
         sync_debug_out("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);
