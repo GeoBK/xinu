@@ -112,6 +112,8 @@ process	main(void)
 	al_lock_t l1,l2;
 	al_initlock(&l1);
 	al_initlock(&l2);
+	debug_out("l1 index : %d\n",l1.index);
+	debug_out("l2 index : %d\n",l2.index);
 	kprintf("Creating deadlock creating child processes\n");
 	pid32 pid1 = create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2);
 	pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
