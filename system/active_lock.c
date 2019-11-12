@@ -173,7 +173,8 @@ syscall al_lock(al_lock_t *l)
                         {
                             //printf that a cycle has been formed
                             kprintf("lock_detected=");
-                            printinorder(cycleq);                
+                            printq(cycleq);
+                            //printinorder(cycleq);                
                             break;
                         }
                         else
