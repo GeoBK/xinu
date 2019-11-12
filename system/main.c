@@ -179,9 +179,9 @@ process pilocks(pi_lock_t *l1)
 	int i,j,k;
 	for(i=0;i<200000;i++)
 	{
-		for(j=0;j<20000;j++)
+		for(j=0;j<2000;j++)
 		{
-			for(k=0;k<200000;k++);
+			for(k=0;k<2000;k++);
 		}
 	}
 	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);

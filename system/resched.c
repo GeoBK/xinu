@@ -23,6 +23,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	/* Point to process table entry for the current (old) process */
 
 	ptold = &proctab[currpid];
+	pid32	oldpid=currpid;
 
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
 		if (ptold->prprio > firstkey(readylist)) {
@@ -41,6 +42,12 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
 	preempt = QUANTUM;		/* Reset time slice for process	*/
+	#define DEBUG_CTXSW
+	#ifdef DEBUG_CTXSW  
+	if(oldpid!=currpid){		
+		kprintf("ctxsw::%d-%d\n",oldpid,currpid);
+	}	
+	#endif
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
 
 	/* Old process returns here when resumed */
