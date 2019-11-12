@@ -119,6 +119,30 @@ void printinorder(queue q)
     restore(mask);
 }
 
+pri16 maxpriority(queue q)
+{
+    if(q.head==NULL)
+    {
+        kprintf("maxpriority called for null q!!!");
+        return 0;
+    }
+    else
+    {
+        pri16 max_pri=-1;
+        node* it=q.head;
+        while(it!=NULL)
+        {
+            if(max_pri==-1||proctab[it->pid].prprio>max_pri)
+            {
+                max_pri=proctab[it->pid].prprio;
+            }
+            it=it->next;
+        }
+        return max_pri;
+    }
+    
+}
+
 process park(lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/

@@ -221,7 +221,7 @@ syscall al_unlock(al_lock_t *l)
     {
 
         sync_debug_out("Inside unlock when q has elements\n");
-        printq(l->q);
+        // printq(l->q);
         pid32 pid = dq(&(l->q));        
         l->owner=pid;
         proctab[l->owner].prlockindex=-1;
