@@ -174,8 +174,7 @@ void sync_printf(char *fmt, ...)
 }
 
 process pilocks(pi_lock_t *l1)
-{
-	
+{	
 	pi_lock(l1);
 	int i;
 	for(i=0;i<200000;i++);
