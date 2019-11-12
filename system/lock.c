@@ -26,8 +26,7 @@ void debug_out(char *fmt, ...)
     #endif
 }
 void enq(queue* q,pid32 pid)
-{
-    debug_out("ENQ -> %d",pid);
+{    
     node *new_node=(node*)getmem(sizeof(node));
     new_node->pid=pid;
     new_node->next=NULL;
@@ -40,8 +39,7 @@ void enq(queue* q,pid32 pid)
     {
         q->head=new_node;
     }
-    debug_out("ENQ -> %d",q->tail->pid);
-    debug_out("ENQ-head -> %d",q->head->pid);
+    
 }
 
 pid32 dq(queue* q)
@@ -147,7 +145,7 @@ process park(lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
     mask = disable();
-    kprintf("Inside park\n");
+    
     //---------------------------critical section--------------------
     if(l->set_park_called == l->unpark_called && l->set_park_called !=0)
     {
