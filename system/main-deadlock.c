@@ -1,7 +1,23 @@
+// /*  main.c  - main */
+
+// /*  main.c  - main */
+
 // #include <xinu.h>
+
+// void sync_printf(char *fmt, ...)
+
+// {    
+// 	intmask mask = disable();
+// 	void *arg = __builtin_apply_args();
+// 	__builtin_apply((void*)kprintf, arg, 100);
+// 	restore(mask);
+// }
+
+
 // process cycliclockswithtrylock(al_lock_t *l1, al_lock_t* l2)
 // {
 // 	while(!al_trylock(l1));	
+//     sync_printf("Acquired first lock! \n");
 // 	sleep(1);
 //     while(!al_trylock(l2));	
 // 	al_unlock(l2);
@@ -13,6 +29,7 @@
 // {
 	
 // 	al_lock(l1);
+
 // 	sleep(1);
 // 	al_lock(l2);
 // 	al_unlock(l2);
@@ -20,19 +37,21 @@
 // 	return OK;
 // }
 
-// process main()
+// process	main(void)
 // {
-//     //Testcase2 using the trylock function
+// 	//Testcase2 using the trylock function
 //     al_lock_t l5,l6;
 // 	al_initlock(&l5);
 // 	al_initlock(&l6);
-//     pid32 pid1 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l5, &l6);
-// 	pid32 pid2 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l6, &l5);
+//     pid32 pid5 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l5, &l6);
+// 	pid32 pid6 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l6, &l5);
+// 	resume(pid5);
+// 	resume(pid6);
+// 	receive();
+// 	receive();
 //     kprintf("Deadlock not created!!!\n");
 
-
-//     //Test case 1 - Creating a deadlock
-//     al_lock_t l1,l2,l3,l4;
+// 	al_lock_t l1,l2,l3,l4;
 // 	al_initlock(&l1);
 // 	al_initlock(&l2);
 // 	al_initlock(&l3);
@@ -56,9 +75,5 @@
 // 	kprintf("Deadlock not created!!!\n");
 // 	//resume(pid2);
 // 	//Expected output   -   lock_detected=P1-P2	
-
-    
-
-
 // 	return OK;
 // }
