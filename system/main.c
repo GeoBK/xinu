@@ -176,8 +176,11 @@ void sync_printf(char *fmt, ...)
 process pilocks(pi_lock_t *l1)
 {	
 	pi_lock(l1);
-	int i;
-	for(i=0;i<200000;i++);
+	int i,j;
+	for(i=0;i<200000;i++)
+	{
+		for(j=0;j<20000;j++);
+	}
 	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);
 	pi_unlock(l1);
     	
@@ -197,11 +200,14 @@ process lockswithdiffpri(lock_t *l1)
 
 process longrunningprocess()
 {
+	sync_printf("Inside long running process\n");
 	int i,j,k;
-    for(i=0;i<20000;i++)
+    for(i=0;i<200000;i++)
     {
-        for(j=0;i<20000;j++);
-        
+        for(j=0;j<200000;j++)
+		{
+			for(k=0;k<200000;k++)
+		}        
     }
     sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
 	return OK;
@@ -216,7 +222,7 @@ process main()
 	pid32 pid2 = create((void *)pilocks, INITSTK, 3,"trylock", 2, &l5);
     pid32 pid3 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
     resume(pid1);
-	sleepms(10);
+	sleepms(1);
 	resume(pid3);
 	resume(pid2);	
 	receive();
