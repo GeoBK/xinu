@@ -90,8 +90,7 @@ bool8 checkinq(queue *q,pid32 pid)
 {
     node* it = q->head;
     while(it!=NULL)
-    {
-        sync_debug_out("CyclePID  -> %d \n",it->pid);
+    {        
         if(pid==it->pid)
         {
             return 1;
@@ -190,7 +189,7 @@ syscall al_lock(al_lock_t *l)
             }            
         }        
         enq(&(l->q),currpid);
-        printq(l->q);
+        // printq(l->q);
         al_setpark(l,currpid);        
         l->guard=0;
         al_park(l);        
