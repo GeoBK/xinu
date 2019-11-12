@@ -155,7 +155,7 @@ syscall pi_unlock(pi_lock_t *l)
         l->flag=0;
         if(proctab[l->owner].prprio!=proctab[l->owner].initialpriority)
         {
-            sync_printf("priority_change=P%d::%d-%d\n",l->owner,proctab[l->owner].prprio,l->initialpriority);
+            sync_printf("priority_change=P%d::%d-%d\n",l->owner,proctab[l->owner].prprio,proctab[l->owner].initialpriority);
             preempt = QUANTUM;
         }
         proctab[l->owner].prprio=proctab[l->owner].initialpriority;        
