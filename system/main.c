@@ -168,7 +168,8 @@ process cycliclockswithtrylock(pi_lock_t *l1)
 {
 	
 	pi_lock(l1);
-	for(int i=0;i<200000;i++);
+	int i;
+	for(i=0;i<200000;i++);
 	pi_unlock(l1);
     sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
 	return OK;
@@ -176,11 +177,12 @@ process cycliclockswithtrylock(pi_lock_t *l1)
 
 process longrunningprocess()
 {
-    for(int i=0;i<200000;i++)
+	int i,j,k;
+    for(i=0;i<200000;i++)
     {
-        for(int i=0;i<200000;i++)
+        for(j=0;i<200000;i++)
         {
-            for(int i=0;i<200000;i++);
+            for(k=0;i<200000;i++);
         }
     }
     sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
