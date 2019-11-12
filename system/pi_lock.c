@@ -128,6 +128,8 @@ syscall pi_lock(pi_lock_t *l)
             preempt = QUANTUM;
             l->lockpriority=proctab[currpid].prprio;  
             proctab[l->owner].prprio=l->lockpriority;
+            queuetab[queuetab[l->owner].qnext].qprev = queuetab[l->owner].qprev;
+            queuetab[queuetab[l->owner].qprev].qnext = queuetab[l->owner].qnext;
             insert(l->owner, readylist, l->lockpriority);
         }
         pi_setpark(l,currpid);
@@ -182,6 +184,8 @@ syscall pi_unlock(pi_lock_t *l)
             preempt = QUANTUM;
             l->lockpriority=maxpri;
             proctab[l->owner].prprio=maxpri;
+            queuetab[queuetab[l->owner].qnext].qprev = queuetab[l->owner].qprev;
+            queuetab[queuetab[l->owner].qprev].qnext = queuetab[l->owner].qnext;	        
             insert(l->owner, readylist, l->lockpriority);
         }
         pi_unpark(l,pid);        
