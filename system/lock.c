@@ -81,7 +81,7 @@ void printq(queue q)
 void printinorder(queue q)
 {
     intmask mask = disable();
-    kprintf("lock_detected=");
+    kprintf("(currpid=%d)lock_detected=",currpid);
     node* it = q.head;
     node* min_node;
     node dummy_node;
