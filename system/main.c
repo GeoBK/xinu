@@ -82,15 +82,10 @@ process nthreads(uint32 nt, uint32 *x, uint32 n, al_lock_t *mutex){
 
 process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
 {
-	sync_debug_out("In deadlock function \n");
-	sync_debug_out("l1  : %d\n",l1);
-	sync_debug_out("l2  : %d\n",l2);
-	debug_out("l1 index : %d\n",l1->index);
-	debug_out("l2 index : %d\n",l2->index);
 	
 	al_lock(l1);
 
-	yield();
+	sleep(1);
 	al_lock(l2);
 	al_unlock(l2);
 	al_unlock(l1);
