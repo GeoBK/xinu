@@ -183,7 +183,7 @@ process pilocks(pi_lock_t *l1)
 		{
 			for(k=0;k<2000;k++);
 		}
-		sync_debug_out("%d\n",i);
+		//sync_debug_out("%d\n",i);
 	}
 	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);
 	pi_unlock(l1);    	

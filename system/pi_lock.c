@@ -161,7 +161,9 @@ syscall pi_unlock(pi_lock_t *l)
     else
     {
         sync_debug_out("Inside unlock when q has elements\n");
-        proctab[l->owner].prprio=l->initialpriority;
+        pid32 oldowner=l->owner;
+        pri16 oldpriority=l->initialpriority;
+        
         printq(l->q);
         pid32 pid = dq(&(l->q)); 
         l->owner=pid; 
@@ -176,6 +178,7 @@ syscall pi_unlock(pi_lock_t *l)
         }
         pi_unpark(l,pid);        
         l->guard=0;
+        proctab[oldowner].prprio=oldpriority;
     }
     return OK;    
 }
