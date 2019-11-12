@@ -80,6 +80,16 @@ process nthreads(uint32 nt, uint32 *x, uint32 n, al_lock_t *mutex){
 	return OK;
 }
 
+process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
+{
+	sync_debug_out("In deadlock function \n");
+	al_lock(l1);
+	yield();
+	al_lock(l2);
+	al_unlock(l2);
+	al_unlock(l1);
+}
+
 process	main(void)
 {
 	uint32 x;			// shared variable
@@ -98,8 +108,11 @@ process	main(void)
 	sync_printf("%d threads, n=%d, target value=%d\n", nt, value, x);
 	if (x==value) kprintf("TEST PASSED.\n"); else kprintf("TEST FAILED.\n");
 
-	
-
+	al_lock_t l1,l2;
+	al_initlock(&l1);
+	al_initlock(&l2);
+	resume(create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2));
+	resume(create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1));
 	return OK;
 }
 
