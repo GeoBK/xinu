@@ -80,6 +80,16 @@ process nthreads(uint32 nt, uint32 *x, uint32 n, al_lock_t *mutex){
 	return OK;
 }
 
+process cycliclockswithtrylock(al_lock_t *l1, al_lock_t* l2)
+{
+	while(!al_trylock(l1));	
+	sleep(1);
+    while(!al_trylock(l2));	
+	al_unlock(l2);
+	al_unlock(l1);
+	return OK;
+}
+
 process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
 {
 	
@@ -109,6 +119,15 @@ process	main(void)
 	// receive(); 
 	// sync_printf("%d threads, n=%d, target value=%d\n", nt, value, x);
 	// if (x==value) kprintf("TEST PASSED.\n"); else kprintf("TEST FAILED.\n");
+
+
+	//Testcase2 using the trylock function
+    al_lock_t l5,l6;
+	al_initlock(&l5);
+	al_initlock(&l6);
+    pid32 pid1 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l5, &l6);
+	pid32 pid2 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l6, &l5);
+    kprintf("Deadlock not created!!!\n");
 
 	al_lock_t l1,l2,l3,l4;
 	al_initlock(&l1);

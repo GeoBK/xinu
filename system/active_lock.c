@@ -232,3 +232,20 @@ syscall al_unlock(al_lock_t *l)
     }
     return OK;    
 }
+
+bool8   al_trylock(al_lock_t *l)
+{
+    while(test_and_set(&l->guard,1)==1);
+    if(l->flag==1)
+    {
+        l->guard=0;
+        return 0;
+    }
+    else
+    {
+        l->guard=0;
+        al_lock(l);
+        return 1;
+    }
+    
+}
