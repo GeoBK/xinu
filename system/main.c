@@ -110,20 +110,25 @@ process	main(void)
 	// sync_printf("%d threads, n=%d, target value=%d\n", nt, value, x);
 	// if (x==value) kprintf("TEST PASSED.\n"); else kprintf("TEST FAILED.\n");
 
-	al_lock_t l1,l2;
+	al_lock_t l1,l2,l3,l4;
 	al_initlock(&l1);
 	al_initlock(&l2);
-	debug_out("l1  : %d\n",&l1);
-	debug_out("l2  : %d\n",&l2);
-	debug_out("l1 index : %d\n",l1.index);
-	debug_out("l2 index : %d\n",l2.index);
+	al_initlock(&l3);
+	al_initlock(&l4);
+	
 	
 	kprintf("Creating deadlock creating child processes\n");
 	pid32 pid1 = create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2);
 	pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
+	pid32 pid3 = create((void *)deadlockfunc, INITSTK, 1,"deadlock3", 2, &l3, &l4);
+	pid32 pid4 = create((void *)deadlockfunc, INITSTK, 1,"deadlock4", 2, &l4, &l3);
 	kprintf("Created children\n");
 	resume(pid1);
 	resume(pid2);
+	resume(pid3);
+	resume(pid4);
+	receive();
+	receive();
 	receive();
 	receive();
 	kprintf("Deadlock not created!!!\n");

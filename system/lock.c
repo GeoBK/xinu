@@ -101,7 +101,7 @@ void printinorder(queue q)
             prev_node=it;
             it=it->next;
         }
-        kprintf("%d",min_node->pid);
+        kprintf("P%d",min_node->pid);
         kprintf("-",it->pid);
         if(prev_min_node==&dummy_node)
         {
