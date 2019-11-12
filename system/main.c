@@ -125,11 +125,13 @@ process	main(void)
 	
 	kprintf("Creating deadlock creating child processes\n");
 	pid32 pid1 = create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2);
-	//pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
+	pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
 	kprintf("Created children\n");
 	resume(pid1);
+	resume(pid2);
 	receive();
-	
+	receive();
+	kprintf("Deadlock not created!!!\n");
 	//resume(pid2);
 	//Expected output   -   lock_detected=P1-P2	
 	return OK;
