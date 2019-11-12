@@ -88,6 +88,7 @@ process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
 	al_lock(l2);
 	al_unlock(l2);
 	al_unlock(l1);
+	return OK;
 }
 
 process	main(void)
@@ -99,20 +100,25 @@ process	main(void)
 
 	kprintf("\n\n=====     Testing the SPINLOCK's implementation     =====\n");
 
-	// 10 threads
-	kprintf("\n\n================= TEST 1 = 10 threads ===================\n");
-	x = 0;	nt = 10;
- 	al_initlock(&mutex); 
-	resume(create((void *)nthreads, INITSTK, 1,"nthreads", 4, nt, &x, value/nt, &mutex));
-	receive(); 
-	sync_printf("%d threads, n=%d, target value=%d\n", nt, value, x);
-	if (x==value) kprintf("TEST PASSED.\n"); else kprintf("TEST FAILED.\n");
+	// // 10 threads
+	// kprintf("\n\n================= TEST 1 = 10 threads ===================\n");
+	// x = 0;	nt = 10;
+ 	// al_initlock(&mutex); 
+	// resume(create((void *)nthreads, INITSTK, 1,"nthreads", 4, nt, &x, value/nt, &mutex));
+	// receive(); 
+	// sync_printf("%d threads, n=%d, target value=%d\n", nt, value, x);
+	// if (x==value) kprintf("TEST PASSED.\n"); else kprintf("TEST FAILED.\n");
 
 	al_lock_t l1,l2;
 	al_initlock(&l1);
 	al_initlock(&l2);
-	resume(create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2));
-	resume(create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1));
+	kprintf("Creating deadlock creating child processes\n");
+	pid32 pid1 = create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2);
+	pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
+	kprintf("Created children\n");
+	resume(pid1);
+	resume(pid1);
+	//Expected output lock_detected=P1-P2	
 	return OK;
 }
 
