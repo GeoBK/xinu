@@ -53,7 +53,7 @@ syscall unlock(lock_t *l);
 
 
 #define NALOCKS 20
-extern uint32 num_activelocks;
+extern int32 num_activelocks;
 typedef struct al_lock_t 
 {
     uint32  flag;          /* lock flag */
