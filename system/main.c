@@ -194,8 +194,15 @@ process lockswithdiffpri(lock_t *l1)
 {
 	
 	lock(l1);
-	int i;
-	for(i=0;i<200000;i++);
+	int i,j,k;
+	for(i=0;i<2000;i++)
+	{
+		for(j=0;j<2000;j++)
+		{
+			for(k=0;k<2000;k++);
+		}
+		//sync_debug_out("%d\n",i);
+	}
 	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
 	unlock(l1);    
 	return OK;
