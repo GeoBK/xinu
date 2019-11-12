@@ -239,7 +239,7 @@ syscall lock(lock_t *l)
 {
     // sync_debug_out("Inside LOCK for PID -> %d \n",currpid);
     
-    while(test_and_set(&l->guard,1)==1){sync_debug_out("spinning on lock guard \n");}
+    while(test_and_set(&l->guard,1)==1){sleepms(QUANTUM);sync_debug_out("spinning on lock guard \n");}
     preempt = QUANTUM;
     if(l->flag==0)
     {
@@ -263,7 +263,7 @@ syscall lock(lock_t *l)
 syscall unlock(lock_t *l)
 {
     sync_debug_out("Inside UNLOCK for PID -> %d \n",currpid);
-    while(test_and_set(&l->guard,1)==1){sync_debug_out("spinning on unlock guard (currpid= %d)\n",currpid);}
+    while(test_and_set(&l->guard,1)==1){sleepms(QUANTUM);sync_debug_out("spinning on unlock guard (currpid= %d)\n",currpid);}
     preempt = QUANTUM;
     if(currpid!=l->owner){
         sync_debug_out("Returning SYSERR currpid-> %d lockowner -> %d", currpid, l->owner);

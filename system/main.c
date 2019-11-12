@@ -232,7 +232,7 @@ process main()
 	pid32 pid2 = create((void *)pilocks, INITSTK, 3,"trylock", 2, &l5);
     pid32 pid3 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
     resume(pid1);
-	sleepms(3);
+	sleepms(6);
 	resume(pid3);
 	resume(pid2);	
 	receive();
@@ -253,7 +253,7 @@ process main()
 	pid32 pid5 = create((void *)lockswithdiffpri, INITSTK, 3,"trylock", 2, &l6);
     pid32 pid6 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
     resume(pid4);
-	sleepms(3);
+	sleepms(6);
 	resume(pid5);
 	resume(pid6);	
 	receive();
