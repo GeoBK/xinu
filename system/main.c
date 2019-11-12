@@ -173,25 +173,37 @@ void sync_printf(char *fmt, ...)
 	restore(mask);
 }
 
-process cycliclockswithtrylock(pi_lock_t *l1)
+process pilocks(pi_lock_t *l1)
 {
 	
 	pi_lock(l1);
 	int i;
 	for(i=0;i<200000;i++);
+	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);
 	pi_unlock(l1);
-    sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
+    	
+	return OK;
+}
+
+process lockswithdiffpri(lock_t *l1)
+{
+	
+	lock(l1);
+	int i;
+	for(i=0;i<200000;i++);
+	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
+	unlock(l1);    
 	return OK;
 }
 
 process longrunningprocess()
 {
 	int i,j,k;
-    for(i=0;i<200000;i++)
+    for(i=0;i<2000000;i++)
     {
-        for(j=0;i<200000;i++)
+        for(j=0;i<2000000;i++)
         {
-            for(k=0;i<200000;i++);
+            for(k=0;i<2000000;i++);
         }
     }
     sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
@@ -199,13 +211,12 @@ process longrunningprocess()
 
 process main()
 {
-    //Testcase2 using the trylock function
-    pi_lock_t l5,l6;
+    
+    pi_lock_t l5;
 	pi_initlock(&l5);
-	pi_initlock(&l6);
-    pid32 pid1 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l5);
-	pid32 pid3 = create((void *)cycliclockswithtrylock, INITSTK, 3,"trylock", 2, &l5);
-    pid32 pid2 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
+    pid32 pid1 = create((void *)pilocks, INITSTK, 1,"trylock", 2, &l5);
+	pid32 pid2 = create((void *)pilocks, INITSTK, 3,"trylock", 2, &l5);
+    pid32 pid3 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
     resume(pid1);
 	resume(pid3);
 	resume(pid2);	
@@ -215,10 +226,28 @@ process main()
     kprintf("Testcase complete\n");   
 
     //Expected output
+    // PID: 6 with priority 1 completed.
     // PID: 7 with priority 3 completed.
     // PID: 8 with priority 2 completed.
-    // PID: 6 with priority 1 completed.
 
+
+	//Behaviour without priority inversion
+    lock_t l6;
+	initlock(&l6);	
+    pid32 pid4 = create((void *)lockswithdiffpri, INITSTK, 1,"trylock", 2, &l6);
+	pid32 pid5 = create((void *)lockswithdiffpri, INITSTK, 3,"trylock", 2, &l6);
+    pid32 pid6 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
+    resume(pid4);
+	resume(pid5);
+	resume(pid6);	
+	receive();
+	receive();
+	receive();
+    kprintf("Testcase complete\n");  
+	//Expected output
+    // PID: 7 with priority 3 completed.
+    // PID: 6 with priority 1 completed.
+    // PID: 8 with priority 2 completed. 
 
 	return OK;
 }
