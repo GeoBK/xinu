@@ -107,7 +107,8 @@ syscall pi_lock(pi_lock_t *l)
     while(test_and_set(&l->guard,1)==1){sleepms(QUANTUM);sync_debug_out("spinning on lock guard \n");}    
     if(l->flag==0)
     {
-        sync_debug_out("inside when flag =0 lock code part \n");
+        //sync_debug_out("inside when flag =0 lock code part \n");
+        preempt = QUANTUM;
         l->owner=currpid;
         l->flag=1;   
         l->initialpriority=proctab[currpid].prprio; 
@@ -117,12 +118,14 @@ syscall pi_lock(pi_lock_t *l)
     }
     else
     {
-        sync_debug_out("inside when flag =1 lock code part \n");
+        //sync_debug_out("inside when flag =1 lock code part \n");
+        preempt = QUANTUM;
         enq(&(l->q),currpid);
         printq(l->q);
         if(proctab[currpid].prprio>l->lockpriority)
         {
             sync_printf("priority_change=P%d::%d-%d",l->owner,l->lockpriority,proctab[currpid].prprio);
+            preempt = QUANTUM;
             l->lockpriority=proctab[currpid].prprio;  
             proctab[l->owner].prprio=l->lockpriority;
         }
@@ -144,11 +147,13 @@ syscall pi_unlock(pi_lock_t *l)
     }
     if(l->q.head==NULL)
     {
-        sync_debug_out("Inside unlock when q empty\n");
+        //sync_debug_out("Inside unlock when q empty\n");
+        preempt = QUANTUM;
         l->flag=0;
         if(proctab[l->owner].prprio!=l->initialpriority)
         {
             sync_printf("priority_change=P%d::%d-%d",l->owner,proctab[l->owner].prprio,l->initialpriority);
+            preempt = QUANTUM;
         }
         proctab[l->owner].prprio=l->initialpriority;        
         l->owner=0;
@@ -159,7 +164,8 @@ syscall pi_unlock(pi_lock_t *l)
     }
     else
     {
-        sync_debug_out("Inside unlock when q has elements\n");
+        //sync_debug_out("Inside unlock when q has elements\n");
+        preempt = QUANTUM;
         pid32 oldowner=l->owner;
         pri16 oldpriority=l->initialpriority;
         
@@ -172,6 +178,7 @@ syscall pi_unlock(pi_lock_t *l)
         if(maxpri>l->lockpriority)
         {
             sync_printf("priority_change=P%d::%d-%d",l->owner,l->lockpriority,maxpri);
+            preempt = QUANTUM;
             l->lockpriority=maxpri;
             proctab[l->owner].prprio=maxpri;
         }
