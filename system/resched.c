@@ -44,9 +44,9 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	preempt = QUANTUM;		/* Reset time slice for process	*/
 	#define DEBUG_CTXSW
 	#ifdef DEBUG_CTXSW  
-	if(oldpid!=currpid){		
+	// if(oldpid!=currpid){		
 		kprintf("ctxsw::%d-%d\n",oldpid,currpid);
-	}	
+	// }	
 	#endif
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
 

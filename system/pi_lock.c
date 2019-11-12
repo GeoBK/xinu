@@ -128,6 +128,7 @@ syscall pi_lock(pi_lock_t *l)
             preempt = QUANTUM;
             l->lockpriority=proctab[currpid].prprio;  
             proctab[l->owner].prprio=l->lockpriority;
+            insert(l->owner, readylist, l->lockpriority);
         }
         pi_setpark(l,currpid);
         l->guard=0;
@@ -181,6 +182,7 @@ syscall pi_unlock(pi_lock_t *l)
             preempt = QUANTUM;
             l->lockpriority=maxpri;
             proctab[l->owner].prprio=maxpri;
+            insert(l->owner, readylist, l->lockpriority);
         }
         pi_unpark(l,pid);        
         l->guard=0;
