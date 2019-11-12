@@ -125,8 +125,12 @@ process	main(void)
     al_lock_t l5,l6;
 	al_initlock(&l5);
 	al_initlock(&l6);
-    pid32 pid1 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l5, &l6);
-	pid32 pid2 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l6, &l5);
+    pid32 pid5 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l5, &l6);
+	pid32 pid6 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l6, &l5);
+	resume(pid5);
+	resume(pid6);
+	receive();
+	receive();
     kprintf("Deadlock not created!!!\n");
 
 	al_lock_t l1,l2,l3,l4;
