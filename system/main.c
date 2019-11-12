@@ -201,9 +201,9 @@ process longrunningprocess()
 	int i,j,k;
     for(i=0;i<2000000;i++)
     {
-        for(j=0;i<2000000;i++)
+        for(j=0;i<2000000;j++)
         {
-            for(k=0;i<2000000;i++);
+            for(k=0;i<2000000;k++);
         }
     }
     sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
