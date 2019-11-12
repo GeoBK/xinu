@@ -103,8 +103,9 @@ bool8 checkinq(queue *q,pid32 pid)
 
 syscall al_initlock(al_lock_t *l)
 {
-    if(num_locks<NALOCKS)
+    if(num_activelocks<NALOCKS)
     {
+        sync_debug_out("num_activelocks : %d\n",num_activelocks);
         al_lock_list[num_activelocks]=l;
         l->flag=0;
         l->guard=0;
