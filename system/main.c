@@ -67,6 +67,7 @@ process cycliclockswithtrylock(al_lock_t *l1, al_lock_t* l2)
 		}
 		else{
 			al_unlock(l1);
+			yield();
 		}		
 	}
 	return OK;
