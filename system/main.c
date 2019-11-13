@@ -178,9 +178,9 @@ process main()
 	pi_lock_t l7,l8;
 	pi_initlock(&l7);	
 	pi_initlock(&l8);
-	pid32 pid7 = create((void *)multlocks, INITSTK, 1,"ml", 2, &l7, &l8);
-	pid32 pid8 = create((void *)singlelock, INITSTK, 1,"ml", 3, &l7);
-	pid32 pid9 = create((void *)singlelock, INITSTK, 1,"ml", 4, &l8);
+	pid32 pid7 = create((void *)multlocks, INITSTK, 2,"ml", 2, &l7, &l8);
+	pid32 pid8 = create((void *)singlelock, INITSTK, 3,"ml", 1, &l7);
+	pid32 pid9 = create((void *)singlelock, INITSTK, 4,"ml", 1, &l8);
 	resume(pid7);
 	sleepms(10);
 	resume(pid8);	
