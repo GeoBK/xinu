@@ -57,7 +57,7 @@ process cycliclockswithtrylock(al_lock_t *l1, al_lock_t* l2)
 	{
 		while(!al_trylock(l1));	
 		sync_printf("Acquired first lock! \n");
-		sleep(1);
+		// sleep(1);
 		if(al_trylock(l2))
 		{
 			//Do activity here
