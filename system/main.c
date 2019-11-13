@@ -73,7 +73,8 @@ process cycliclockswithtrylock(al_lock_t *l1, al_lock_t* l2)
 process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
 {
 	
-	al_lock(l1);		
+	al_lock(l1);	
+	sleep(1);	
 	al_lock(l2);
 	al_unlock(l2);
 	al_unlock(l1);
