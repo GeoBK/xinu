@@ -183,7 +183,8 @@ process main()
 	pid32 pid9 = create((void *)singlelock, INITSTK, 4,"ml", 1, &l8);
 	resume(pid7);
 	sleepms(10);
-	resume(pid8);	
+	resume(pid8);
+	sleepms(10);	
 	resume(pid9);	
 	receive();
 	receive();
