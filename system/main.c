@@ -188,5 +188,6 @@ process main()
 	receive();
 	receive();
 	receive();
+	kprintf("Transitivity testcase complete!\n");
 	return OK;
 }
