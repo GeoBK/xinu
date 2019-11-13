@@ -122,9 +122,9 @@ syscall pi_lock(pi_lock_t *l)
         preempt = QUANTUM;
         enq(&(l->q),currpid);
         //printq(l->q);
-        if(proctab[currpid].prprio>l->lockpriority)
+        if(proctab[currpid].prprio>proctab[l->owner].prprio)
         {
-            sync_printf("priority_change=P%d::%d-%d\n",l->owner,l->lockpriority,proctab[currpid].prprio);
+            sync_printf("priority_change=P%d::%d-%d\n",l->owner,proctab[l->owner].prprio,proctab[currpid].prprio);
             preempt = QUANTUM;
             l->lockpriority=proctab[currpid].prprio;  
             proctab[l->owner].prprio=l->lockpriority;
