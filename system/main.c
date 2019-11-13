@@ -55,30 +55,25 @@ process cycliclockswithtrylock(al_lock_t *l1, al_lock_t* l2)
 {
 	while(1)
 	{
-		while(!al_trylock(l1));	
-		sync_printf("Acquired first lock! \n");
-		// sleep(1);
-		if(al_trylock(l2))
+		while(!al_trylock(l1));			
+		if(!al_trylock(l2))
 		{
-			//Do activity here
-			al_unlock(l2);
+			sync_printf("Acquired first lock! \n");	
 			al_unlock(l1);
-			break;
 		}
 		else{
-			al_unlock(l1);
-			yield();
-		}		
+			break;
+		}
 	}
+	al_unlock(l2);
+	al_unlock(l1);
 	return OK;
 }
 
 process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
 {
 	
-	al_lock(l1);
-
-	sleep(1);
+	al_lock(l1);		
 	al_lock(l2);
 	al_unlock(l2);
 	al_unlock(l1);
