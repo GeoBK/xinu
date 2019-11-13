@@ -196,8 +196,7 @@
 
 #include <xinu.h>
 
-// void sync_printf(char *fmt, ...)
-
+void sync_printf(char *fmt, ...)
 {    
 	intmask mask = disable();
 	void *arg = __builtin_apply_args();
