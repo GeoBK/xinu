@@ -53,11 +53,11 @@ void sync_printf(char *fmt, ...)
 	restore(mask);
 }
 
-process multlocks(al_lock_t *l1, al_lock_t* l2)
+process multlocks(pi_lock_t *l1, pi_lock_t* l2)
 {
 	
-	al_lock(l1);	
-	al_lock(l2);
+	pi_lock(l1);	
+	pi_lock(l2);
 	int i,j,k;
 	for(i=0;i<2000;i++)
 	{
@@ -67,8 +67,8 @@ process multlocks(al_lock_t *l1, al_lock_t* l2)
 		}
 		//sync_debug_out("%d\n",i);
 	}
-	al_unlock(l2);
-	al_unlock(l1);
+	pi_unlock(l2);
+	pi_unlock(l1);
 	return OK;
 }
 
@@ -107,11 +107,11 @@ process lockswithdiffpri(lock_t *l1)
 	return OK;
 }
 
-process singlelock(lock_t *l1)
+process singlelock(pi_lock_t *l1)
 {
 	
-	lock(l1);	
-	unlock(l1);    
+	pi_lock(l1);	
+	pi_unlock(l1);    
 	return OK;
 }
 

@@ -155,11 +155,11 @@ process park(lock_t *l)
     }
     else
     {
-        kprintf("pid : %d will now be put to sleep\n",currpid);
+        debug_out("pid : %d will now be put to sleep\n",currpid);
         struct	procent *prptr;		/* Ptr to process's table entry	*/        
         prptr = &proctab[currpid];
         if (prptr->prhasmsg == FALSE) {
-            kprintf("pid : %d will now be put to sleep 2\n",currpid);
+            debug_out("pid : %d will now be put to sleep 2\n",currpid);
             prptr->prstate = PR_RECV;
             resched();		/* Block until message arrives	*/
         }        
@@ -252,7 +252,7 @@ syscall lock(lock_t *l)
     {
         sync_debug_out("inside when flag =1 lock code part \n");
         enq(&(l->q),currpid);
-        printq(l->q);
+        // printq(l->q);
         setpark(l,currpid);
         l->guard=0;
         park(l);        
@@ -279,7 +279,7 @@ syscall unlock(lock_t *l)
     else
     {
         sync_debug_out("Inside unlock when q has elements\n");
-        printq(l->q);
+        // printq(l->q);
         pid32 pid = dq(&(l->q));  
         unpark(l,pid);  
         l->owner=pid;
