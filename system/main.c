@@ -37,7 +37,10 @@
 
 /*  main.c  - main */
 
-/*  main.c  - main */
+
+
+
+
 
 #include <xinu.h>
 
@@ -50,78 +53,140 @@ void sync_printf(char *fmt, ...)
 	restore(mask);
 }
 
-
-process cycliclockswithtrylock(al_lock_t *l1, al_lock_t* l2)
+process multlocks(al_lock_t *l1, al_lock_t* l2)
 {
-	while(1)
+	
+	al_lock(l1);	
+	al_lock(l2);
+	int i,j,k;
+	for(i=0;i<2000;i++)
 	{
-		while(!al_trylock(l1));			
-		if(!al_trylock(l2))
+		for(j=0;j<2000;j++)
 		{
-			sync_printf("Acquired first lock! \n");	
-			al_unlock(l1);
+			for(k=0;k<2000;k++);
 		}
-		else{
-			break;
-		}
+		//sync_debug_out("%d\n",i);
 	}
 	al_unlock(l2);
 	al_unlock(l1);
 	return OK;
 }
 
-process deadlockfunc(al_lock_t *l1, al_lock_t* l2)
-{
-	
-	al_lock(l1);	
-	sleep(1);	
-	al_lock(l2);
-	al_unlock(l2);
-	al_unlock(l1);
+process pilocks(pi_lock_t *l1)
+{	
+	pi_lock(l1);
+	int i,j,k;
+	for(i=0;i<2000;i++)
+	{
+		for(j=0;j<2000;j++)
+		{
+			for(k=0;k<2000;k++);
+		}
+		//sync_debug_out("%d\n",i);
+	}
+	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);
+	pi_unlock(l1);    	
 	return OK;
 }
 
-process	main(void)
+process lockswithdiffpri(lock_t *l1)
 {
-	//Testcase2 using the trylock function
-    al_lock_t l5,l6;
-	al_initlock(&l5);
-	al_initlock(&l6);
-    pid32 pid5 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l5, &l6);
-	pid32 pid6 = create((void *)cycliclockswithtrylock, INITSTK, 1,"trylock", 2, &l6, &l5);
-	resume(pid5);
-	resume(pid6);
-	receive();
-	receive();
-    kprintf("Deadlock not created!!!\n");
+	
+	lock(l1);
+	int i,j,k;
+	for(i=0;i<2000;i++)
+	{
+		for(j=0;j<2000;j++)
+		{
+			for(k=0;k<2000;k++);
+		}
+		//sync_debug_out("%d\n",i);
+	}
+	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
+	unlock(l1);    
+	return OK;
+}
 
-	al_lock_t l1,l2,l3,l4;
-	al_initlock(&l1);
-	al_initlock(&l2);
-	al_initlock(&l3);
-	al_initlock(&l4);
+process singlelock(lock_t *l1)
+{
 	
-	
-	kprintf("Creating deadlock creating child processes\n");
-	pid32 pid1 = create((void *)deadlockfunc, INITSTK, 1,"deadlock1", 2, &l1, &l2);
-	pid32 pid2 = create((void *)deadlockfunc, INITSTK, 1,"deadlock2", 2, &l2, &l1);
-	pid32 pid3 = create((void *)deadlockfunc, INITSTK, 1,"deadlock3", 2, &l3, &l4);
-	pid32 pid4 = create((void *)deadlockfunc, INITSTK, 1,"deadlock4", 2, &l4, &l3);
-	kprintf("Created children\n");
-	resume(pid1);
-	resume(pid2);
+	lock(l1);	
+	unlock(l1);    
+	return OK;
+}
+
+process longrunningprocess()
+{
+	sync_printf("Inside long running process\n");
+	int i,j,k;
+    for(i=0;i<200;i++)
+    {
+        for(j=0;j<2000;j++)
+		{
+			for(k=0;k<2000;k++);
+		}        
+    }
+    sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
+	return OK;
+}
+
+process main()
+{
+    
+    pi_lock_t l5;
+	pi_initlock(&l5);
+    pid32 pid1 = create((void *)pilocks, INITSTK, 1,"trylock", 2, &l5);
+	pid32 pid2 = create((void *)pilocks, INITSTK, 3,"trylock", 2, &l5);
+    pid32 pid3 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
+    resume(pid1);
+	sleepms(6);
 	resume(pid3);
-	resume(pid4);
+	resume(pid2);	
 	receive();
 	receive();
 	receive();
+    kprintf("Testcase complete\n");   
+
+    //Expected output
+    // PID: 6 with priority 1 completed.
+    // PID: 7 with priority 3 completed.
+    // PID: 8 with priority 2 completed.
+
+
+	//Behaviour without priority inversion
+    lock_t l6;
+	initlock(&l6);	
+    pid32 pid4 = create((void *)lockswithdiffpri, INITSTK, 1,"trylock", 2, &l6);
+	pid32 pid5 = create((void *)lockswithdiffpri, INITSTK, 3,"trylock", 2, &l6);
+    pid32 pid6 = create((void *)longrunningprocess, INITSTK, 2,"trylock", 0);
+    resume(pid4);
+	sleepms(6);
+	resume(pid5);
+	resume(pid6);	
 	receive();
-	kprintf("Deadlock not created!!!\n");
-	//resume(pid2);
-	//Expected output   -   lock_detected=P1-P2	
+	receive();
+	receive();
+    kprintf("Testcase complete\n");  
+	//Expected output
+	// PID: 11 with priority 2 completed. 
+    // PID: 9 with priority 1 completed.
+    // PID: 10 with priority 3 completed.
+    
+
+
+	//Testing transitivity of priority inheritance
+	pi_lock_t l7,l8;
+	initlock(&l7);	
+	initlock(&l8);
+	pid32 pid7 = create((void *)multlocks, INITSTK, 1,"ml", 2, &l7, &l8);
+	pid32 pid8 = create((void *)singlelock, INITSTK, 1,"ml", 3, &l7);
+	pid32 pid9 = create((void *)singlelock, INITSTK, 1,"ml", 4, &l8);
+	resume(pid7);
+	sleepms(10);
+	resume(pid8);	
+	resume(pid9);	
+	receive();
+	receive();
+	receive();
 	return OK;
 }
-
-
-
-

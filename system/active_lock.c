@@ -239,16 +239,15 @@ bool8   al_trylock(al_lock_t *l)
     preempt = QUANTUM;
     if(l->flag==1)
     {
-        sync_printf("Inside trylock when flag=1\n");
+        sync_debug_out("Inside trylock when flag=1\n");
         l->guard=0;
         return 0;
     }
     else
     {
-        sync_printf("Inside trylock when flag=0\n");
+        sync_debug_out("Inside trylock when flag=0\n");
         l->guard=0;
         al_lock(l);
         return 1;
-    }
-    
+    }    
 }
