@@ -53,12 +53,22 @@ void sync_printf(char *fmt, ...)
 
 process cycliclockswithtrylock(al_lock_t *l1, al_lock_t* l2)
 {
-	while(!al_trylock(l1));	
-    sync_printf("Acquired first lock! \n");
-	sleep(1);
-    while(!al_trylock(l2));	
-	al_unlock(l2);
-	al_unlock(l1);
+	while(1)
+	{
+		while(!al_trylock(l1));	
+		sync_printf("Acquired first lock! \n");
+		sleep(1);
+		if(al_trylock(l2))
+		{
+			//Do activity here
+			al_unlock(l2);
+			al_unlock(l1);
+			break;
+		}
+		else{
+			al_unlock(l1);
+		}		
+	}
 	return OK;
 }
 
