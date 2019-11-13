@@ -7,6 +7,8 @@ uint32 num_pilocks=0;
 #include <inttypes.h>
 
 #define MAX_PRIORITY 30000
+sl_lock_t proc_tab_mutex;
+sl_initlock(&proc_tab_mutex);
 process pi_park(pi_lock_t *l)
 {
     intmask	mask;			/* Saved interrupt mask		*/
@@ -111,8 +113,10 @@ syscall pi_lock(pi_lock_t *l)
         preempt = QUANTUM;
         l->owner=currpid;
         l->flag=1;   
-        proctab[l->owner].initialpriority=proctab[currpid].prprio; 
-        l->lockpriority=proctab[currpid].prprio;     
+        sl_lock(&proc_tab_mutex);
+        proctab[l->owner].initialpriority=proctab[currpid].prprio;
+        l->lockpriority=proctab[currpid].prprio;   
+        sl_unlock(&proc_tab_mutex);           
         l->guard=0;    
             
     }
@@ -122,6 +126,7 @@ syscall pi_lock(pi_lock_t *l)
         preempt = QUANTUM;
         enq(&(l->q),currpid);
         //printq(l->q);
+        sl_lock(&proc_tab_mutex);
         if(proctab[currpid].prprio>l->lockpriority)
         {
             sync_printf("priority_change=P%d::%d-%d\n",l->owner,l->lockpriority,proctab[currpid].prprio);
@@ -132,6 +137,7 @@ syscall pi_lock(pi_lock_t *l)
             queuetab[queuetab[l->owner].qprev].qnext = queuetab[l->owner].qnext;
             insert(l->owner, readylist, l->lockpriority);
         }
+        sl_unlock(&proc_tab_mutex);
         pi_setpark(l,currpid);
         l->guard=0;
         pi_park(l);        
@@ -153,12 +159,14 @@ syscall pi_unlock(pi_lock_t *l)
         //sync_debug_out("Inside unlock when q empty\n");
         preempt = QUANTUM;
         l->flag=0;
+        sl_lock(&proc_tab_mutex);
         if(proctab[l->owner].prprio!=proctab[l->owner].initialpriority)
         {
             sync_printf("priority_change=P%d::%d-%d\n",l->owner,proctab[l->owner].prprio,proctab[l->owner].initialpriority);
             preempt = QUANTUM;
-        }
-        proctab[l->owner].prprio=proctab[l->owner].initialpriority;        
+        }        
+        proctab[l->owner].prprio=proctab[l->owner].initialpriority;   
+        sl_unlock(&proc_tab_mutex);     
         l->owner=0;
         l->lockpriority=0;        
         l->guard=0;
