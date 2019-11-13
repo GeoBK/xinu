@@ -1,3 +1,10 @@
+// /*  main.c  - main */
+
+
+
+
+
+
 // #include <xinu.h>
 
 // void sync_printf(char *fmt, ...)
@@ -7,6 +14,25 @@
 // 	void *arg = __builtin_apply_args();
 // 	__builtin_apply((void*)kprintf, arg, 100);
 // 	restore(mask);
+// }
+
+// process multlocks(pi_lock_t *l1, pi_lock_t* l2)
+// {
+	
+// 	pi_lock(l1);	
+// 	pi_lock(l2);
+// 	int i,j,k;
+// 	for(i=0;i<2000;i++)
+// 	{
+// 		for(j=0;j<2000;j++)
+// 		{
+// 			for(k=0;k<2000;k++);
+// 		}
+// 		//sync_debug_out("%d\n",i);
+// 	}
+// 	pi_unlock(l2);
+// 	pi_unlock(l1);
+// 	return OK;
 // }
 
 // process pilocks(pi_lock_t *l1)
@@ -41,6 +67,14 @@
 // 	}
 // 	sync_printf("PID: %d with priority %d completed.\n",currpid,proctab[currpid].prprio);	
 // 	unlock(l1);    
+// 	return OK;
+// }
+
+// process singlelock(pi_lock_t *l1)
+// {
+	
+// 	pi_lock(l1);	
+// 	pi_unlock(l1);    
 // 	return OK;
 // }
 
@@ -102,5 +136,22 @@
 //     // PID: 10 with priority 3 completed.
     
 
+
+// 	//Testing transitivity of priority inheritance
+// 	pi_lock_t l7,l8;
+// 	pi_initlock(&l7);	
+// 	pi_initlock(&l8);
+// 	pid32 pid7 = create((void *)multlocks, INITSTK, 2,"ml", 2, &l7, &l8);
+// 	pid32 pid8 = create((void *)singlelock, INITSTK, 3,"ml", 1, &l7);
+// 	pid32 pid9 = create((void *)singlelock, INITSTK, 4,"ml", 1, &l8);
+// 	resume(pid7);
+// 	sleepms(10);
+// 	resume(pid8);
+// 	sleepms(10);	
+// 	resume(pid9);	
+// 	receive();
+// 	receive();
+// 	receive();
+// 	kprintf("Transitivity testcase complete!\n");
 // 	return OK;
 // }
