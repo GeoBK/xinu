@@ -100,7 +100,7 @@ pid32	create(
 
 process initialize_user_page_table(uint32* new_pd)
 {
-	int i,j,k=0;
+	int i,k=0;
 	uint32 old_pdbr=read_cr3();
 	write_cr3(XINU_PAGES*PAGE_SIZE);
 	uint32 pd_ptr=allocate_next_table();
@@ -115,13 +115,14 @@ process initialize_user_page_table(uint32* new_pd)
 	{		
 		pd[i].pd_base=sys_pd[i].pd_base;
 		pd[i].pd_pres=sys_pd[i].pd_pres;		
-		kprintf("i: %d, j:%d, k: %d\n",i,j,k);		
+		kprintf("i: %d, k: %d\n",i,k);		
 	}
 	
 	uint32 pdbr=((uint32)pd)&0x11111000;
 	kprintf("pdbr: %x\n",pdbr);
 	*new_pd=(uint32)pd;
 	write_cr3(old_pdbr);
+	return OK;
 }
 
 pid32	vcreate(
