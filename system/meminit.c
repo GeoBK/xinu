@@ -111,7 +111,7 @@ uint32 allocate_next_table()
 	{
 		if(pt_begin[i*(PAGE_SIZE/4)].pd_avail==1)
 		{
-			kprintf("New page table address : %x, i:%u, j: %x",&(pt_begin[i*(PAGE_SIZE/4)]),i,&(pt_begin[i*(PAGE_SIZE/4)]));
+			kprintf("New page table address : %x, i:%u, j: %x, j-end: %x",&(pt_begin[i*(PAGE_SIZE/4)]),i,(pt_begin+(i*PAGE_SIZE)),((XINU_PAGES+i+1)*PAGE_SIZE));
 			for(j=(pd_t*)(pt_begin+(i*PAGE_SIZE));j<(pd_t*)((XINU_PAGES+i+1)*PAGE_SIZE);j++)
 			{
 				j->pd_avail=0;
