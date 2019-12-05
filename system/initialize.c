@@ -191,6 +191,7 @@ static	void	sysinit()
 	prptr->prstkbase = getstk(NULLSTK);
 	prptr->prstklen = NULLSTK;
 	prptr->prstkptr = 0;
+	prptr->pdbr=(char*)XINU_PAGES*PAGE_SIZE;
 	currpid = NULLPROC;
 	
 	/* Initialize semaphores */
