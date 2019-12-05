@@ -63,15 +63,36 @@ void initialize_page_table()
 	//first 1024 entries are for the system page directory
 	for(i=0;i<PAGE_SIZE;i++)
 	{
-		pd[i].pd_base=0;
-		pd[i].pd_pres=1;
-		pd[i].pd_avail=0;
+		pd[i].pd_pres 	= 0;	
+		pd[i].pd_write 	= 0;
+		pd[i].pd_user	= 0;
+		pd[i].pd_pwt	= 0;
+		pd[i].pd_pcd	= 0;
+		pd[i].pd_acc	= 0;
+		pd[i].pd_mbz	= 0;
+		pd[i].pd_fmb	= 0;
+		pd[i].pd_global = 0;
+		pd[i].pd_valid 	= 1;		
+		pd[i].pd_avail 	= 0;
+		pd[i].pd_base	= 0;
+		
+
 	}
 	for(i=1;i<MAX_PT_SIZE*PAGE_SIZE;i++)
 	{
-		pd[i].pd_base=0;
-		pd[i].pd_pres=1;
-		pd[i].pd_avail=1;
+
+		pd[i].pd_pres 	= 0;	
+		pd[i].pd_write 	= 0;
+		pd[i].pd_user	= 0;
+		pd[i].pd_pwt	= 0;
+		pd[i].pd_pcd	= 0;
+		pd[i].pd_acc	= 0;
+		pd[i].pd_mbz	= 0;
+		pd[i].pd_fmb	= 0;
+		pd[i].pd_global = 0;
+		pd[i].pd_valid 	= 0;		
+		pd[i].pd_avail 	= 0;
+		pd[i].pd_base	= 0;
 	}
 	int k=0;
 	for(i=0;i<(XINU_PAGES+MAX_PT_SIZE+MAX_FFS_SIZE+MAX_SWAP_SIZE);)
@@ -88,7 +109,10 @@ void initialize_page_table()
 		{
 			pt_t *curr_ptb = (pt_t*)(pd[k].pd_base<<12);
 			curr_ptb[j].pt_base=i;
-			curr_ptb[j].pt_pres=1;
+			if(i<XINU_PAGES)
+			{
+				curr_ptb[j].pt_pres=1;
+			}			
 			//kprintf("%u\t : %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
 			i++;
 		}
@@ -110,12 +134,12 @@ uint32 allocate_next_table()
 	
 	for(i=0;i<MAX_PT_SIZE;i++)
 	{
-		if(pt_begin[i*(PAGE_SIZE/4)].pd_avail==1)
+		if(pt_begin[i*(PAGE_SIZE/4)].pd_valid==0)
 		{
 			kprintf("New page table address : %x, i:%u, j: %x",&(pt_begin[i*(PAGE_SIZE/4)]),i,&(pt_begin[i*(PAGE_SIZE/4)]));
 			for(j=&(pt_begin[i*(PAGE_SIZE/4)]);j<(pd_t*)((XINU_PAGES+i+1)*PAGE_SIZE);j++)
 			{
-				j->pd_avail=0;
+				j->pd_valid=1;
 				//kprintf("\tj: %x\n",j);
 			}
 			return (uint32)&(pt_begin[i*(PAGE_SIZE/4)]);
