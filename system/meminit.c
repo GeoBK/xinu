@@ -88,6 +88,7 @@ void initialize_page_table()
 		{
 			pt_t *curr_ptb = (pt_t*)(pd[k].pd_base<<12);
 			curr_ptb[j].pt_base=i;
+			curr_ptb[j].pt_pres=1;
 			//kprintf("%u\t : %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
 			i++;
 		}
