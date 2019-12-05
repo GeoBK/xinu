@@ -115,7 +115,7 @@ uint32 allocate_next_table()
 			for(j=&(pt_begin[i*(PAGE_SIZE/4)]);j<(pd_t*)((XINU_PAGES+i+1)*PAGE_SIZE);j++)
 			{
 				j->pd_avail=0;
-				kprintf("\tj: %u\n",j);
+				kprintf("\tj: %x\n",j);
 			}
 			return (uint32)&(pt_begin[i*(PAGE_SIZE/4)]);
 		}
