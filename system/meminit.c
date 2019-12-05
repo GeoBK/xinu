@@ -52,7 +52,7 @@ void print_page_table()
 	kprintf("Address\t : Content\n");
 	for(i=0;i<PAGE_SIZE;i++)
 	{
-		kprintf("%x\t : %x | %u | %u | %u\t",(uint32)pdbr+i*4,pdbr[i].pd_base<<12,pdbr[i].pd_pres,pdbr[i].pd_mbz, pdbr[i].pd_fmb);
+		kprintf("%x\t : %x | %u | %u | %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base<<12,pdbr[i].pd_pres,pdbr[i].pd_mbz, pdbr[i].pd_fmb);
 	}
 }
 void initialize_page_table()
