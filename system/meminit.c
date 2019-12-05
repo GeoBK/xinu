@@ -75,7 +75,7 @@ void initialize_page_table()
 		}
 		for(j=0;j<PAGE_SIZE/4;j++)
 		{
-			pt_t *curr_ptb = (pt_t*)pd[k].pd_base<<12;
+			pt_t *curr_ptb = (pt_t*)(pd[k].pd_base<<12);
 			curr_ptb[j].pt_base=i>>12;			
 			i++;
 		}
@@ -95,7 +95,7 @@ uint32 allocate_next_table()
 		if(pt_begin[i*PAGE_SIZE].pd_avail==1)
 		{
 			kprintf("New page table address : %u",&(pt_begin[i]));
-			for(j=&(pt_begin[i*PAGE_SIZE]);j<(XINU_PAGES+MAX_PT_SIZE)*PAGE_SIZE;j++)
+			for(j=&(pt_begin[i*PAGE_SIZE]);j<(pd_t*)((XINU_PAGES+MAX_PT_SIZE)*PAGE_SIZE);j++)
 			{
 				j->pd_avail=0;
 			}
