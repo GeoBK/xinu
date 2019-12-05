@@ -103,6 +103,7 @@ void initialize_page_table()
 			if(new_pd!=SYSERR)
 			{
 				pd[k].pd_base=new_pd>>12;
+				pd[k].pd_pres=1;
 			}				
 		}
 		for(j=0;j<PAGE_SIZE/4;j++)
