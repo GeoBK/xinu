@@ -88,7 +88,7 @@ void initialize_page_table()
 		{
 			pt_t *curr_ptb = (pt_t*)(pd[k].pd_base<<12);
 			curr_ptb[j].pt_base=i;
-			kprintf("%u\t : %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
+			//kprintf("%u\t : %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
 			i++;
 		}
 		k++;
@@ -115,6 +115,7 @@ uint32 allocate_next_table()
 			for(j=&(pt_begin[i*(PAGE_SIZE/4)]);j<(pd_t*)((XINU_PAGES+i)*PAGE_SIZE);j++)
 			{
 				j->pd_avail=0;
+				kprintf("\tj: %u\n",j);
 			}
 			return (uint32)&(pt_begin[i*(PAGE_SIZE/4)]);
 		}
