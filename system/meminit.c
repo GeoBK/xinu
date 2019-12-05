@@ -38,7 +38,9 @@ void	meminit(void) {
        			(uint32)&end - NULLSTK);
        }
 	   initialize_page_table();
+	   kprintf("Switching on paging\n");
 	   enable_paging();
+	   kprintf("paging switched on\n");
 
        return;
 }
@@ -66,7 +68,6 @@ void initialize_page_table()
 	{
 		if(pd[k].pd_base==0)
 		{			
-			k++;
 			uint32 new_pd=allocate_next_table();
 			if(new_pd!=SYSERR)
 			{
