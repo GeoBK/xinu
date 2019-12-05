@@ -52,7 +52,7 @@ void print_page_table()
 	kprintf("Address\t : Content\n");
 	for(i=0;i<3000;i++)
 	{
-		kprintf("%x\t : %x\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
+		kprintf("%u\t : %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
 	}
 }
 void initialize_page_table()
@@ -87,7 +87,8 @@ void initialize_page_table()
 		for(j=0;j<PAGE_SIZE/4;j++)
 		{
 			pt_t *curr_ptb = (pt_t*)(pd[k].pd_base<<12);
-			curr_ptb[j].pt_base=i;			
+			curr_ptb[j].pt_base=i;
+			kprintf("%u\t : %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
 			i++;
 		}
 		k++;
@@ -97,7 +98,7 @@ void initialize_page_table()
 	uint32 pdbr=((uint32)pd)&0x11111000;
 	kprintf("pdbr: %x\n",pdbr);
 	write_cr3(pdbr);
-	print_page_table();
+	//print_page_table();
 }
 
 uint32 allocate_next_table()
