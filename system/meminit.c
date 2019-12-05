@@ -93,10 +93,11 @@ void initialize_page_table()
 		k++;
 		kprintf("i: %d, j:%d, k: %d\n",i,j,k);		
 	}
-	print_page_table();
+	
 	uint32 pdbr=((uint32)pd)&0x11111000;
 	kprintf("pdbr: %x\n",pdbr);
 	write_cr3(pdbr);
+	print_page_table();
 }
 
 uint32 allocate_next_table()
