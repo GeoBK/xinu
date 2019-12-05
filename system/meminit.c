@@ -88,7 +88,7 @@ uint32 allocate_next_table()
 {
 	uint32 i;
 	pd_t *j;
-	pd_t* pt_begin = (pd_t*)XINU_PAGES*PAGE_SIZE;	
+	pd_t* pt_begin = (pd_t*)(XINU_PAGES*PAGE_SIZE);	
 	
 	for(i=0;i<MAX_PT_SIZE;i++)
 	{
