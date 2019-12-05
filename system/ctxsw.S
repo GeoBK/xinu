@@ -27,9 +27,7 @@ ctxsw:
 
 		movl	(%eax),%esp	/* Pop up new process's SP	*/
 
-		movl 	16(%ebp), %eax
-		movl	(%eax),%cr3
-
+		
 		/* Restore new seg. registers here, if multiple allowed */
 
 		popal			/* Restore general registers	*/

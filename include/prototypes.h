@@ -45,7 +45,7 @@ extern	syscall	control(did32, int32, int32, int32);
 extern	pid32	create(void *, uint32, pri16, char *, uint32, ...);
 
 /* in file ctxsw.S */
-extern	void	ctxsw(void *, void *, void *);
+extern	void	ctxsw(void *, void *);
 
 /* in file dhcp.c */
 extern	uint32	getlocalip(void);
