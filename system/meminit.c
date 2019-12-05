@@ -64,13 +64,13 @@ void initialize_page_table()
 	for(i=0;i<PAGE_SIZE;i++)
 	{
 		pd[i].pd_base=0;
-		pd[i].pd_pres=0;
+		pd[i].pd_pres=1;
 		pd[i].pd_avail=0;
 	}
 	for(i=1;i<MAX_PT_SIZE*PAGE_SIZE;i++)
 	{
 		pd[i].pd_base=0;
-		pd[i].pd_pres=0;
+		pd[i].pd_pres=1;
 		pd[i].pd_avail=1;
 	}
 	int k=0;
