@@ -45,7 +45,7 @@ extern	syscall	control(did32, int32, int32, int32);
 extern	pid32	create(void *, uint32, pri16, char *, uint32, ...);
 
 /* in file ctxsw.S */
-extern	void	ctxsw(void *, void *);
+extern	void	ctxsw(void *, void *, void *);
 
 /* in file dhcp.c */
 extern	uint32	getlocalip(void);
@@ -606,6 +606,10 @@ extern	void	xdone(void);
 
 /* in file yield.c */
 extern	syscall	yield(void);
+
+extern uint32 allocate_next_table();
+
+extern void initialize_page_table();
 
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
 #define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))

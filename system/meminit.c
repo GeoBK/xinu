@@ -37,6 +37,72 @@ void	meminit(void) {
        	memptr->mlength = (uint32) truncmb((uint32)maxheap -
        			(uint32)&end - NULLSTK);
        }
+	   initialize_page_table();
+	   enable_paging();
 
        return;
+}
+
+void initialize_page_table()
+{
+	//Initialize the bits available for programmer to 0 to mark an invalid entry
+	int i,j;
+	pd_t *pd = (pd_t*)(XINU_PAGES*PAGE_SIZE);
+	//first 1024 entries are for the system page directory
+	for(i=0;i<PAGE_SIZE;i++)
+	{
+		pd[i].pd_base=0;
+		pd[i].pd_pres=0;
+		pd[i].pd_avail=0;
+	}
+	for(i=1;i<MAX_PT_SIZE*PAGE_SIZE;i++)
+	{
+		pd[i].pd_base=0;
+		pd[i].pd_pres=0;
+		pd[i].pd_avail=1;
+	}
+	int k=0;
+	for(i=0;i<(XINU_PAGES+MAX_PT_SIZE+MAX_FFS_SIZE+MAX_SWAP_SIZE);)
+	{
+		if(pd[k].pd_base==0)
+		{			
+			k++;
+			uint32 new_pd=allocate_next_table();
+			if(new_pd!=SYSERR)
+			{
+				pd[k].pd_base=new_pd>>12;
+			}				
+		}
+		for(j=0;j<PAGE_SIZE/4;j++)
+		{
+			pt_t *curr_ptb = pd[k].pd_base<<12;
+			curr_ptb[j].pt_base=i>>12;			
+			i++;
+		}
+		k++;
+		kprintf("i: %d, j:%d, k: %d\n",i,j,k);		
+	}
+}
+
+uint32 allocate_next_table()
+{
+	uint32 i,j;
+	pd_t *j;
+	pd_t* pt_begin = XINU_PAGES*PAGE_SIZE;	
+	pd_t* curr;
+	for(i=0;i<MAX_PT_SIZE;i++)
+	{
+		if(pt_begin[i*PAGE_SIZE].pd_avail==1)
+		{
+			kprintf("New page table address : %u",&(pt_begin[i]));
+			for(j=&(pt_begin[i*PAGE_SIZE]);j<(XINU_PAGES+MAX_PT_SIZE)*PAGE_SIZE;j++)
+			{
+				curr=j;
+				curr->pd_avail=0;
+			}
+			return (uint32)&(pt_begin[i]);
+		}
+		return SYSERR;
+
+	}
 }
