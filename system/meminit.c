@@ -50,9 +50,9 @@ void print_page_table()
 	int i;
 	pd_t* pdbr=(pd_t*)read_cr3();
 	kprintf("Address\t : Content\n");
-	for(i=0;i<3000;i++)
+	for(i=0;i<PAGE_SIZE;i++)
 	{
-		kprintf("%x\t : %x\n",(uint32)pdbr+i*4,pdbr[i].pd_base<<12);
+		kprintf("%x\t : %x | %u | %u | %u\t",(uint32)pdbr+i*4,pdbr[i].pd_base<<12,pdbr[i].pd_pres,pdbr[i].pd_mbz, pdbr[i].pd_fmb);
 	}
 }
 void initialize_page_table()
