@@ -85,7 +85,7 @@ void initialize_page_table()
 		kprintf("i: %d, j:%d, k: %d\n",i,j,k);		
 	}
 	uint32 pdbr=((uint32)pd)&0x11111000;
-	kprintf("pdbr: %u\n",pdbr);
+	kprintf("pdbr: %x\n",pdbr);
 	write_cr3(pdbr);
 }
 
@@ -99,7 +99,7 @@ uint32 allocate_next_table()
 	{
 		if(pt_begin[i*PAGE_SIZE].pd_avail==1)
 		{
-			kprintf("New page table address : %u",&(pt_begin[i*PAGE_SIZE]));
+			kprintf("New page table address : %x",&(pt_begin[i*PAGE_SIZE]));
 			for(j=&(pt_begin[i*PAGE_SIZE]);j<(pd_t*)((XINU_PAGES+MAX_PT_SIZE)*PAGE_SIZE);j++)
 			{
 				j->pd_avail=0;
@@ -108,4 +108,14 @@ uint32 allocate_next_table()
 		}
 	}
 	return SYSERR;
+}
+
+void print_page_table()
+{
+	pd_t* pdbr=(pd_t*)read_cr3();
+	kprintf("Address\t : %Content\n");
+	for(int i=0;i<3000;i++)
+	{
+		kprintf("%x\t : %x\n",&(pdbr[i]),pdbr[i].pd_base);
+	}
 }
