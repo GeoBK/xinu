@@ -41,6 +41,7 @@ void	meminit(void) {
 	   kprintf("Switching on paging\n");
 	   enable_paging();
 	   kprintf("paging switched on\n");
+	   fflush(NULL);
 
        return;
 }
