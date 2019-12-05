@@ -41,7 +41,7 @@ void	meminit(void) {
 	   kprintf("Switching on paging\n");
 	   enable_paging();
 	   kprintf("paging switched on\n");
-	   fflush(NULL);
+	//    fflush(NULL);
 
        return;
 }
@@ -103,7 +103,6 @@ uint32 allocate_next_table()
 			}
 			return (uint32)&(pt_begin[i*PAGE_SIZE]);
 		}
-		return SYSERR;
-
 	}
+	return SYSERR;
 }
