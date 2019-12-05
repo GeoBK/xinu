@@ -146,7 +146,7 @@ uint32 allocate_next_table()
 			return (uint32)&(pt_begin[i*(PAGE_SIZE/4)]);
 		}
 	}
-	return SYSERR;
+	return 0;
 }
 
 

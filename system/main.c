@@ -8,7 +8,8 @@ process	main(void)
 	/* Run the Xinu shell */
 
 	recvclr();
-	resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
+	//resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
+	resume(vcreate(shell, 8192, 50, "shell", 1, CONSOLE));
 
 	/* Wait for shell to exit and recreate it */
 
