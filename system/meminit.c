@@ -45,7 +45,16 @@ void	meminit(void) {
 
        return;
 }
-
+void print_page_table()
+{
+	int i;
+	pd_t* pdbr=(pd_t*)read_cr3();
+	kprintf("Address\t : %Content\n");
+	for(i=0;i<3000;i++)
+	{
+		kprintf("%x\t : %x\n",&(pdbr[i]),pdbr[i].pd_base);
+	}
+}
 void initialize_page_table()
 {
 	//Initialize the bits available for programmer to 0 to mark an invalid entry
@@ -84,6 +93,7 @@ void initialize_page_table()
 		k++;
 		kprintf("i: %d, j:%d, k: %d\n",i,j,k);		
 	}
+	print_page_table();
 	uint32 pdbr=((uint32)pd)&0x11111000;
 	kprintf("pdbr: %x\n",pdbr);
 	write_cr3(pdbr);
@@ -110,12 +120,4 @@ uint32 allocate_next_table()
 	return SYSERR;
 }
 
-void print_page_table()
-{
-	pd_t* pdbr=(pd_t*)read_cr3();
-	kprintf("Address\t : %Content\n");
-	for(int i=0;i<3000;i++)
-	{
-		kprintf("%x\t : %x\n",&(pdbr[i]),pdbr[i].pd_base);
-	}
-}
+
