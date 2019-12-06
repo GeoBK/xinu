@@ -70,6 +70,7 @@ int32 find_contiguous_vheap(uint32 frames)
 		if(free_frames>=frames)
 		{
 			kprintf("i: %d\n",i);
+			kprintf("beg_frame: %x\n",beg_frame);
 			return beg_frame;
 		}
 		
@@ -104,7 +105,8 @@ int32 find_contiguous_vheap(uint32 frames)
 			
         }
 		else
-		{			
+		{		
+			kprintf("inside the part where pd.pres=0 - i: %d\n",i);
 			free_frames=free_frames+(PAGE_SIZE/4);
 			frame_count=frame_count+(PAGE_SIZE/4);
 		}
