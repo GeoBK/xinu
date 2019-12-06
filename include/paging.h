@@ -9,6 +9,7 @@
 #define MAX_FFS_SIZE    4096    /* size of FFS space  (in frames)                        */
 #define MAX_PT_SIZE     1024    /* size of space used for page tables (in frames)        */
 #define XINU_PAGES      4096
+#define SYS_PD          PAGE_SIZE*XINU_PAGES
 
 /* Structure for a page directory entry */
 
