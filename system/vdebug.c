@@ -42,7 +42,7 @@ uint32 used_ffs_frames(pid32 pid)
 	write_cr3(XINU_PAGES*PAGE_SIZE);
     pd_t *pd=(pd_t*)proctab[pid].pdbr;
     int i,j;
-    for(i=0;i<PAGE_SIZE/4;i++)
+    for(i=XINU_PAGES/(PAGE_SIZE/4);i<PAGE_SIZE/4;i++)
     {
         if(pd[i].pd_allocated==0)kprintf("Error!No allocation but directory is being accessed!!!\n");
         if(pd[i].pd_pres==1)

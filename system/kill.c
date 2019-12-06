@@ -34,7 +34,7 @@ syscall	kill(
     int i,j;
     for(i=0;i<PAGE_SIZE/4;i++)
     {        
-        if(pd[i].pd_pres==1)
+        if(pd[i].pd_pres==1 && i>=(XINU_PAGES/(PAGE_SIZE/4)))
         {
             pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
             for(j=0;j<PAGE_SIZE/4;j++)

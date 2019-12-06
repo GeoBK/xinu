@@ -50,6 +50,7 @@ char  	*getmem(
 }
 int32 find_contiguous_vheap(uint32 frames)
 {
+	kprintf("inside find_contiguous_vheap!\n");
 	uint32 free_frames=0;
     
 	uint32 beg_frame,frame_count;
@@ -59,6 +60,7 @@ int32 find_contiguous_vheap(uint32 frames)
     int i,j;
     for(i=0;i<PAGE_SIZE/4;i++)
     {
+		kprintf("i: %d",i);
 		if(free_frames>=frames)
 		{
 			return beg_frame;
@@ -133,7 +135,7 @@ char	*vmalloc(uint32 size)
 		if(pd[pd_index].pd_pres==1)
 		{
 			pt_t *pt=(pt_t*)(pd[pd_index].pd_base<<12);
-			if(pt[pt_index].pt_pres==1)kprintf("Possible mistake in allocation since we are trying to allocate when present bit is 1");
+			if(pt[pt_index].pt_pres==1)kprintf("Possible mistake in allocation pd_index: %x, pt_index: %x\n",pd_index,pt_index);
 			pt[pt_index].pt_valid=1;
 			pt[pt_index].pt_pres=0;
 			pt[pt_index].pt_write=1;
