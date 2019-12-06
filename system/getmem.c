@@ -58,7 +58,7 @@ int32 find_contiguous_vheap(uint32 frames)
 	
     pd_t *pd=(pd_t*)proctab[currpid].pdbr;
     int i,j;
-    for(i=0;i<PAGE_SIZE/4;i++)
+    for(i=XINU_PAGES/(PAGE_SIZE/4);i<PAGE_SIZE/4;i++)
     {
 		kprintf("i: %d\n",i);
 		if(break_occured==1)
