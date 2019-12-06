@@ -51,10 +51,10 @@ char  	*getmem(
 int32 find_contiguous_vheap(uint32 frames)
 {
 	uint32 free_frames=0;
-    uint32 old_pdbr=read_cr3();
+    
 	uint32 beg_frame,frame_count;
 	bool8 break_occured=0;
-	write_cr3(XINU_PAGES*PAGE_SIZE);
+	
     pd_t *pd=(pd_t*)proctab[currpid].pdbr;
     int i,j;
     for(i=0;i<PAGE_SIZE/4;i++)
