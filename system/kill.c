@@ -12,7 +12,7 @@ syscall	kill(
 {
 	intmask	mask;			/* Saved interrupt mask		*/
 	struct	procent *prptr;		/* Ptr to process's table entry	*/
-	int32	i;			/* Index into descriptors	*/
+	int32	i,j;			/* Index into descriptors	*/
 
 	mask = disable();
 	if (isbadpid(pid) || (pid == NULLPROC)
@@ -31,7 +31,7 @@ syscall	kill(
 	}
 
 	pd_t *pd=(pd_t*)proctab[currpid].pdbr;
-    int i,j;
+    
     for(i=0;i<PAGE_SIZE/4;i++)
     {        
         if(pd[i].pd_pres==1 && i>=(XINU_PAGES/(PAGE_SIZE/4)))
