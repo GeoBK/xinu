@@ -40,15 +40,19 @@ syscall	kill(
             pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
             for(j=0;j<PAGE_SIZE/4;j++)
             {
-                pt[i].pt_pres=0;
-				pt[i].pt_valid=0;
-				pt[i].pt_allocated=0;
+				kprintf("i: %d, j: %d\n",i,j);
+                pt[j].pt_pres=0;
+				pt[j].pt_valid=0;
+				pt[j].pt_allocated=0;
             }
         }
-		pd[i].pd_pres=0;
-		pd[i].pd_valid=0;
-		pd[i].pd_allocated=0;	
-		
+		else if(i>=(XINU_PAGES/(PAGE_SIZE/4)))
+		{
+			kprintf("i: %d\n",i);
+			pd[i].pd_pres=0;
+			pd[i].pd_valid=0;
+			pd[i].pd_allocated=0;	
+		}		
     }
 	write_cr3(old_pdbr);
 
