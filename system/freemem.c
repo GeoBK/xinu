@@ -148,8 +148,6 @@ syscall	vfree(char * addr, uint32 size)
 	//Find out when vfree would fail (Spec talks about failure but doesnt mention why it might fail)
 	//Im freeing space even when there is no mapping in the page directory.
 	intmask	mask;			/* Saved interrupt mask		*/
-	struct	memblk	*next, *prev, *block;
-	uint32	top;
 	mask = disable();
 	uint32 old_pdbr=read_cr3();
 	write_cr3(XINU_PAGES*PAGE_SIZE);
@@ -162,7 +160,7 @@ syscall	vfree(char * addr, uint32 size)
 	{
 		req_frames++;
 	}
-	pd_t *pd=(pd_t*)proctab[pid].pdbr;
+	pd_t *pd=(pd_t*)proctab[currpid].pdbr;
 
 	while(req_frames>0)
 	{
