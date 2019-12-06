@@ -21,7 +21,7 @@ uint32 allocated_virtual_pages(pid32 pid)
         if(pd[i].pd_allocated==0)kprintf("Error!No allocation but directory is being accessed!!!\n");
         if(pd[i].pd_pres==1)
         {
-            pt_t *pt= (pd_t*)(pd[i].pd_base<<12);
+            pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
             for(j=0;j<PAGE_SIZE/4;j++)
             {
                 if(pt[j].pt_valid==1)
@@ -47,7 +47,7 @@ uint32 used_ffs_frames(pid32 pid)
         if(pd[i].pd_allocated==0)kprintf("Error!No allocation but directory is being accessed!!!\n");
         if(pd[i].pd_pres==1)
         {
-            pt_t *pt= (pd_t*)(pd[i].pd_base<<12);
+            pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
             for(j=0;j<PAGE_SIZE/4;j++)
             {
                 if(pt[j].pt_pres==1)
@@ -73,7 +73,7 @@ uint32 used_swap_frames(pid32 pid)
         if(pd[i].pd_allocated==0)kprintf("Error!No allocation but directory is being accessed!!!\n");
         if(pd[i].pd_pres==1)
         {
-            pt_t *pt= (pd_t*)(pd[i].pd_base<<12);
+            pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
             for(j=0;j<PAGE_SIZE/4;j++)
             {
                 if(pt[j].pt_pres==0 && pt[j].pt_swap==1)

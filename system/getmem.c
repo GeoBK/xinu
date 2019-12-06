@@ -48,7 +48,7 @@ char  	*getmem(
 	restore(mask);
 	return (char *)SYSERR;
 }
-char* find_contiguous_vheap(uint32 frames)
+int32 find_contiguous_vheap(uint32 frames)
 {
 	uint32 free_frames=0;
     uint32 old_pdbr=read_cr3();
@@ -71,7 +71,7 @@ char* find_contiguous_vheap(uint32 frames)
         if(pd[i].pd_allocated==0)kprintf("Error!No allocation but directory is being accessed!!!\n");
         if(pd[i].pd_pres==1)
         {
-            pt_t *pt= (pd_t*)(pd[i].pd_base<<12);
+            pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
             for(j=0;j<PAGE_SIZE/4;j++)
             {
 				if(free_frames>=frames)
@@ -103,7 +103,7 @@ char* find_contiguous_vheap(uint32 frames)
 		}
 		
     }
-	return (char*)(beg_frame);
+	return SYSERR;
 }
 
 char	*vmalloc(uint32 size)
@@ -119,6 +119,12 @@ char	*vmalloc(uint32 size)
 		req_frames++;
 	}
 	uint32 free_frame = find_contiguous_vheap(req_frames);
+	if(free_frame==SYSERR)
+	{
+		write_cr3(old_pdbr);
+		restore(mask);
+		return SYSERR;
+	}
 	uint32 pd_index = free_frame>>10;
 	uint32 pt_index = free_frame & 0x003FF;
 	pd_t *pd = (pd_t*)proctab[currpid].pdbr;
@@ -149,6 +155,7 @@ char	*vmalloc(uint32 size)
 	}
 	write_cr3(old_pdbr);
 	restore(mask);
+	return (char*)(free_frame<<12);
 }
 
 char  	*generic_getmem(
