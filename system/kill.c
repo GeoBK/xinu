@@ -29,7 +29,8 @@ syscall	kill(
 	for (i=0; i<3; i++) {
 		close(prptr->prdesc[i]);
 	}
-
+	uint32 old_pdbr=read_cr3();
+	write_cr3(XINU_PAGES*PAGE_SIZE);
 	pd_t *pd=(pd_t*)proctab[currpid].pdbr;
     
     for(i=0;i<PAGE_SIZE/4;i++)
@@ -49,6 +50,7 @@ syscall	kill(
 		pd[i].pd_allocated=0;	
 		
     }
+	write_cr3(old_pdbr);
 
 	freestk(prptr->prstkbase, prptr->prstklen);
 
