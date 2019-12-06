@@ -38,6 +38,15 @@ void	meminit(void) {
        			(uint32)&end - NULLSTK);
        }
 	   initialize_page_table();
+
+	   ffsmemlist.mnext = memptr = (struct memblk *) roundmb(((XINU_PAGES+MAX_PT_SIZE)*PAGE_SIZE));
+	   memptr->mnext = (struct memblk *) NULL;
+	   ffsmemlist.mlength = memptr->mlength = (uint32) truncmb(MAX_FFS_SIZE*PAGE_SIZE);
+
+	   swapmemlist.mnext = memptr = (struct memblk *) roundmb(((XINU_PAGES+MAX_PT_SIZE+MAX_FFS_SIZE)*PAGE_SIZE));
+	   memptr->mnext = (struct memblk *) NULL;
+	   swapmemlist.mlength = memptr->mlength = (uint32) truncmb(MAX_SWAP_SIZE*PAGE_SIZE);
+
 	   kprintf("Switching on paging\n");
 	   enable_paging();
 	   kprintf("paging switched on\n");
@@ -72,8 +81,9 @@ void initialize_page_table()
 		pd[i].pd_mbz	= 0;
 		pd[i].pd_fmb	= 0;
 		pd[i].pd_global = 0;
+		pd[i].pd_allocated = 1;
 		pd[i].pd_valid 	= 1;		
-		pd[i].pd_avail 	= 0;
+		pd[i].pd_swap 	= 0;
 		pd[i].pd_base	= 0;
 		
 
@@ -90,8 +100,9 @@ void initialize_page_table()
 		pd[i].pd_mbz	= 0;
 		pd[i].pd_fmb	= 0;
 		pd[i].pd_global = 0;
+		pd[i].pd_allocated 	= 0;
 		pd[i].pd_valid 	= 0;		
-		pd[i].pd_avail 	= 0;
+		pd[i].pd_swap 	= 0;
 		pd[i].pd_base	= 0;
 	}
 	int k=0;
@@ -104,6 +115,7 @@ void initialize_page_table()
 			{
 				pd[k].pd_base=new_pd>>12;
 				pd[k].pd_pres=1;
+				pd[k].pd_valid=1;
 			}				
 		}
 		for(j=0;j<PAGE_SIZE/4;j++)
@@ -113,6 +125,7 @@ void initialize_page_table()
 			// if(i<XINU_PAGES+MAX_PT_SIZE)
 			// {
 				curr_ptb[j].pt_pres=1;
+				curr_ptb[j].pt_write=1;
 			//}			
 			//kprintf("%u\t : %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
 			i++;
@@ -121,7 +134,7 @@ void initialize_page_table()
 		kprintf("i: %d, j:%d, k: %d\n",i,j,k);		
 	}
 	
-	uint32 pdbr=((uint32)pd)&0x11111000;
+	uint32 pdbr=((uint32)pd)&0xFFFFF000;
 	kprintf("pdbr: %x\n",pdbr);
 	write_cr3(pdbr);
 	//print_page_table();
@@ -136,12 +149,12 @@ uint32 allocate_next_table()
 	
 	for(i=1;i<MAX_PT_SIZE;i++)
 	{
-		if(pt_begin[i*(PAGE_SIZE/4)].pd_valid==0)
+		if(pt_begin[i*(PAGE_SIZE/4)].pd_allocated==0)
 		{
 			kprintf("New page table address : %x, i:%u, j: %x",&(pt_begin[i*(PAGE_SIZE/4)]),i,&(pt_begin[i*(PAGE_SIZE/4)]));
 			for(j=&(pt_begin[i*(PAGE_SIZE/4)]);j<(pd_t*)((XINU_PAGES+i+1)*PAGE_SIZE);j++)
 			{
-				j->pd_valid=1;
+				j->pd_allocated =1;
 				//kprintf("\tj: %x\n",j);
 			}
 			return (uint32)&(pt_begin[i*(PAGE_SIZE/4)]);

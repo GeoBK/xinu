@@ -41,7 +41,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
 	preempt = QUANTUM;		/* Reset time slice for process	*/
-	
+	ptold->pdbr = (char*) read_cr3();
 	write_cr3((uint32)ptnew->pdbr);
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
 

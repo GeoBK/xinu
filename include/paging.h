@@ -23,8 +23,9 @@ typedef struct {
   unsigned int pd_mbz	: 1;		/* must be zero			*/
   unsigned int pd_fmb	: 1;		/* four MB pages?		*/
   unsigned int pd_global: 1;		/* global (ignored)		*/
+  unsigned int pd_allocated : 1;		/* check if entry is valid		*/
   unsigned int pd_valid : 1;		/* check if entry is valid		*/
-  unsigned int pd_avail : 2;		/* for programmer's use		*/
+  unsigned int pd_swap  : 1;		/* for programmer's use		*/
   unsigned int pd_base	: 20;		/* location of page table?	*/
 } pd_t;
 
@@ -41,8 +42,25 @@ typedef struct {
   unsigned int pt_dirty : 1;		/* page was written?		*/
   unsigned int pt_mbz	: 1;		/* must be zero			*/
   unsigned int pt_global: 1;		/* should be zero in 586	*/
-  unsigned int pt_valid : 1;		/* check if entry is valid		*/
-  unsigned int pt_avail : 2;		/* for programmer's use		*/
+  unsigned int pt_allocated : 1;		/*  Allocated is needed for the page table free space checks		*/
+  unsigned int pt_valid : 1;		/* valid is needed for checking if the corresponding virtual address has been allocated even if the mapping might not be valid.
+                                     If valid is 0 raise a segmentation fault. */
+  unsigned int pt_swap  : 1;		/* for programmer's use		*/
+//if present is 1 address translation just happens
+//if present is 0 - if valid is 0 raise a segmentation fault
+//                  if valid is 1 find a slot in physical memory for it 
+//                              if swap is 1 get the data from swap space from the corresponding pd_base before overwriting it
+//                              if swap is 0 do nothing more
+
+//valid is set when vmalloc is called
+//valid is reset when process is killed and the space is deallocated along with present and allocated being reset as well
+//valid is also reset when vfree is called. present is also reset. Allocated is NOT touched though
+//when ffs space is full we set the swap to 1, present becomes 0, valid and allocated remain 1.
+
+//Also need a freelist for swap space
+//Free list for FFS as well
+
+
   unsigned int pt_base	: 20;		/* location of page?		*/
 } pt_t;
 

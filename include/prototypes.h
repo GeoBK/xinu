@@ -611,6 +611,16 @@ extern	syscall	yield(void);
 
 extern uint32 allocate_next_table();
 
+extern uint32 free_ffs_pages();
+
+extern uint32 free_swap_pages();
+
+extern uint32 allocated_virtual_pages(pid32 pid);
+
+extern uint32 used_ffs_frames(pid32 pid);
+
+extern uint32 used_swap_frames(pid32 pid);
+
 extern void initialize_page_table();
 
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */

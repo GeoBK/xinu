@@ -19,7 +19,9 @@ local	process startup(void);	/* Process to finish startup tasks	*/
 
 struct	procent	proctab[NPROC];	/* Process table			*/
 struct	sentry	semtab[NSEM];	/* Semaphore table			*/
-struct	memblk	memlist;	/* List of free memory blocks		*/
+struct	memblk	memlist;		/* List of free memory blocks		*/
+struct 	memblk	ffsmemlist;		/* List free memory blocks in ffs 	*/
+struct 	memblk	swapmemlist;	/* List of free memory blocks in swap space	*/
 
 /* Active system status */
 
