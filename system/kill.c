@@ -32,12 +32,13 @@ syscall	kill(
 	uint32 old_pdbr=read_cr3();
 	write_cr3(XINU_PAGES*PAGE_SIZE);
 	pd_t *pd=(pd_t*)proctab[currpid].pdbr;
-    
+    kprintf("pd: %x\n",pd);
     for(i=0;i<PAGE_SIZE/4;i++)
     {        
         if(pd[i].pd_pres==1 && i>=(XINU_PAGES/(PAGE_SIZE/4)))
         {
             pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
+			kprintf("pt: %x\n",pt);
             for(j=0;j<PAGE_SIZE/4;j++)
             {
 				kprintf("kill - i: %d, j: %d\n",i,j);
