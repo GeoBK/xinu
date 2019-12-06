@@ -44,7 +44,7 @@ syscall	kill(
 				kprintf("pt: %x\n",pt);
 				for(j=0;j<PAGE_SIZE/4;j++)
 				{
-					kprintf("kill - i: %d, j: %d\n",i,j);
+					//kprintf("kill - i: %d, j: %d\n",i,j);
 					pt[j].pt_pres=0;
 					pt[j].pt_valid=0;
 					pt[j].pt_allocated=0;
@@ -52,7 +52,7 @@ syscall	kill(
 			}
 			else if(i>=(XINU_PAGES/(PAGE_SIZE/4)))
 			{
-				kprintf("kill - i: %d\n",i);
+				//kprintf("kill - i: %d\n",i);
 				pd[i].pd_pres=0;
 				pd[i].pd_valid=0;
 				pd[i].pd_allocated=0;	

@@ -52,7 +52,7 @@ int32 find_contiguous_vheap(uint32 frames)
 {
 	kprintf("inside find_contiguous_vheap!\n");
 	uint32 free_frames=0;
-    
+    if(frames==0)return SYSERR;
 	uint32 beg_frame,frame_count;
 	bool8 break_occured=0;
 	
@@ -61,37 +61,42 @@ int32 find_contiguous_vheap(uint32 frames)
     for(i=0;i<PAGE_SIZE/4;i++)
     {
 		kprintf("i: %d\n",i);
+		if(break_occured==1)
+		{
+			beg_frame=frame_count;
+			free_frames=0;
+			break_occured=0;
+		}
 		if(free_frames>=frames)
 		{
 			kprintf("i: %d\n",i);
 			return beg_frame;
 		}
-		if(break_occured==1)
-		{
-			beg_frame=frame_count;
-			break_occured=0;
-		}
+		
         if(pd[i].pd_allocated==0)kprintf("Error!No allocation but directory is being accessed!!!\n");
         if(pd[i].pd_pres==1)
         {
             pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
             for(j=0;j<PAGE_SIZE/4;j++)
             {
-				if(free_frames>=frames)
-				{
-					return beg_frame;
-				}
+				kprintf("i: %d, j: %d\n",i,j);	
 				if(break_occured==1)
 				{
 					beg_frame=frame_count;
+					free_frames=0;
 					break_occured=0;
 				}
+				if(free_frames>=frames)
+				{
+					kprintf("i: %d, j: %d\n",i,j);	
+					return beg_frame;
+				}				
                 if(pt[j].pt_valid==0)
                 {
                     ++free_frames;
                 }
 				else
-				{
+				{					
 					break_occured=1;
 				}		
 				++frame_count;		
@@ -99,8 +104,7 @@ int32 find_contiguous_vheap(uint32 frames)
 			
         }
 		else
-		{
-			break_occured=1;
+		{			
 			free_frames=free_frames+(PAGE_SIZE/4);
 			frame_count=frame_count+(PAGE_SIZE/4);
 		}
