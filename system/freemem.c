@@ -141,3 +141,59 @@ syscall	generic_freemem(
 	restore(mask);
 	return OK;
 }
+
+
+syscall	vfree(char * addr, uint32 size)
+{
+	//Find out when vfree would fail (Spec talks about failure but doesnt mention why it might fail)
+	//Im freeing space even when there is no mapping in the page directory.
+	intmask	mask;			/* Saved interrupt mask		*/
+	struct	memblk	*next, *prev, *block;
+	uint32	top;
+	mask = disable();
+	uint32 old_pdbr=read_cr3();
+	write_cr3(XINU_PAGES*PAGE_SIZE);
+
+	uint32 pd_index=size>>22;
+	uint32 pt_index= (size>>12)&0x003FF;
+
+	uint32 req_frames = size/PAGE_SIZE;
+	if(size%PAGE_SIZE!=0)
+	{
+		req_frames++;
+	}
+	pd_t *pd=(pd_t*)proctab[pid].pdbr;
+
+	while(req_frames>0)
+	{
+		if(pd[pd_index].pd_pres==1)
+		{
+			pt_t *pt=(pt_t*)(pd[pd_index].pd_base<<12);
+			
+			pt[pt_index].pt_valid=0;
+			pt[pt_index].pt_pres=0;
+			pt[pt_index].pt_write=0;
+			--req_frames;
+			++pt_index;
+			if(pt_index==(PAGE_SIZE/4))
+			{
+				pd_index++;
+				pt_index=0;
+			}
+		}
+		else
+		{
+			--req_frames;
+			pd_index++;
+			if(pt_index==(PAGE_SIZE/4))
+			{
+				pd_index++;
+				pt_index=0;
+			}			
+		}
+	}  
+
+	write_cr3(old_pdbr);
+	restore(mask);
+	return OK;
+}
