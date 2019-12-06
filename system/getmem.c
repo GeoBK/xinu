@@ -53,8 +53,8 @@ int32 find_contiguous_vheap(uint32 frames)
 	kprintf("inside find_contiguous_vheap!\n");
 	uint32 free_frames=0;
     if(frames==0)return SYSERR;
-	uint32 beg_frame,frame_count;
-	bool8 break_occured=0;
+	uint32 beg_frame,frame_count=XINU_PAGES;
+	bool8 break_occured=1;
 	
     pd_t *pd=(pd_t*)proctab[currpid].pdbr;
     int i,j;
@@ -71,6 +71,8 @@ int32 find_contiguous_vheap(uint32 frames)
 		{
 			kprintf("i: %d\n",i);
 			kprintf("beg_frame: %x\n",beg_frame);
+			kprintf("free_frames: %u\n",free_frames);
+			kprintf("frames: %u\n",frames);
 			return beg_frame;
 		}
 		
