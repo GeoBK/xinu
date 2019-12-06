@@ -110,6 +110,8 @@ extern	syscall	freebuf(char *);
 /* in file freemem.c */
 extern	syscall	freemem(char *, uint32);
 
+extern	syscall	vfree(char *, uint32);
+
 /* in file getbuf.c */
 extern	char	*getbuf(bpid32);
 
@@ -123,6 +125,8 @@ extern	pid32	getitem(pid32);
 
 /* in file getmem.c */
 extern	char	*getmem(uint32);
+
+extern	char	*vmalloc(uint32);
 
 /* in file getpid.c */
 extern	pid32	getpid(void);
