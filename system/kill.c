@@ -31,7 +31,7 @@ syscall	kill(
 	}
 	
 	pd_t *pd=(pd_t*)proctab[currpid].pdbr;
-	if(pd!=SYS_PD)
+	if((uint32)pd!=SYS_PD)
 	{
 		uint32 old_pdbr=read_cr3();
 		write_cr3(XINU_PAGES*PAGE_SIZE);
