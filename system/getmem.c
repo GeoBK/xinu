@@ -60,9 +60,10 @@ int32 find_contiguous_vheap(uint32 frames)
     int i,j;
     for(i=0;i<PAGE_SIZE/4;i++)
     {
-		kprintf("i: %d",i);
+		kprintf("i: %d\n",i);
 		if(free_frames>=frames)
 		{
+			kprintf("i: %d\n",i);
 			return beg_frame;
 		}
 		if(break_occured==1)

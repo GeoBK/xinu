@@ -125,6 +125,7 @@ void initialize_page_table()
 			// if(i<XINU_PAGES+MAX_PT_SIZE)
 			// {
 				curr_ptb[j].pt_pres=1;
+				curr_ptb[j].pt_valid=1;
 				curr_ptb[j].pt_write=1;
 			//}			
 			//kprintf("%u\t : %u\n",(uint32)pdbr+i*4,pdbr[i].pd_base);
