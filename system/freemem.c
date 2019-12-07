@@ -152,8 +152,8 @@ syscall	vfree(char * addr, uint32 size)
 	uint32 old_pdbr=read_cr3();
 	write_cr3(XINU_PAGES*PAGE_SIZE);
 
-	uint32 pd_index=size>>22;
-	uint32 pt_index= (size>>12)&0x003FF;
+	uint32 pd_index=(uint32)addr>>22;
+	uint32 pt_index= ((uint32)addr>>12)&0x003FF;
 
 	uint32 req_frames = size/PAGE_SIZE;
 	if(size%PAGE_SIZE!=0)
