@@ -50,18 +50,18 @@ char  	*getmem(
 }
 int32 find_contiguous_vheap(uint32 frames)
 {
-	kprintf("inside find_contiguous_vheap!\n");
+	//kprintf("inside find_contiguous_vheap!\n");
 	uint32 free_frames=0;
     if(frames==0)return SYSERR;
 	uint32 beg_frame,frame_count=XINU_PAGES;
 	bool8 break_occured=1;
 	
     pd_t *pd=(pd_t*)proctab[currpid].pdbr;
-	kprintf("pd: %x\n",pd);
+	//kprintf("pd: %x\n",pd);
     int i,j;
     for(i=XINU_PAGES/(PAGE_SIZE/4);i<PAGE_SIZE/4;i++)
     {
-		kprintf("i: %d\n",i);
+		//kprintf("i: %d\n",i);
 		if(break_occured==1)
 		{
 			beg_frame=frame_count;
@@ -70,10 +70,10 @@ int32 find_contiguous_vheap(uint32 frames)
 		}
 		if(free_frames>=frames)
 		{
-			kprintf("i: %d\n",i);
-			kprintf("beg_frame: %x\n",beg_frame);
-			kprintf("free_frames: %u\n",free_frames);
-			kprintf("frames: %u\n",frames);
+			// kprintf("i: %d\n",i);
+			// kprintf("beg_frame: %x\n",beg_frame);
+			// kprintf("free_frames: %u\n",free_frames);
+			// kprintf("frames: %u\n",frames);
 			return beg_frame;
 		}
 		
@@ -81,7 +81,7 @@ int32 find_contiguous_vheap(uint32 frames)
         if(pd[i].pd_pres==1)
         {
             pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
-			kprintf("pt: %x\n",pt);
+			//kprintf("pt: %x\n",pt);
             for(j=0;j<PAGE_SIZE/4;j++)
             {
 
@@ -111,7 +111,7 @@ int32 find_contiguous_vheap(uint32 frames)
         }
 		else
 		{		
-			kprintf("inside the part where pd.pres=0 - i: %d\n",i);
+			//kprintf("inside the part where pd.pres=0 - i: %d\n",i);
 			free_frames=free_frames+(PAGE_SIZE/4);
 			frame_count=frame_count+(PAGE_SIZE/4);
 		}
@@ -122,7 +122,7 @@ int32 find_contiguous_vheap(uint32 frames)
 
 char	*vmalloc(uint32 size)
 {
-	kprintf("Inside vmalloc\n");
+	//kprintf("Inside vmalloc\n");
 	intmask	mask;			/* Saved interrupt mask		*/	
 	mask = disable();
 	uint32 old_pdbr=read_cr3();
@@ -143,15 +143,15 @@ char	*vmalloc(uint32 size)
 	uint32 pd_index = free_frame>>10;
 	uint32 pt_index = free_frame & 0x003FF;
 	pd_t *pd = (pd_t*)proctab[currpid].pdbr;
-	kprintf("req_frames: %u\n",req_frames);
+	//kprintf("req_frames: %u\n",req_frames);
 	while(req_frames>0)
 	{
-		kprintf("pd_index: %u, pt_index: %u\n",pd_index, pt_index);
+		//kprintf("pd_index: %u, pt_index: %u\n",pd_index, pt_index);
 		
 		if(pd[pd_index].pd_pres==1)
 		{
 			pt_t *pt=(pt_t*)(pd[pd_index].pd_base<<12);
-			kprintf("pt base: %u\n",(uint32)pt);
+			//kprintf("pt base: %u\n",(uint32)pt);
 			if(pt[pt_index].pt_pres==1)kprintf("Possible mistake in allocation pd_index: %x, pt_index: %x\n",pd_index,pt_index);
 			pt[pt_index].pt_valid=1;
 			pt[pt_index].pt_pres=0;
@@ -167,7 +167,7 @@ char	*vmalloc(uint32 size)
 		else
 		{
 			pd[pd_index].pd_base = allocate_next_table()>>12;
-			kprintf("New page table at : %u\n",(uint32)pd[pd_index].pd_base);
+			//kprintf("New page table at : %u\n",(uint32)pd[pd_index].pd_base);
 			pd[pd_index].pd_valid= 1;
 			pd[pd_index].pd_pres = 1;
 		}
