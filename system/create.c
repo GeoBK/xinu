@@ -116,12 +116,12 @@ process initialize_user_page_table(uint32* new_pd)
 	{		
 		pd[i].pd_base=sys_pd[i].pd_base;
 		pd[i].pd_pres=sys_pd[i].pd_pres;		
-		kprintf("i: %d, k: %d\n",i,k);		
+		//kprintf("i: %d, k: %d\n",i,k);		
 	}
 	
 	uint32 pdbr=((uint32)pd)&0xFFFFF000;
-	kprintf("pd: %x\n",pd);
-	kprintf("pdbr: %x\n",pdbr);
+	//kprintf("pd: %x\n",pd);
+	//kprintf("pdbr: %x\n",pdbr);
 	*new_pd=(uint32)pd;
 	write_cr3(old_pdbr);
 	return OK;

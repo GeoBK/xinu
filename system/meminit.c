@@ -136,7 +136,7 @@ void initialize_page_table()
 	}
 	
 	uint32 pdbr=((uint32)pd)&0xFFFFF000;
-	kprintf("pdbr: %x\n",pdbr);
+	//kprintf("pdbr: %x\n",pdbr);
 	write_cr3(pdbr);
 	//print_page_table();
 }
