@@ -627,6 +627,8 @@ extern uint32 used_swap_frames(pid32 pid);
 
 extern void initialize_page_table();
 
+extern void pagefault_handler();
+
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
 #define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))
 #define	htonl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \
