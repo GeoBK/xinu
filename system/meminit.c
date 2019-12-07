@@ -132,7 +132,7 @@ void initialize_page_table()
 			i++;
 		}
 		k++;
-		kprintf("i: %d, j:%d, k: %d\n",i,j,k);		
+		//kprintf("i: %d, j:%d, k: %d\n",i,j,k);		
 	}
 	
 	uint32 pdbr=((uint32)pd)&0xFFFFF000;
@@ -143,7 +143,7 @@ void initialize_page_table()
 
 uint32 allocate_next_table()
 {
-	kprintf("Inside the allocate_next_table function\n");
+	//kprintf("Inside the allocate_next_table function\n");
 	uint32 i;
 	pd_t *j;
 	pd_t* pt_begin = (pd_t*)(XINU_PAGES*PAGE_SIZE);	
@@ -152,7 +152,7 @@ uint32 allocate_next_table()
 	{
 		if(pt_begin[i*(PAGE_SIZE/4)].pd_allocated==0)
 		{
-			kprintf("New page table address : %x, i:%u, j: %x",&(pt_begin[i*(PAGE_SIZE/4)]),i,&(pt_begin[i*(PAGE_SIZE/4)]));
+			//kprintf("New page table address : %x, i:%u, j: %x",&(pt_begin[i*(PAGE_SIZE/4)]),i,&(pt_begin[i*(PAGE_SIZE/4)]));
 			for(j=&(pt_begin[i*(PAGE_SIZE/4)]);j<(pd_t*)((XINU_PAGES+i+1)*PAGE_SIZE);j++)
 			{
 				j->pd_allocated =1;
