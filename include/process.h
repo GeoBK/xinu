@@ -53,7 +53,8 @@ struct procent {		/* Entry in the process table		*/
 	bool8	prhasmsg;	/* Nonzero iff msg is valid		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
 
-	char	*pdbr;			
+	char	*pdbr;	
+	bool8 	sys_proc;		/* Whether the process is a system process or user process */	
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/

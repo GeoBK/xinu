@@ -50,6 +50,7 @@ pid32	create(
 	prptr->prparent = (pid32)getpid();
 	prptr->prhasmsg = FALSE;
 	prptr->pdbr = (char*)(XINU_PAGES * PAGE_SIZE);
+	prptr->sys_proc = 1;
 
 	/* Set up stdin, stdout, and stderr descriptors for the shell	*/
 	prptr->prdesc[0] = CONSOLE;
@@ -174,6 +175,7 @@ pid32	vcreate(
 	prptr->prparent = (pid32)getpid();
 	prptr->prhasmsg = FALSE;
 	prptr->pdbr = (char*)(new_pd);
+	prptr->sys_proc = 0;
 
 	/* Set up stdin, stdout, and stderr descriptors for the shell	*/
 	prptr->prdesc[0] = CONSOLE;
