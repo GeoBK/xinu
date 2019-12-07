@@ -85,7 +85,7 @@ int32 find_contiguous_vheap(uint32 frames)
             for(j=0;j<PAGE_SIZE/4;j++)
             {
 
-				kprintf("i: %d, j: %d\n",i,j);	
+				//kprintf("i: %d, j: %d\n",i,j);	
 				if(break_occured==1)
 				{
 					beg_frame=frame_count;
@@ -94,7 +94,7 @@ int32 find_contiguous_vheap(uint32 frames)
 				}
 				if(free_frames>=frames)
 				{
-					kprintf("i: %d, j: %d\n",i,j);	
+					//kprintf("i: %d, j: %d\n",i,j);	
 					return beg_frame;
 				}				
                 if(pt[j].pt_valid==0)
