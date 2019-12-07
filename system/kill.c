@@ -45,8 +45,13 @@ syscall	kill(
 				for(j=0;j<PAGE_SIZE/4;j++)
 				{
 					//kprintf("kill - i: %d, j: %d\n",i,j);
+					if(pt[j].pt_pres==1)
+					{
+						generic_freemem(ffsmemlist,pt[j].pt_base<<12,PAGE_SIZE);
+					}
 					pt[j].pt_pres=0;
 					pt[j].pt_valid=0;
+					pt[j].pt_swap=0;
 					pt[j].pt_allocated=0;
 				}
 			}
@@ -55,6 +60,7 @@ syscall	kill(
 				//kprintf("kill - i: %d\n",i);
 				pd[i].pd_pres=0;
 				pd[i].pd_valid=0;
+				pd[i].pd_swap=0;
 				pd[i].pd_allocated=0;	
 			}		
 		}

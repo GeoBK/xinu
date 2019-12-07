@@ -169,8 +169,13 @@ syscall	vfree(char * addr, uint32 size)
 			pt_t *pt=(pt_t*)(pd[pd_index].pd_base<<12);
 			//kprintf("Freeing pt : %x\n",pt);
 			//kprintf("Freeing pd_index: %d, pt_index: %d\n",pd_index,pt_index);
+			if(pt[pt_index].pt_pres==1)
+			{
+				generic_freemem(ffsmemlist,pt[pt_index].pt_base<<12,PAGE_SIZE);
+			}
 			pt[pt_index].pt_valid=0;
 			pt[pt_index].pt_pres=0;
+			pt[pt_index].pt_swap=0;
 			pt[pt_index].pt_write=0;
 			--req_frames;
 			++pt_index;
