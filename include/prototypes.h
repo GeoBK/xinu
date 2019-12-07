@@ -627,6 +627,8 @@ extern uint32 used_swap_frames(pid32 pid);
 
 extern void initialize_page_table();
 
+extern void pagefault_handler_disp(void);
+
 extern void pagefault_handler();
 
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
