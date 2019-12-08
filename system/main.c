@@ -77,7 +77,7 @@ process vmalloc_process(){
 
 	/* testing FFS allocation */
 	sync_printf("P%d:: Accessing 1 page @ ptr1...\n", currpid);
-	kprintf("Doing a read: %d",ptr1[0]);
+	ptr1[0]=0;
 	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
 	sync_printf("P%d:: Accessing again 1 page @ ptr1...\n", currpid);
 	ptr1[4]=0;
