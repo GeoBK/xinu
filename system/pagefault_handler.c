@@ -56,17 +56,16 @@ void pagefault_handler(uint32 error)
     uint32 pd_index = addr>>22;
     uint32 pt_index = (addr>>12)&0x003FF;
     pd_t *pd = (pd_t*)(proctab[currpid].pdbr);
-    if(pd[pd_index].pd_pres==1)
+    if(violation==0)
     {
-        pt_t *pt = (pt_t*)(pd[pd_index].pd_base<<12);
-        if(pt[pt_index].pt_valid==1)
+        kprintf("P%d:: PROTECTION_FAULT\n",currpid);
+    }
+    else
+    {
+        if(pd[pd_index].pd_pres==1)
         {
-            //Access type = 1 is for writes
-            if(violation==1)
-            {
-                kprintf("P%d:: PROTECTION_FAULT\n",currpid);
-            }
-            else
+            pt_t *pt = (pt_t*)(pd[pd_index].pd_base<<12);
+            if(pt[pt_index].pt_valid==1)
             {
                 // Since we are in the page fault handler it is implied that the present bit is 0
                 if(pt[pt_index].pt_pres==1)kprintf("Present bit is 1 inside the page fault handler!!! \n");
@@ -102,17 +101,18 @@ void pagefault_handler(uint32 error)
                 pt[pt_index].pt_base=phys_addr>>12;
                 pt[pt_index].pt_pres = 1;
                 pt[pt_index].pt_swap=0;
+                
+            }
+            else
+            {
+                kprintf("P%d:: SEGMENTATION_FAULT\n",currpid);
             }
         }
         else
         {
             kprintf("P%d:: SEGMENTATION_FAULT\n",currpid);
+            kill(currpid);
         }
-    }
-    else
-    {
-        kprintf("P%d:: SEGMENTATION_FAULT\n",currpid);
-        kill(currpid);
     }
     
     write_cr3(old_pdbr);
