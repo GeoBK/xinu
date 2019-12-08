@@ -633,7 +633,7 @@ extern void pagefault_handler();
 
 syscall	generic_freemem(struct memblk* 	generic_freelist,char *blkaddr, uint32	nbytes);
 
-syscall	generic_getmem(struct memblk* 	generic_freelist, uint32	nbytes);
+char*	generic_getmem(struct memblk* 	generic_freelist, uint32	nbytes);
 
 
 
