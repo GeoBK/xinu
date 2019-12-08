@@ -39,9 +39,10 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
 	}
     return SYSERR;
 }
-void pagefault_handler()
+void pagefault_handler(uint32 error)
 {
-    uint32 error;
+    kprintf("initial error: %x\n",error);
+    
     intmask	mask;			/* Saved interrupt mask		*/	
 	mask = disable();
 	uint32 old_pdbr=read_cr3();
