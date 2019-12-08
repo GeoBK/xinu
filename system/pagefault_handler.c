@@ -49,7 +49,7 @@ void pagefault_handler(uint32 error)
 	write_cr3(XINU_PAGES*PAGE_SIZE);
     //0 is for page fault caused by page not present
     //1 is for page fault caused by page-level protection violation
-    kprintf("error: %x\n",error);
+    // kprintf("error: %x\n",error);
     uint32 violation = error&1;
 
     uint32 addr = read_cr2();
