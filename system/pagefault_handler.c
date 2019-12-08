@@ -56,7 +56,7 @@ void pagefault_handler(uint32 error)
     uint32 pd_index = addr>>22;
     uint32 pt_index = (addr>>12)&0x003FF;
     pd_t *pd = (pd_t*)(proctab[currpid].pdbr);
-    if(violation==0)
+    if(violation==1)
     {
         kprintf("P%d:: PROTECTION_FAULT\n",currpid);
     }
