@@ -171,7 +171,7 @@ syscall	vfree(char * addr, uint32 size)
 			//kprintf("Freeing pd_index: %d, pt_index: %d\n",pd_index,pt_index);
 			if(pt[pt_index].pt_pres==1)
 			{
-				generic_freemem(&ffsmemlist,(char*)pt[pt_index].pt_base<<12,PAGE_SIZE);
+				generic_freemem(&ffsmemlist,(char*)(pt[pt_index].pt_base<<12),PAGE_SIZE);
 			}
 			pt[pt_index].pt_valid=0;
 			pt[pt_index].pt_pres=0;
