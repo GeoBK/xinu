@@ -65,18 +65,18 @@ void pagefault_handler(uint32 error)
     {
         if(pd[pd_index].pd_pres==1)
         {
-            kprintf("deso!!\n");
+            // kprintf("deso!!\n");
             pt_t *pt = (pt_t*)(pd[pd_index].pd_base<<12);
             if(pt[pt_index].pt_valid==1)
             {
-                kprintf("deso2!!\n");
+                // kprintf("deso2!!\n");
                 // Since we are in the page fault handler it is implied that the present bit is 0
                 if(pt[pt_index].pt_pres==1)kprintf("Present bit is 1 inside the page fault handler!!! \n");
                 //Find physical memory location mapping                               
                 uint32 phys_addr = (uint32)generic_getmem(&ffsmemlist,PAGE_SIZE);
                 if(phys_addr==-1)
                 { 
-                    kprintf("deso3!!\n");
+                    // kprintf("deso3!!\n");
                     //Do stuff to move the LRU to swap space
                     uint32 victim_pdbr, victim_pdi, victim_pti;
                     find_victim_frame(&victim_pdbr, &victim_pdi, &victim_pti);
