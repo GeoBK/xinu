@@ -41,7 +41,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
 }
 void pagefault_handler(uint32 error)
 {
-    kprintf("initial error: %x\n",error);
+    //kprintf("initial error: %x\n",error);
     
     intmask	mask;			/* Saved interrupt mask		*/	
 	mask = disable();
@@ -59,6 +59,7 @@ void pagefault_handler(uint32 error)
     if(violation==1)
     {
         kprintf("P%d:: PROTECTION_FAULT\n",currpid);
+        kill(currpid);
     }
     else
     {
@@ -70,8 +71,7 @@ void pagefault_handler(uint32 error)
                 // Since we are in the page fault handler it is implied that the present bit is 0
                 if(pt[pt_index].pt_pres==1)kprintf("Present bit is 1 inside the page fault handler!!! \n");
                 //Find physical memory location mapping 
-                uint32 test = -1;
-                kprintf("%%d: %d, %%u: %u",test, test);
+                uint32 test = -1;                
                 uint32 phys_addr = (uint32)generic_getmem(&ffsmemlist,PAGE_SIZE);
                 if(phys_addr==-1)
                 {
@@ -106,6 +106,7 @@ void pagefault_handler(uint32 error)
             else
             {
                 kprintf("P%d:: SEGMENTATION_FAULT\n",currpid);
+                kill(currpid);
             }
         }
         else
