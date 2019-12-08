@@ -631,6 +631,12 @@ extern void pagefault_handler_disp(void);
 
 extern void pagefault_handler();
 
+syscall	generic_freemem(struct memblk* 	generic_freelist,char *blkaddr, uint32	nbytes);
+
+syscall	generic_getmem(struct memblk* 	generic_freelist, uint32	nbytes);
+
+
+
 /* NETWORK BYTE ORDER CONVERSION NOT NEEDED ON A BIG-ENDIAN COMPUTER */
 #define	htons(x)  ((0xff & ((x)>>8)) | ((0xff & (x)) << 8))
 #define	htonl(x)  ((((x)>>24) & 0x000000ff) | (((x)>> 8) & 0x0000ff00) | \

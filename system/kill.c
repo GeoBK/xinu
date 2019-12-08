@@ -47,7 +47,7 @@ syscall	kill(
 					//kprintf("kill - i: %d, j: %d\n",i,j);
 					if(pt[j].pt_pres==1)
 					{
-						generic_freemem(ffsmemlist,pt[j].pt_base<<12,PAGE_SIZE);
+						generic_freemem(&ffsmemlist,(char*)(pt[j].pt_base<<12),PAGE_SIZE);
 					}
 					pt[j].pt_pres=0;
 					pt[j].pt_valid=0;

@@ -22,10 +22,10 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                         {
                             if(pt[pti_ptr].pt_acc==0)
                             {
-                                victim_pdbr=proctab[pr_ptr].pdbr;
+                                *victim_pdbr=(uint32)proctab[pr_ptr].pdbr;
                                 if(victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
-                                victim_pdi=pdi_ptr;
-                                victim_pti=pti_ptr;
+                                *victim_pdi=pdi_ptr;
+                                *victim_pti=pti_ptr;
                             }
                             else
                             {
@@ -87,15 +87,15 @@ void pagefault_handler(uint32 error)
                     //Change the pt_swap of the pt entry to 1 and the pt_base to the location of the swap space
                     pd_t* vpd=(pd_t*)victim_pdbr;
                     pt_t* vpt=(pt_t*)(vpd[victim_pdi].pd_base<<12);
-                    memcpy(swap_addr,vpt[victim_pti].pt_base<<12,PAGE_SIZE);
+                    memcpy((void*)swap_addr,(void*)(vpt[victim_pti].pt_base<<12),PAGE_SIZE);
 
                     vpt[victim_pti].pt_base=swap_addr>>12;
                     vpt[victim_pti].pt_swap=1;
                 }
                 if(pt[pt_index].pt_swap==1)
                 {
-                    memcpy(phys_addr,pt[pt_index].pt_base<<12,PAGE_SIZE);
-                    generic_freemem(&swapmemlist,pt[pt_index].pt_base<<12,PAGE_SIZE);
+                    memcpy(phys_addr,(void*)(pt[pt_index].pt_base<<12),PAGE_SIZE);
+                    generic_freemem(&swapmemlist,(char*)(pt[pt_index].pt_base<<12),PAGE_SIZE);
                 }                
                 pt[pt_index].pt_base=phys_addr>>12;
                 pt[pt_index].pt_pres = 1;
