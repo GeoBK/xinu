@@ -53,7 +53,7 @@ void pagefault_handler(uint32 error)
     uint32 addr = read_cr2();
     uint32 pd_index = addr>>22;
     uint32 pt_index = (addr>>12)&0x003FF;
-    pd_t *pd = (pd_t*)(porctab[currpid].pdbr);
+    pd_t *pd = (pd_t*)(proctab[currpid].pdbr);
     if(pd[pd_index].pd_pres==1)
     {
         pt_t *pt = (pt_t*)(pd[pd_index].pd_base<<12);
@@ -71,13 +71,13 @@ void pagefault_handler(uint32 error)
                 //Find physical memory location mapping 
                 uint32 test = -1;
                 kprintf("%%d: %d, %%u: %u",test, test);
-                uint32 phys_addr = (uint32)generic_getmem(ffsmemlist,PAGE_SIZE);
+                uint32 phys_addr = (uint32)generic_getmem(&ffsmemlist,PAGE_SIZE);
                 if(phys_addr==-1)
                 {
                     //Do stuff to move the LRU to swap space
                     uint32 victim_pdbr, victim_pdi, victim_pti;
                     find_victim_frame(&victim_pdbr, &victim_pdi, &victim_pti);
-                    uint32 swap_addr = (uint32)generic_getmem(swapmemlist,PAGE_SIZE);
+                    uint32 swap_addr = (uint32)generic_getmem(&swapmemlist,PAGE_SIZE);
                     if(swap_addr==-1)
                     {
                         kprintf("Swap space full- ABORT!!!\n");
@@ -95,7 +95,7 @@ void pagefault_handler(uint32 error)
                 if(pt[pt_index].pt_swap==1)
                 {
                     memcpy(phys_addr,pt[pt_index].pt_base<<12,PAGE_SIZE);
-                    generic_freemem(swapmemlist,pt[pt_index].pt_base<<12,PAGE_SIZE);
+                    generic_freemem(&swapmemlist,pt[pt_index].pt_base<<12,PAGE_SIZE);
                 }                
                 pt[pt_index].pt_base=phys_addr>>12;
                 pt[pt_index].pt_pres = 1;
