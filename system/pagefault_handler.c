@@ -23,7 +23,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                             if(pt[pti_ptr].pt_acc==0)
                             {
                                 *victim_pdbr=(uint32)proctab[pr_ptr].pdbr;
-                                if(victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
+                                if((uint32)victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
                                 *victim_pdi=pdi_ptr;
                                 *victim_pti=pti_ptr;
                             }
@@ -94,7 +94,7 @@ void pagefault_handler(uint32 error)
                 }
                 if(pt[pt_index].pt_swap==1)
                 {
-                    memcpy(phys_addr,(void*)(pt[pt_index].pt_base<<12),PAGE_SIZE);
+                    memcpy((void*)phys_addr,(void*)(pt[pt_index].pt_base<<12),PAGE_SIZE);
                     generic_freemem(&swapmemlist,(char*)(pt[pt_index].pt_base<<12),PAGE_SIZE);
                 }                
                 pt[pt_index].pt_base=phys_addr>>12;
