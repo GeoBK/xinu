@@ -47,6 +47,7 @@ syscall	kill(
 					//kprintf("kill - i: %d, j: %d\n",i,j);
 					if(pt[j].pt_pres==1)
 					{
+						kprintf("In kill calling freemem\n");
 						generic_freemem(&ffsmemlist,(char*)(pt[j].pt_base<<12),PAGE_SIZE);
 					}
 					pt[j].pt_pres=0;
