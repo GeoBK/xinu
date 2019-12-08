@@ -157,12 +157,17 @@ static	void	sysinit()
 	kprintf("\n%s\n\n", VERSION);
 
 	/* Initialize the interrupt vectors */
+	kprintf("initializing initvectors\n");
 
 	initevec();
+
+	
 	
 	/* Initialize free memory list */
 	
 	meminit();
+
+	kprintf("returned from meminit\n");
 
 	/* Initialize system variables */
 
