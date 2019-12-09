@@ -11,6 +11,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
 		if (proctab[pr_ptr].prstate == PR_FREE) 
         {
             pd_t* pd = (pd_t*)proctab[pr_ptr].pdbr;
+
             for(pdi_ptr=0;pdi_ptr<(PAGE_SIZE/4);pdi_ptr++)
             {
                 if(pd[pdi_ptr].pd_pres==1)
@@ -18,6 +19,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                     pt_t* pt=(pt_t*)(pd[pdi_ptr].pd_base<<12);
                     for(pti_ptr=0;pti_ptr<(PAGE_SIZE/4);pti_ptr++)
                     {
+                        kprintf("pd: %x, pd_index: %d, pt: %x, pt_index: %d",pd,pdi_ptr,pt, pti_ptr);
                         if(pt[pti_ptr].pt_pres==1 && pt[pti_ptr].pt_valid==1)
                         {
                             if(pt[pti_ptr].pt_acc==0)
