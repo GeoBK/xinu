@@ -88,8 +88,10 @@ syscall	generic_freemem(
 	write_cr3(XINU_PAGES*PAGE_SIZE);
 	if ((nbytes == 0) || ((uint32) blkaddr < (uint32) minheap)
 			  || ((uint32) blkaddr > (uint32) maxheap)) {
+				  kprintf("returning syserr!!!\n");
 		write_cr3(old_pdbr);
 		restore(mask);
+
 		return SYSERR;
 	}
 
