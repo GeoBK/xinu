@@ -8,7 +8,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
     {
         pr_ptr++;
 		pr_ptr %= NPROC;	/* Wrap around to beginning */
-		if (proctab[pr_ptr].prstate == PR_FREE) 
+		if (proctab[pr_ptr].prstate != PR_FREE) 
         {
             pd_t* pd = (pd_t*)proctab[pr_ptr].initial_pdbr;
 
@@ -28,6 +28,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                 if((uint32)victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
                                 *victim_pdi=pdi_ptr;
                                 *victim_pti=pti_ptr;
+                                return OK;
                             }
                             else
                             {
