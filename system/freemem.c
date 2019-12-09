@@ -117,8 +117,9 @@ syscall	generic_freemem(
 		restore(mask);
 		return SYSERR;
 	}
-
+	kprintf("ffsmemlist length before : %d\n", generic_freelist->mlength/PAGE_SIZE);
 	generic_freelist->mlength += nbytes;
+	kprintf("ffsmemlist length before : %d\n", generic_freelist->mlength/PAGE_SIZE);
 
 	/* Either coalesce with previous block or add to free list */
 
@@ -195,8 +196,7 @@ syscall	vfree(char * addr, uint32 size)
 				pt_index=0;
 			}			
 		}
-	}  
-
+	}
 	write_cr3(old_pdbr);
 	restore(mask);
 	return OK;
