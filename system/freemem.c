@@ -86,8 +86,8 @@ syscall	generic_freemem(
 	mask = disable();
 	uint32 old_pdbr=read_cr3();
 	write_cr3(XINU_PAGES*PAGE_SIZE);
-	if ((nbytes == 0) || ((uint32) blkaddr < (uint32) minheap)
-			  || ((uint32) blkaddr > (uint32) maxheap)) {
+	if ((nbytes == 0) || ((uint32) blkaddr < (uint32) (XINU_PAGES+MAX_PT_SIZE)*PAGE_SIZE)
+			  || ((uint32) blkaddr > (uint32) (XINU_PAGES+MAX_PT_SIZE+MAX_FFS_SIZE+MAX_SWAP_SIZE)*PAGE_SIZE)) {
 				  kprintf("returning syserr!!!\n");
 		write_cr3(old_pdbr);
 		restore(mask);
