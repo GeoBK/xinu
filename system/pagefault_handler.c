@@ -113,6 +113,7 @@ void pagefault_handler(uint32 error)
         }
         else
         {
+            kprintf("pd: %x, pd_index: %u, pt_base(?): %x\n",pd,pd_index,pd[pd_index].pd_base);
             kprintf("P%d:: SEGMENTATION_FAULT because of page directory entry being absent\n",currpid);
             kill(currpid);
         }
