@@ -98,6 +98,7 @@ void pagefault_handler(uint32 error)
                     vpt[victim_pti].pt_base=swap_addr>>12;
                     vpt[victim_pti].pt_swap=1;
                     
+                    kprintf("Exiting SWAP operations!!\n");
                 }
                 if(pt[pt_index].pt_swap==1)
                 {
