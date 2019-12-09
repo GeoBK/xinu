@@ -71,7 +71,7 @@ void initialize_page_table()
 	int i,j;
 	pd_t *pd = (pd_t*)(XINU_PAGES*PAGE_SIZE);
 	//first 1024 entries are for the system page directory
-	for(i=0;i<PAGE_SIZE;i++)
+	for(i=0;i<PAGE_SIZE/4;i++)
 	{
 		pd[i].pd_pres 	= 0;	
 		pd[i].pd_write 	= 0;
@@ -89,7 +89,7 @@ void initialize_page_table()
 		
 
 	}
-	for(i=1;i<MAX_PT_SIZE*PAGE_SIZE;i++)
+	for(i=PAGE_SIZE/4;i<MAX_PT_SIZE*PAGE_SIZE;i++)
 	{
 
 		pd[i].pd_pres 	= 0;	
