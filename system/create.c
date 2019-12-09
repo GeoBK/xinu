@@ -177,7 +177,7 @@ pid32	vcreate(
 	prptr->prhasmsg = FALSE;
 	prptr->pdbr = (char*)(new_pd);
 	prptr->initial_pdbr = (char*)(new_pd);
-	kprintf("pid: %d, pdbr: %x",currpid,prptr->pdbr);
+	// kprintf("pid: %d, pdbr: %x",currpid,prptr->pdbr);
 	prptr->sys_proc = 0;
 
 	/* Set up stdin, stdout, and stderr descriptors for the shell	*/
