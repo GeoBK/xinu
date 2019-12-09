@@ -53,6 +53,7 @@ void pagefault_handler(uint32 error)
     uint32 violation = error&1;
 
     uint32 addr = read_cr2();
+    kprintf("addr: %x\n",addr);
     uint32 pd_index = addr>>22;
     uint32 pt_index = (addr>>12)&0x003FF;
     pd_t *pd = (pd_t*)(proctab[currpid].pdbr);
@@ -91,10 +92,12 @@ void pagefault_handler(uint32 error)
                     //Change the pt_swap of the pt entry to 1 and the pt_base to the location of the swap space
                     pd_t* vpd=(pd_t*)victim_pdbr;
                     pt_t* vpt=(pt_t*)(vpd[victim_pdi].pd_base<<12);
+                    phys_addr=(pt_t*)(vpd[victim_pdi].pd_base<<12);
                     memcpy((void*)swap_addr,(void*)(vpt[victim_pti].pt_base<<12),PAGE_SIZE);
 
                     vpt[victim_pti].pt_base=swap_addr>>12;
                     vpt[victim_pti].pt_swap=1;
+                    
                 }
                 if(pt[pt_index].pt_swap==1)
                 {
