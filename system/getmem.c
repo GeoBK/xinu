@@ -146,12 +146,12 @@ char	*vmalloc(uint32 size)
 	//kprintf("req_frames: %u\n",req_frames);
 	while(req_frames>0)
 	{
-		//kprintf("pd_index: %u, pt_index: %u\n",pd_index, pt_index);
+		kprintf("pd_index: %u, pt_index: %u\n",pd_index, pt_index);
 		
 		if(pd[pd_index].pd_pres==1)
 		{
 			pt_t *pt=(pt_t*)(pd[pd_index].pd_base<<12);
-			//kprintf("pt base: %u\n",(uint32)pt);
+			kprintf("pt base: %u\n",(uint32)pt);
 			if(pt[pt_index].pt_pres==1)kprintf("Possible mistake in allocation pd_index: %x, pt_index: %x\n",pd_index,pt_index);
 			pt[pt_index].pt_valid=1;
 			pt[pt_index].pt_pres=0;
@@ -167,7 +167,7 @@ char	*vmalloc(uint32 size)
 		else
 		{
 			pd[pd_index].pd_base = allocate_next_table()>>12;
-			//kprintf("New page table at : %u\n",(uint32)pd[pd_index].pd_base);
+			kprintf("New page table at : %u\n",(uint32)pd[pd_index].pd_base);
 			pd[pd_index].pd_valid= 1;
 			pd[pd_index].pd_pres = 1;
 		}
