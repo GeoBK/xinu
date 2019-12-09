@@ -17,7 +17,8 @@ syscall	kill(
 	mask = disable();
 	if (isbadpid(pid) || (pid == NULLPROC)
 	    || ((prptr = &proctab[pid])->prstate) == PR_FREE) {
-		restore(mask);
+		kprintf("returning syserr!");
+		restore(mask);		
 		return SYSERR;
 	}
 
@@ -29,7 +30,7 @@ syscall	kill(
 	for (i=0; i<3; i++) {
 		close(prptr->prdesc[i]);
 	}
-	
+	kprintf("Just before freeing up page directories for the process!!\n");
 	pd_t *pd=(pd_t*)proctab[currpid].pdbr;
 	if((uint32)pd!=SYS_PD)
 	{
