@@ -30,7 +30,7 @@ syscall	kill(
 	for (i=0; i<3; i++) {
 		close(prptr->prdesc[i]);
 	}
-	kprintf("Just before freeing up page directories for the process!!\n");
+	kprintf("Just before freeing up page directories for the process!! currpid: %d\n",currpid);
 	pd_t *pd=(pd_t*)proctab[currpid].pdbr;
 	if((uint32)pd!=SYS_PD)
 	{
