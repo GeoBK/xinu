@@ -28,6 +28,21 @@
 
 #include <xinu.h>
 
+/* tests using only FFS area - all students */
+#define TEST1
+#define TEST2
+#define TEST3
+#define TEST4
+
+/* tests using SWAP area - only ECE592 students */
+//#define TEST5
+//#define TEST6
+//#define TEST7
+//#define TEST8
+
+uint32 error = 0; 
+uint32 done = 0;
+
 void sync_printf(char *fmt, ...)
 {
         intmask mask = disable();
@@ -36,147 +51,253 @@ void sync_printf(char *fmt, ...)
         restore(mask);
 }
 
-void process_info(pid32 pid){
-	sync_printf("P%d:: virtual pages = %d\n", pid, allocated_virtual_pages(pid));	
-	sync_printf("P%d:: FFS frames = %d\n", pid, used_ffs_frames(pid)); 
-	sync_printf("P%d:: SWAP frames = %d\n\n", pid, used_swap_frames(pid));
+
+void test(uint32 numPages){
+    char *ptr = NULL;
+    ptr = vmalloc(numPages * PAGE_SIZE);
+
+    if (ptr==(char *)SYSERR){
+	sync_printf("[P%d] vmalloc failed\n", currpid);
+	kill(currpid);
+    }
+
+    uint32 i=0;
+
+    // write data
+    for(i =0; i<numPages; i++){
+        ptr[i*PAGE_SIZE] = 'A';
+    }
+
+    // read data
+    char c = 0;
+    i=0;
+    for(i=0; i<numPages; i++){
+        c =  ptr[i*PAGE_SIZE];
+        if(c!='A'){
+            error = 1;
+            break;
+        }
+    }
+    if (i!=numPages) error=1;
+
+    if (vfree(ptr, numPages*PAGE_SIZE)==SYSERR){
+	sync_printf("[P%d] vfree failed\n", currpid);
+	kill(currpid);
+    }
+
+    done = 1;
 }
 
-process empty_process(){
-	process_info(currpid);
-	return OK;
+/*
+ * Test1: An extreme case to exhaust FFS space
+ */
+void test1_run(void){
+
+    error = 0; done = 0;
+    pid32 p1 = vcreate(test, 2000, 50, "test", 1, MAX_FFS_SIZE);
+    resume(p1);
+
+    receive();
+    if(error || !done){
+        sync_printf("\nTest case 1 FAIL\n");
+    }else{
+        sync_printf("\nTest case 1 PASS\n");
+    }
 }
 
-process vmalloc_process(){
 
-	/* testing vmalloc only */
+/*
+ * Test5: An extreme case to exhaust SWAP space
+ */
+void test5_run(void){
 
-	sync_printf("P%d:: Allocating 8/4/2 pages...\n", currpid);
-	char *ptr1 = vmalloc(8 * PAGE_SIZE);
-	char *ptr2 = vmalloc(4 * PAGE_SIZE);
-	char *ptr3 = vmalloc(2 * PAGE_SIZE);
-
-	sync_printf("P%d:: ptr1=0x%x, ptr2=0x%x, ptr3=0x%x\n", currpid, ptr1, ptr2, ptr3);
-	process_info(currpid);
-
-	/* testing deallocation */
-	sync_printf("P%d:: Freeing 4 pages @ ptr2...\n", currpid);
-	vfree(ptr2, 4 * PAGE_SIZE);
-
-	process_info(currpid);
-
-	/* testing virtual space handling (must be first-fit) */
-	sync_printf("P%d:: Allocating 2/4 pages...\n", currpid);
-	char *ptr4 = vmalloc(2 * PAGE_SIZE);
-	char *ptr5 = vmalloc(4 * PAGE_SIZE);
-
-	sync_printf("P%d:: ptr4=0x%x, ptr5=0x%x, ptr3=0x%x\n", currpid, ptr4, ptr5, ptr3);
-	process_info(currpid);
-
-	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-
-	/* testing FFS allocation */
-	sync_printf("P%d:: Accessing 1 page @ ptr1...\n", currpid);
-	ptr1[0]=0;
-	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-	sync_printf("P%d:: Accessing again 1 page @ ptr1...\n", currpid);
-	ptr1[4]=0;
-	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-	sync_printf("P%d:: Accessing 2nd page from ptr3...\n", currpid);
-	ptr3[PAGE_SIZE]=0;
-	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-
-	/* testing segmentation fault */
-	sync_printf("P%d:: Testing segmentation fault...\n", currpid);
-	ptr4[2*PAGE_SIZE]=0;
-
-	sync_printf("P%d :: ERROR: process should already be killed!", currpid);
+    error = 0; done = 0;
 	
-	return OK;
+    pid32 p1 = vcreate(test, 2000, 50, "test", 1, MAX_FFS_SIZE+MAX_SWAP_SIZE);
+    resume(p1);
+
+    receive();
+    if(error || !done){
+        sync_printf("\nTest case 5 FAIL\n");
+    }else{
+        sync_printf("\nTest case 5 PASS\n");
+    }
 }
 
-process vmalloc_process2(){
+/*
+ * Test 2: Multiple processes exhaust FFS space 
+ */
+void test2_run(void){
 
-	uint32 i = 0;
+    error = 0; done = 0;	
 
-	/* testing vmalloc only */
+    pid32 p1 = vcreate(test, 2000, 10, "P1", 1, MAX_FFS_SIZE/4);
+    pid32 p2 = vcreate(test, 2000, 10, "P2", 1, MAX_FFS_SIZE/4);
+    pid32 p3 = vcreate(test, 2000, 10, "P3", 1, MAX_FFS_SIZE/4);
+    pid32 p4 = vcreate(test, 2000, 10, "P4", 1, MAX_FFS_SIZE/4);
+    resume(p1);
+    resume(p2);
+    resume(p3);
+    resume(p4);
 
-	char *ptr1 = vmalloc(80 * PAGE_SIZE);
-	char *ptr2 = vmalloc(80 * PAGE_SIZE);
-	char *ptr3 = vmalloc(80 * PAGE_SIZE);
-	
-	if (ptr1==(char *)SYSERR || ptr2==(char *)SYSERR || ptr3==(char *)SYSERR)
-		sync_printf("P%d:: allocation failed!\n");	
+    receive();
+    receive();
+    receive();
+    receive();
 
-	/* testing FFS allocation */
-	for (i=0; i<40; i++){
-		ptr1[i*PAGE_SIZE]=i;
-		ptr1[i*PAGE_SIZE+1]=i;
-	}	
-
-	for (i=0; i<40; i++){
-		if (ptr1[i*PAGE_SIZE]!=i || ptr1[i*PAGE_SIZE+1]!=i){
-			sync_printf("P%d:: ERROR - read incorrect data!\n",currpid);
-		}
-	}
-
-	process_info(currpid);
-
-	sleepms(200); // waiting so that main can see FFS taken
-
-	return OK;
+    if(error || !done){
+        sync_printf("\nTest case 2 FAIL\n");
+    }else{
+        sync_printf("\nTest case 2 PASS\n");
+    }
 }
 
+/*
+ * Test 6: Multiple processes exhaust SWAP space 
+ */ 
+void test6_run(void){
+    
+    error = 0; done = 0; 
 
+    pid32 p1 = vcreate(test, 2000, 10, "P1", 1, (MAX_FFS_SIZE+MAX_SWAP_SIZE)/4 );
+    pid32 p2 = vcreate(test, 2000, 10, "P2", 1, (MAX_FFS_SIZE+MAX_SWAP_SIZE)/4 );
+    pid32 p3 = vcreate(test, 2000, 10, "P3", 1, (MAX_FFS_SIZE+MAX_SWAP_SIZE)/4 );
+    pid32 p4 = vcreate(test, 2000, 10, "P4", 1, (MAX_FFS_SIZE+MAX_SWAP_SIZE)/4 );
+    resume(p1);
+    resume(p2);
+    resume(p3);
+    resume(p4);
 
+    receive();
+    receive();
+    receive();
+    receive();
 
+    if(error || !done){
+        sync_printf("\nTest case 6 FAIL\n");
+    }else{
+        sync_printf("\nTest case 6 PASS\n");
+    }
+}
+
+/*
+ * Test 3: Tests if vfree() works when FFS space is exhausted
+ */
+void test3_run(void){
+    error = 0; done = 0;
+    pid32 p1 = vcreate(test, 2000, 10, "P1", 1,  MAX_FFS_SIZE);
+    resume(p1);
+    // wait for the first process to be finished
+    receive();
+
+    pid32 p2 = vcreate(test, 2000, 10, "P2", 1, MAX_FFS_SIZE);
+    resume(p2);
+    // wait for the second process to be finished
+    receive();
+
+    if(error || !done){
+        sync_printf("\nTest case 3 FAIL\n");
+    }else{
+        sync_printf("\nTest case 3 PASS\n");
+    }
+}
+
+/*
+ * Test 7: Tests if vfree() works when SWAP space is exhausted
+ */
+void test7_run(void){
+
+    error=0;   
+ 
+    pid32 p1 = vcreate(test, 2000, 10, "P1", 1, MAX_FFS_SIZE+MAX_SWAP_SIZE);
+    resume(p1);
+    // wait for the first process to be finished
+    receive();
+
+    pid32 p2 = vcreate(test, 2000, 10, "P2", 1, MAX_FFS_SIZE+MAX_SWAP_SIZE);
+    resume(p2);
+    // wait for the second process to be finished
+    receive();
+
+    if(error || !done){
+        sync_printf("\nTest case 7 FAIL\n");
+    }else{
+        sync_printf("\nTest case 7 PASS\n");
+    }
+}
+
+/*
+ * Test 4: Simple test case that uses only portion of FFS space
+ */
+void test4_run(void){
+
+    error = 0; done = 0;
+
+    pid32 p1 = vcreate(test, 2000, 50, "test4", 1, MAX_FFS_SIZE/2);
+    resume(p1);
+
+    receive();
+    if(error || !done){
+        sync_printf("\nTest case 4 FAIL\n");
+    }else{
+        sync_printf("\nTest case 4 PASS\n");
+    }
+}
+
+/*
+ * Test 8: Simple test case that uses all FFS space and part of the SWAP space
+ */
+void test8_run(void){
+
+    error = 0; done = 0;
+
+    pid32 p1 = vcreate(test, 2000, 50, "test8", 1, MAX_FFS_SIZE+MAX_SWAP_SIZE/2);
+    resume(p1);
+
+    receive();
+    if(error || !done){
+        sync_printf("\nTest case 8 FAIL\n");
+    }else{
+        sync_printf("\nTest case 8 PASS\n");
+    }
+}
 
 process	main(void)
 {
-
-	uint32 i = 0;
-
-	sync_printf("\n\nTESTS START NOW...\n");
-	sync_printf("-------------------\n\n");
-
-	/* After initialization */
-	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-
-	sync_printf("P%d:: Spawning 2 processes that do not perform any allocation...\n\n", currpid);
-
-	resume(vcreate((void *)empty_process, INITSTK, 1, "p1", 0));
-	sleepms(1000);	
-	resume(vcreate((void *)empty_process, INITSTK, 1, "p2", 0));
-
-	receive();
-	receive();
-
-	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-	
-	sync_printf("P%d:: Spawning 1 process that performs allocations...\n\n", currpid);
-	resume(vcreate((void *)vmalloc_process, INITSTK, 1, "empty1", 0));
-	
-	receive();
-	sleepms(100);
-
-	sync_printf("\nP%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-	sync_printf("P%d:: Spawning 10 concurrent processes (interleaving can change from run to run)...\n\n", currpid);
-	for (i=0; i<10; i++){
-		resume(vcreate((void *)vmalloc_process2, INITSTK, 1, "p", 0));
-	}
-
-	sleepms(100);
-	
-	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-	
-	sync_printf("P%d:: Letting the processes terminate...\n\n");
-	for (i=0; i<10; i++){
-		receive();
-	}
-	
-	sleepms(100);
-
-	sync_printf("P%d:: Free FFS pages = %d out of %d\n\n", currpid, free_ffs_pages(), MAX_FFS_SIZE);
-
-   	return OK; 
+#ifdef TEST1
+    sync_printf("\n.........run TEST1......\n");
+    test1_run();
+#endif
+#ifdef TEST2
+    sync_printf("\n.........run TEST2......\n");
+    test2_run();
+#endif
+#ifdef TEST3
+    sync_printf("\n.........run TEST3......\n");
+    test3_run();
+#endif
+#ifdef TEST4
+    sync_printf("\n.........run TEST4......\n");
+    test4_run();
+#endif
+#ifdef TEST5
+    sync_printf("\n.........run TEST5......\n");
+    test5_run();
+#endif
+#ifdef TEST6
+    sync_printf("\n.........run TEST6......\n");
+    test6_run();
+#endif
+#ifdef TEST7
+    sync_printf("\n.........run TEST7......\n");
+    test7_run();
+#endif
+#ifdef TEST8
+    sync_printf("\n.........run TEST8......\n");
+    test8_run();
+#endif
+    sync_printf("\nAll tests are done!\n");
+    return OK;
 }
+
+
