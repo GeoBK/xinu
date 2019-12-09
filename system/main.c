@@ -75,10 +75,15 @@ void test(uint32 numPages){
         c =  ptr[i*PAGE_SIZE];
         if(c!='A'){
             error = 1;
+			sync_printf("[P%d] error occured. c: %c\n", currpid,c);
             break;
         }
     }
-    if (i!=numPages) error=1;
+    if (i!=numPages) 
+	{
+		sync_printf("[P%d] error occured. i: %d\n", currpid,i);
+		error=1;
+	}
 
     if (vfree(ptr, numPages*PAGE_SIZE)==SYSERR){
 	sync_printf("[P%d] vfree failed\n", currpid);
