@@ -53,7 +53,7 @@ void pagefault_handler(uint32 error)
     uint32 violation = error&1;
 
     uint32 addr = read_cr2();
-    kprintf("addr: %x\n",addr);
+    // kprintf("addr: %x\n",addr);
     uint32 pd_index = addr>>22;
     uint32 pt_index = (addr>>12)&0x003FF;
     pd_t *pd = (pd_t*)(proctab[currpid].pdbr);
@@ -77,7 +77,7 @@ void pagefault_handler(uint32 error)
                 uint32 phys_addr = (uint32)generic_getmem(&ffsmemlist,PAGE_SIZE);
                 if(phys_addr==-1)
                 { 
-
+                    kprintf("addr: %x\n",addr);
                     kprintf("Entered SWAP operations!!\n");
                     //Do stuff to move the LRU to swap space
                     uint32 victim_pdbr, victim_pdi, victim_pti;
@@ -103,6 +103,7 @@ void pagefault_handler(uint32 error)
                 }
                 if(pt[pt_index].pt_swap==1)
                 {
+                    kprintf("addr: %x\n",addr);
                     memcpy((void*)phys_addr,(void*)(pt[pt_index].pt_base<<12),PAGE_SIZE);
                     generic_freemem(&swapmemlist,(char*)(pt[pt_index].pt_base<<12),PAGE_SIZE);
                 }                
