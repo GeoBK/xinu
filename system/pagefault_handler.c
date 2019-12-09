@@ -76,7 +76,8 @@ void pagefault_handler(uint32 error)
                 uint32 phys_addr = (uint32)generic_getmem(&ffsmemlist,PAGE_SIZE);
                 if(phys_addr==-1)
                 { 
-                    // kprintf("deso3!!\n");
+
+                    kprintf("Entered SWAP operations!!\n");
                     //Do stuff to move the LRU to swap space
                     uint32 victim_pdbr, victim_pdi, victim_pti;
                     find_victim_frame(&victim_pdbr, &victim_pdi, &victim_pti);
