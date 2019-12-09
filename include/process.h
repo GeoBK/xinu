@@ -54,6 +54,7 @@ struct procent {		/* Entry in the process table		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
 
 	char	*pdbr;	
+	char	*initial_pdbr;
 	bool8 	sys_proc;		/* Whether the process is a system process or user process */	
 };
 
