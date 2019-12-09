@@ -65,7 +65,7 @@ void test(uint32 numPages){
 
     // write data
     for(i =0; i<numPages; i++){
-		sync_printf("[P%d] writing i: %d\n", currpid,i);
+		//sync_printf("[P%d] writing i: %d\n", currpid,i);
         ptr[i*PAGE_SIZE] = 'A';
     }
 
