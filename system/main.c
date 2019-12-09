@@ -29,16 +29,16 @@
 #include <xinu.h>
 
 /* tests using only FFS area - all students */
-#define TEST1
-#define TEST2
-#define TEST3
-#define TEST4
+// #define TEST1
+// #define TEST2
+// #define TEST3
+// #define TEST4
 
 /* tests using SWAP area - only ECE592 students */
 #define TEST5
-#define TEST6
-#define TEST7
-#define TEST8
+// #define TEST6
+// #define TEST7
+// #define TEST8
 
 uint32 error = 0; 
 uint32 done = 0;
@@ -65,6 +65,7 @@ void test(uint32 numPages){
 
     // write data
     for(i =0; i<numPages; i++){
+		sync_printf("[P%d] writing i: %d\n", currpid,i);
         ptr[i*PAGE_SIZE] = 'A';
     }
 
@@ -72,6 +73,7 @@ void test(uint32 numPages){
     char c = 0;
     i=0;
     for(i=0; i<numPages; i++){
+		sync_printf("[P%d] reading i: %d\n", currpid,i);
         c =  ptr[i*PAGE_SIZE];
         if(c!='A'){
             error = 1;
