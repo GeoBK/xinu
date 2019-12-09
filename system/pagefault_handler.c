@@ -10,7 +10,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
 		pr_ptr %= NPROC;	/* Wrap around to beginning */
 		if (proctab[pr_ptr].prstate == PR_FREE) 
         {
-            pd_t* pd = (pd_t*)proctab[pr_ptr].pdbr;
+            pd_t* pd = (pd_t*)proctab[pr_ptr].initial_pdbr;
 
             for(pdi_ptr=0;pdi_ptr<(PAGE_SIZE/4);pdi_ptr++)
             {
