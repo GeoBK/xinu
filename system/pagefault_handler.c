@@ -82,6 +82,7 @@ void pagefault_handler(uint32 error)
                     //Do stuff to move the LRU to swap space
                     uint32 victim_pdbr, victim_pdi, victim_pti;
                     find_victim_frame(&victim_pdbr, &victim_pdi, &victim_pti);
+                    kprintf("victim frame found!!\n");
                     uint32 swap_addr = (uint32)generic_getmem(&swapmemlist,PAGE_SIZE);
                     if(swap_addr==-1)
                     {
