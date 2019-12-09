@@ -119,9 +119,9 @@ syscall	generic_freemem(
 		restore(mask);
 		return SYSERR;
 	}
-	kprintf("ffsmemlist length before : %d\n", generic_freelist->mlength/PAGE_SIZE);
+	//kprintf("ffsmemlist length before : %d\n", generic_freelist->mlength/PAGE_SIZE);
 	generic_freelist->mlength += nbytes;
-	kprintf("ffsmemlist length before : %d\n", generic_freelist->mlength/PAGE_SIZE);
+	// kprintf("ffsmemlist length before : %d\n", generic_freelist->mlength/PAGE_SIZE);
 
 	/* Either coalesce with previous block or add to free list */
 

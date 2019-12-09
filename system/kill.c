@@ -32,24 +32,24 @@ syscall	kill(
 	}
 	
 	pd_t *pd=(pd_t*)proctab[currpid].initial_pdbr;
-	kprintf("Just before freeing up page directories for the process!! currpid: %d\n, pd: %x",currpid, pd);
+	// kprintf("Just before freeing up page directories for the process!! currpid: %d\n, pd: %x",currpid, pd);
 	if((uint32)pd!=SYS_PD)
 	{
 		uint32 old_pdbr=read_cr3();
 		write_cr3(XINU_PAGES*PAGE_SIZE);
-		kprintf("pd: %x\n",pd);
+		// kprintf("pd: %x\n",pd);
 		for(i=0;i<PAGE_SIZE/4;i++)
 		{        
 			if(pd[i].pd_pres==1 && i>=(XINU_PAGES/(PAGE_SIZE/4)))
 			{
 				pt_t *pt= (pt_t*)(pd[i].pd_base<<12);
-				kprintf("pt: %x\n",pt);
+				// kprintf("pt: %x\n",pt);
 				for(j=0;j<PAGE_SIZE/4;j++)
 				{
 					//kprintf("kill - i: %d, j: %d\n",i,j);
 					if(pt[j].pt_pres==1)
 					{
-						kprintf("In kill calling freemem\n");
+						// kprintf("In kill calling freemem\n");
 						generic_freemem(&ffsmemlist,(char*)(pt[j].pt_base<<12),PAGE_SIZE);
 					}
 					pt[j].pt_pres=0;
