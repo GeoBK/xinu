@@ -8,13 +8,13 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
     {
 
         pr_ptr++;
-        kprintf("process id: %d\n",pr_ptr);
+        kprintf("process id: %d, pr_state: %u, \n",pr_ptr,proctab[pr_ptr].prstate,);
 		pr_ptr %= NPROC;	/* Wrap around to beginning */
 		if (proctab[pr_ptr].prstate != PR_FREE && proctab[pr_ptr].sys_proc == 0) 
         {
             pd_t* pd = (pd_t*)proctab[pr_ptr].initial_pdbr;
 
-            for(pdi_ptr=(XINU_PAGES/PAGE_SIZE);pdi_ptr<(PAGE_SIZE/4);pdi_ptr++)
+            for(pdi_ptr=(XINU_PAGES/(PAGE_SIZE/4));pdi_ptr<(PAGE_SIZE/4);pdi_ptr++)
             {
                 if(pd[pdi_ptr].pd_pres==1)
                 {
@@ -30,6 +30,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                 if((uint32)victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
                                 *victim_pdi=pdi_ptr;
                                 *victim_pti=pti_ptr;
+                                kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdi,*victim_pdi,*victim_pti);
                                 return OK;
                             }
                             else
