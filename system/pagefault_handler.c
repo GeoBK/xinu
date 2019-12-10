@@ -38,7 +38,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                         pr_ptr++;
                                     }
                                 }
-                                kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdbr,*victim_pdi,*victim_pti);
+                                //kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdbr,*victim_pdi,*victim_pti);
                                 return OK;
                             }
                             else
@@ -97,12 +97,12 @@ void pagefault_handler(uint32 error)
                 uint32 phys_addr = (uint32)generic_getmem(&ffsmemlist,PAGE_SIZE);
                 if(phys_addr==-1)
                 { 
-                    kprintf("addr: %x\n",addr);
-                    kprintf("Entered SWAP operations!!\n");
+                    //kprintf("addr: %x\n",addr);
+                    //kprintf("Entered SWAP operations!!\n");
                     //Do stuff to move the LRU to swap space
                     uint32 victim_pdbr, victim_pdi, victim_pti;
                     find_victim_frame(&victim_pdbr, &victim_pdi, &victim_pti);
-                    kprintf("victim frame found!!\n");
+                    //kprintf("victim frame found!!\n");
                     uint32 swap_addr = (uint32)generic_getmem(&swapmemlist,PAGE_SIZE);
                     if(swap_addr==-1)
                     {
@@ -119,7 +119,7 @@ void pagefault_handler(uint32 error)
                     vpt[victim_pti].pt_base=swap_addr>>12;
                     vpt[victim_pti].pt_swap=1;
                     
-                    kprintf("Exiting SWAP operations!!\n");
+                    //kprintf("Exiting SWAP operations!!\n");
                 }
                 if(pt[pt_index].pt_swap==1)
                 {
