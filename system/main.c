@@ -100,7 +100,7 @@ void sync_printf(char *fmt, ...)
 
 void test(uint32 numPages){
     int *ptr = NULL;
-    ptr = vmalloc(numPages * PAGE_SIZE);
+    ptr = (int*)vmalloc(numPages * PAGE_SIZE);
 
     if (ptr==(char *)SYSERR){
 	sync_printf("[P%d] vmalloc failed\n", currpid);
@@ -135,7 +135,7 @@ void test(uint32 numPages){
 		error=1;
 	}
 
-    if (vfree(ptr, numPages*PAGE_SIZE)==SYSERR){
+    if (vfree((char*)ptr, numPages*PAGE_SIZE)==SYSERR){
 	sync_printf("[P%d] vfree failed\n", currpid);
 	kill(currpid);
     }
