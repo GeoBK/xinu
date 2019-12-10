@@ -38,13 +38,16 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                     pt[pti_ptr].pt_acc=0;
                                 }
                             }
+                            kprintf("Finding infinite loop 1\n");
                         }
                     }
                 }
+                kprintf("Finding infinite loop 2\n");
                 
             }			
 		} 
         pr_ptr++;       
+        kprintf("Finding infinite loop 3\n");
 	}
     return SYSERR;
 }
