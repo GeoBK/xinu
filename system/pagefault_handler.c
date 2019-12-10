@@ -34,6 +34,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                     pdi_ptr++;
                                     if(pdi_ptr==(PAGE_SIZE/4))
                                     {
+                                        pdi_ptr=0;
                                         pr_ptr++;
                                     }
                                 }
