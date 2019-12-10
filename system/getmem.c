@@ -168,7 +168,7 @@ char	*vmalloc(uint32 size)
 		else
 		{
 			pd[pd_index].pd_base = allocate_next_table()>>12;
-			kprintf("(vmalloc)pd: %x, pd_index: %u, pt_base: %x\n",pd,pd_index,pd[pd_index].pd_base);
+			//kprintf("(vmalloc)pd: %x, pd_index: %u, pt_base: %x\n",pd,pd_index,pd[pd_index].pd_base);
 			//kprintf("New page table at : %x\n",(uint32)pd[pd_index].pd_base);
 			pd[pd_index].pd_valid= 1;
 			pd[pd_index].pd_pres = 1;

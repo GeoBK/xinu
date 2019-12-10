@@ -29,10 +29,10 @@
 #include <xinu.h>
 
 /* tests using only FFS area - all students */
-// #define TEST1
-// #define TEST2
-// #define TEST3
-// #define TEST4
+#define TEST1
+#define TEST2
+#define TEST3
+#define TEST4
 
 /* tests using SWAP area - only ECE592 students */
 #define TEST5
@@ -64,7 +64,7 @@ void test(uint32 numPages){
     uint32 i=0;
 
     // write data
-	kprintf("WTF!\n");
+	
     for(i =0; i<numPages; i++){
 		//sync_printf("[P%d] writing i: %d\n", currpid,i);
         ptr[i*PAGE_SIZE] = 'A';
