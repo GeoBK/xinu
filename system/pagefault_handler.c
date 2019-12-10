@@ -19,7 +19,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                     pt_t* pt=(pt_t*)(pd[pdi_ptr].pd_base<<12);                    
                     for(;pti_ptr<(PAGE_SIZE/4);pti_ptr++)
                     {
-                        kprintf("pd: %x, pd_index: %d, pt: %x, pt_index: %d\n",pd,pdi_ptr,pt, pti_ptr);
+                        //kprintf("pd: %x, pd_index: %d, pt: %x, pt_index: %d\n",pd,pdi_ptr,pt, pti_ptr);
                         if(pt[pti_ptr].pt_pres==1 && pt[pti_ptr].pt_valid==1)
                         {
                             if(pt[pti_ptr].pt_acc==0)
