@@ -29,7 +29,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                 if((uint32)victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
                                 *victim_pdi=pdi_ptr;
                                 *victim_pti=pti_ptr;
-                                kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdi,*victim_pdi,*victim_pti);
+                                kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdbr,*victim_pdi,*victim_pti);
                                 return OK;
                             }
                             else
@@ -37,17 +37,17 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                 pt[pti_ptr].pt_acc=0;
                             }
                         }
-                        kprintf("Finding infinite loop 1\n");
+                        //kprintf("Finding infinite loop 1\n");
                     }
                     pti_ptr=0;
                 }                
                 pdi_ptr=XINU_PAGES/(PAGE_SIZE/4);
-                kprintf("Finding infinite loop 2, pdi_ptr: %d\n", pdi_ptr);
+                //kprintf("Finding infinite loop 2, pdi_ptr: %d\n", pdi_ptr);
                 
             }			
 		} 
         pr_ptr++;       
-        kprintf("Finding infinite loop 3, pr_ptr: %d\n",pr_ptr);
+        //kprintf("Finding infinite loop 3, pr_ptr: %d\n",pr_ptr);
 	}
     return SYSERR;
 }
