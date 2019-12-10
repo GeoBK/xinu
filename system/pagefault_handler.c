@@ -8,8 +8,9 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
     {
 
         pr_ptr++;
-        kprintf("process id: %d, pr_state: %u, \n",pr_ptr,proctab[pr_ptr].prstate);
+        
 		pr_ptr %= NPROC;	/* Wrap around to beginning */
+        kprintf("process id: %d, pr_state: %u, system_process: %u \n",pr_ptr,proctab[pr_ptr].prstate,proctab[pr_ptr].sys_proc);
 		if (proctab[pr_ptr].prstate != PR_FREE && proctab[pr_ptr].sys_proc == 0) 
         {
             pd_t* pd = (pd_t*)proctab[pr_ptr].initial_pdbr;
