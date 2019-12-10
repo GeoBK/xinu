@@ -12,32 +12,36 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
         {
             pd_t* pd = (pd_t*)proctab[pr_ptr].initial_pdbr;
 
-            for(pdi_ptr=(XINU_PAGES/(PAGE_SIZE/4));pdi_ptr<(PAGE_SIZE/4);pdi_ptr++)
+            for(;pdi_ptr<(PAGE_SIZE/4);pdi_ptr++)
             {
-                if(pd[pdi_ptr].pd_pres==1)
+                if(pdi_ptr>=XINU_PAGES/(PAGE_SIZE/4))
                 {
-                    pt_t* pt=(pt_t*)(pd[pdi_ptr].pd_base<<12);
-                    for(pti_ptr=0;pti_ptr<(PAGE_SIZE/4);pti_ptr++)
+                    if(pd[pdi_ptr].pd_pres==1)
                     {
-                        //kprintf("pd: %x, pd_index: %d, pt: %x, pt_index: %d\n",pd,pdi_ptr,pt, pti_ptr);
-                        if(pt[pti_ptr].pt_pres==1 && pt[pti_ptr].pt_valid==1)
+                        pt_t* pt=(pt_t*)(pd[pdi_ptr].pd_base<<12);
+                        for(;pti_ptr<(PAGE_SIZE/4);pti_ptr++)
                         {
-                            if(pt[pti_ptr].pt_acc==0)
+                            //kprintf("pd: %x, pd_index: %d, pt: %x, pt_index: %d\n",pd,pdi_ptr,pt, pti_ptr);
+                            if(pt[pti_ptr].pt_pres==1 && pt[pti_ptr].pt_valid==1)
                             {
-                                *victim_pdbr=(uint32)proctab[pr_ptr].pdbr;
-                                if((uint32)victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
-                                *victim_pdi=pdi_ptr;
-                                *victim_pti=pti_ptr;
-                                //kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdi,*victim_pdi,*victim_pti);
-                                return OK;
-                            }
-                            else
-                            {
-                                pt[pti_ptr].pt_acc=0;
+                                if(pt[pti_ptr].pt_acc==0)
+                                {
+                                    *victim_pdbr=(uint32)proctab[pr_ptr].initial_pdbr;
+                                    if((uint32)victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
+                                    *victim_pdi=pdi_ptr;
+                                    *victim_pti=pti_ptr;
+                                    kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdi,*victim_pdi,*victim_pti);
+                                    return OK;
+                                }
+                                else
+                                {
+                                    pt[pti_ptr].pt_acc=0;
+                                }
                             }
                         }
                     }
                 }
+                
             }			
 		} 
         pr_ptr++;       
