@@ -122,7 +122,7 @@ void test5_run(void){
 
     error = 0; done = 0;
 	
-    pid32 p1 = vcreate(test, 2000, 50, "test", 1, MAX_FFS_SIZE+MAX_SWAP_SIZE);
+    pid32 p1 = vcreate(test, 2000, 50, "test", 1, MAX_FFS_SIZE+1);
     resume(p1);
 
     receive();

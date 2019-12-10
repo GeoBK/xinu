@@ -113,7 +113,7 @@ void pagefault_handler(uint32 error)
                     //Change the pt_swap of the pt entry to 1 and the pt_base to the location of the swap space
                     pd_t* vpd=(pd_t*)victim_pdbr;
                     pt_t* vpt=(pt_t*)(vpd[victim_pdi].pd_base<<12);
-                    phys_addr=(pt_t*)(vpd[victim_pdi].pd_base<<12);
+                    phys_addr=(pt_t*)(vpt[victim_pti].pt_base<<12);
                     memcpy((void*)swap_addr,(void*)(vpt[victim_pti].pt_base<<12),PAGE_SIZE);
 
                     vpt[victim_pti].pt_base=swap_addr>>12;
