@@ -5,12 +5,9 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
     static uint32 pr_ptr, pti_ptr=0, pdi_ptr=0;
     kprintf("Trying to find victim frame!!\n");
     while(1)
-    {
-
-        pr_ptr++;
-        
+    {  
 		pr_ptr %= NPROC;	/* Wrap around to beginning */
-        kprintf("process id: %d, pr_state: %u, system_process: %u \n",pr_ptr,proctab[pr_ptr].prstate,proctab[pr_ptr].sys_proc);
+        //kprintf("process id: %d, pr_state: %u, system_process: %u \n",pr_ptr,proctab[pr_ptr].prstate,proctab[pr_ptr].sys_proc);
 		if (proctab[pr_ptr].prstate != PR_FREE && proctab[pr_ptr].sys_proc == 0) 
         {
             pd_t* pd = (pd_t*)proctab[pr_ptr].initial_pdbr;
@@ -31,7 +28,7 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                 if((uint32)victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
                                 *victim_pdi=pdi_ptr;
                                 *victim_pti=pti_ptr;
-                                kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdi,*victim_pdi,*victim_pti);
+                                //kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdi,*victim_pdi,*victim_pti);
                                 return OK;
                             }
                             else
@@ -42,7 +39,8 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                     }
                 }
             }			
-		}        
+		} 
+        pr_ptr++;       
 	}
     return SYSERR;
 }
