@@ -42,12 +42,12 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                         }
                     }
                 }
-                kprintf("Finding infinite loop 2\n");
+                kprintf("Finding infinite loop 2, pdi_ptr: %d\n", pdi_ptr);
                 
             }			
 		} 
         pr_ptr++;       
-        kprintf("Finding infinite loop 3\n");
+        kprintf("Finding infinite loop 3, pr_ptr: %d\n",pr_ptr);
 	}
     return SYSERR;
 }
