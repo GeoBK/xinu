@@ -41,10 +41,9 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                     }
                     pti_ptr=0;
                 }                
-                pdi_ptr=XINU_PAGES/(PAGE_SIZE/4);
-                //kprintf("Finding infinite loop 2, pdi_ptr: %d\n", pdi_ptr);
-                
-            }			
+                //kprintf("Finding infinite loop 2, pdi_ptr: %d\n", pdi_ptr);                
+            }
+            pdi_ptr=XINU_PAGES/(PAGE_SIZE/4);
 		} 
         pr_ptr++;       
         //kprintf("Finding infinite loop 3, pr_ptr: %d\n",pr_ptr);
