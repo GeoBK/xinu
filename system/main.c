@@ -36,9 +36,9 @@
 
 /* tests using SWAP area - only ECE592 students */
 #define TEST5
-// #define TEST6
-// #define TEST7
-// #define TEST8
+#define TEST6
+#define TEST7
+#define TEST8
 
 uint32 error = 0; 
 uint32 done = 0;
