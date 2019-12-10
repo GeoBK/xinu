@@ -3,7 +3,7 @@
 process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victim_pti)
 {
     static uint32 pr_ptr, pti_ptr=0, pdi_ptr=XINU_PAGES/(PAGE_SIZE/4);
-    kprintf("Trying to find victim frame!!\n");
+    //kprintf("Trying to find victim frame!!\n");
     while(1)
     {  
 		pr_ptr %= NPROC;	/* Wrap around to beginning */
