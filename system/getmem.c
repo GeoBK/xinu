@@ -143,8 +143,8 @@ char	*vmalloc(uint32 size)
 	uint32 pd_index = free_frame>>10;
 	uint32 pt_index = free_frame & 0x003FF;
 	pd_t *pd = (pd_t*)proctab[currpid].pdbr;
-	kprintf("req_frames: %u\n",req_frames);
-	kprintf("pd base: %x\n",(uint32)pd);
+	// kprintf("req_frames: %u\n",req_frames);
+	// kprintf("pd base: %x\n",(uint32)pd);
 	while(req_frames>0)
 	{
 		//kprintf("pd_index: %u, pt_index: %u\n",pd_index, pt_index);

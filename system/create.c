@@ -106,7 +106,7 @@ process initialize_user_page_table(uint32* new_pd)
 	uint32 old_pdbr=read_cr3();
 	write_cr3(XINU_PAGES*PAGE_SIZE);
 	uint32 pd_ptr=allocate_next_table();
-	kprintf("pd: %x\n",pd_ptr);
+	//kprintf("pd: %x\n",pd_ptr);
 	
 	if(pd_ptr==0)
 	{
