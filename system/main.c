@@ -52,54 +52,8 @@ void sync_printf(char *fmt, ...)
 }
 
 
-// void test(uint32 numPages){
-//     char *ptr = NULL;
-//     ptr = vmalloc(numPages * PAGE_SIZE);
-
-//     if (ptr==(char *)SYSERR){
-// 	sync_printf("[P%d] vmalloc failed\n", currpid);
-// 	kill(currpid);
-//     }
-
-//     uint32 i=0;
-
-//     // write data
-	
-//     for(i =0; i<numPages; i++){
-// 		//sync_printf("[P%d] writing i: %d\n", currpid,i);
-//         ptr[i*PAGE_SIZE] = 'A';
-//     }
-
-//     // read data
-//     char c = 0;
-//     i=0;
-//     for(i=0; i<numPages; i++){
-// 		//sync_printf("[P%d] reading i: %d\n", currpid,i);
-//         c =  ptr[i*PAGE_SIZE];
-//         if(c!='A'){
-//             error = 1;
-
-// 			sync_printf("[P%d] error occured. c: %c, addr: %x\n", currpid,c,&(ptr[i*PAGE_SIZE]));
-//             break;
-//         }
-//     }
-//     if (i!=numPages) 
-// 	{
-// 		sync_printf("[P%d] error occured. i: %d\n", currpid,i);
-// 		error=1;
-// 	}
-
-//     if (vfree(ptr, numPages*PAGE_SIZE)==SYSERR){
-// 	sync_printf("[P%d] vfree failed\n", currpid);
-// 	kill(currpid);
-//     }
-
-//     done = 1;
-// }
-
-
 void test(uint32 numPages){
-    int *ptr = NULL;
+    char *ptr = NULL;
     ptr = vmalloc(numPages * PAGE_SIZE);
 
     if (ptr==(char *)SYSERR){
@@ -113,16 +67,16 @@ void test(uint32 numPages){
 	
     for(i =0; i<numPages; i++){
 		//sync_printf("[P%d] writing i: %d\n", currpid,i);
-        ptr[i*PAGE_SIZE] = i;
+        ptr[i*PAGE_SIZE] = 'A';
     }
 
     // read data
-    int c = 0;
+    char c = 0;
     i=0;
     for(i=0; i<numPages; i++){
 		//sync_printf("[P%d] reading i: %d\n", currpid,i);
         c =  ptr[i*PAGE_SIZE];
-        if(c!=i){
+        if(c!='A'){
             error = 1;
 
 			sync_printf("[P%d] error occured. c: %c, addr: %x\n", currpid,c,&(ptr[i*PAGE_SIZE]));
@@ -142,6 +96,9 @@ void test(uint32 numPages){
 
     done = 1;
 }
+
+
+
 
 /*
  * Test1: An extreme case to exhaust FFS space
