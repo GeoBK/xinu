@@ -11,13 +11,12 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
 		if (proctab[pr_ptr].prstate != PR_FREE && proctab[pr_ptr].sys_proc == 0) 
         {
             pd_t* pd = (pd_t*)proctab[pr_ptr].initial_pdbr;
-
+            if(pdi_ptr==(PAGE_SIZE/4))pdi_ptr=0;
             for(;pdi_ptr<(PAGE_SIZE/4);pdi_ptr++)
             {
-                
                 if(pd[pdi_ptr].pd_pres==1)
                 {
-                    pt_t* pt=(pt_t*)(pd[pdi_ptr].pd_base<<12);
+                    pt_t* pt=(pt_t*)(pd[pdi_ptr].pd_base<<12);                    
                     for(;pti_ptr<(PAGE_SIZE/4);pti_ptr++)
                     {
                         kprintf("pd: %x, pd_index: %d, pt: %x, pt_index: %d\n",pd,pdi_ptr,pt, pti_ptr);
@@ -28,7 +27,16 @@ process find_victim_frame(uint32* victim_pdbr, uint32* victim_pdi, uint32* victi
                                 *victim_pdbr=(uint32)proctab[pr_ptr].initial_pdbr;
                                 if((uint32)victim_pdbr==SYS_PD)kprintf("pdbr cannot be the same as the system pdbr... this probably means that this happened between a context switch!!!\n");
                                 *victim_pdi=pdi_ptr;
-                                *victim_pti=pti_ptr;
+                                *victim_pti=pti_ptr++;
+                                if(pti_ptr==(PAGE_SIZE/4))
+                                {
+                                    pti_ptr=0;
+                                    pdi_ptr++;
+                                    if(pdi_ptr==(PAGE_SIZE/4))
+                                    {
+                                        pr_ptr++;
+                                    }
+                                }
                                 kprintf("victim details - pd: %x, pd_index: %d, pt_index: %d\n",*victim_pdbr,*victim_pdi,*victim_pti);
                                 return OK;
                             }
