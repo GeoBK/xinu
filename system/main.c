@@ -74,11 +74,12 @@ void test(uint32 numPages){
     char c = 0;
     i=0;
     for(i=0; i<numPages; i++){
-		sync_printf("[P%d] reading i: %d\n", currpid,i);
+		//sync_printf("[P%d] reading i: %d\n", currpid,i);
         c =  ptr[i*PAGE_SIZE];
         if(c!='A'){
             error = 1;
-			sync_printf("[P%d] error occured. c: %c\n", currpid,c);
+
+			sync_printf("[P%d] error occured. c: %c, addr: %x\n", currpid,c,&(ptr[i*PAGE_SIZE]));
             break;
         }
     }
