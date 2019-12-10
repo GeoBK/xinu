@@ -113,7 +113,7 @@ void test(uint32 numPages){
 	
     for(i =0; i<numPages; i++){
 		sync_printf("[P%d] writing i: %d\n", currpid,i);
-        ptr[i*PAGE_SIZE] = i;
+        ptr[i*(PAGE_SIZE/4)] = i;
     }
 
     // read data
@@ -121,11 +121,11 @@ void test(uint32 numPages){
     i=0;
     for(i=0; i<numPages; i++){
 		//sync_printf("[P%d] reading i: %d\n", currpid,i);
-        c =  ptr[i*PAGE_SIZE];
+        c =  ptr[i*(PAGE_SIZE/4)];
         if(c!=i){
             error = 1;
 
-			sync_printf("[P%d] error occured. c: %c, addr: %x\n", currpid,c,&(ptr[i*PAGE_SIZE]));
+			sync_printf("[P%d] error occured. c: %c, addr: %x\n", currpid,c,&(ptr[i*(PAGE_SIZE/4)]));
             break;
         }
     }
