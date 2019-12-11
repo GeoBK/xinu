@@ -47,10 +47,10 @@ void	meminit(void) {
 	   memptr->mnext = (struct memblk *) NULL;
 	   swapmemlist.mlength = memptr->mlength = (uint32) truncmb(MAX_SWAP_SIZE*PAGE_SIZE);
 
-	   kprintf("Switching on paging\n");
+	   //kprintf("Switching on paging\n");
 	   set_evec(14, (uint32)pagefault_handler_disp);
 	   enable_paging();
-	   kprintf("paging switched on\n");
+	   //kprintf("paging switched on\n");
 	//    fflush(NULL);
 
        return;

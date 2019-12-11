@@ -167,7 +167,7 @@ static	void	sysinit()
 	
 	meminit();
 
-	kprintf("returned from meminit\n");
+	//kprintf("returned from meminit\n");
 
 	/* Initialize system variables */
 

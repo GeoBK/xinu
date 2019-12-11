@@ -183,7 +183,7 @@ void enable_paging(){
   
   unsigned long temp =  read_cr0();
   temp = temp | ( 0x1 << 31 ) | 0x1;
-  kprintf("Inside enable paging\n");
+  // kprintf("Inside enable paging\n");
   write_cr0(temp); 
 }
 
